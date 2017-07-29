@@ -36,8 +36,8 @@
       "fullname": "Cesar Augusto Nogueira",
       "email": "bikerCesar@email.com",
       "city": "Campinas",
-      "groupRide": 1,
-      "daysWeek": "Mon,Tues,Wed,Thurs,Fri,Sat,Sun"
+      "group_ride": 1,
+      "days_week": "Mon,Tues,Wed,Thurs,Fri,Sat,Sun"
       }
     }
 
@@ -74,8 +74,7 @@
     
     Running without permission to symlink will degrade build performance.
     See http://ember-cli.com/user-guide/#windows for details.
-    
-    DEPRECATION: Addon files were detected in `C:/Users/Cesar/Desktop/entrevistaVenturus/bike_ride_events_app/client/node_modules/ember-flex-grid/addon`, but no JavaScript preprocessors were found for `ember-flex-grid`. Please make sure to add a preprocessor (most likely `ember-cli-babel`) to in `dependencies` (NOT `devDependencies`) in `ember-flex-grid`'s `package.json`.
+
     Livereload server on http://localhost:49153
     'instrument' is imported from external module 'ember-data/-debug' but never used
     
