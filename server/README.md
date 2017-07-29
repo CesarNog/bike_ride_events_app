@@ -20,7 +20,7 @@ Content-Type  application/json
   "fullname": "Cesar Augusto Nogueira",
   "email": "bikerCesar@email.com",
   "city": "Campinas",
-  "groupRide": 1,
-  "daysWeek": "Mon,Tues,Wed,Thurs,Fri,Sat,Sun"
+  "group_ride": 1,
+  "days_week": "Mon,Tues,Wed,Thurs,Fri,Sat,Sun"
   }
 }
