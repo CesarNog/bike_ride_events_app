@@ -29,6 +29,28 @@
 28 Jul 22:13:20 - [nodemon] watching: *.*
 28 Jul 22:13:20 - [nodemon] starting `node ./bin/www`
 
+
+#### Example of succesfull API running
+    gulp watch
+
+[02:18:01] Using gulpfile \bike_ride_events_app\server\gulpfile.js
+[02:18:01] Starting 'nodemon'...
+[02:18:01] [nodemon] 1.11.0
+[02:18:01] [nodemon] to restart at any time, enter `rs`
+[02:18:01] [nodemon] watching: *.*
+[02:18:01] [nodemon] starting `node bin/www`
+[02:18:01] Finished 'nodemon' after 142 ms
+[02:18:01] Starting 'watch'...
+[02:18:01] Finished 'watch' after 61 ms
+[Browsersync] Proxying: http://localhost:3000
+[Browsersync] Access URLs:
+ --------------------------------------
+       Local: http://localhost:5000/api
+    External: http://10.0.75.1:5000/api
+ --------------------------------------
+          UI: http://localhost:3003
+ UI External: http://10.0.75.1:3003
+
 ### API Bikers - End Point
 > http://localhost:3000/api/bikers
 
