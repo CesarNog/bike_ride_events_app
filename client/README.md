@@ -1,10 +1,14 @@
 # Frontend details of Bike Ride Events App by @cesarnogcps
 
 ## Start EmberJS Server
-1. cd client
-2. npm install  
-3. npm start
+       cd client
+       npm install  
+       npm start
 
-## The content can be seen at
-http://localhost:999/
+## Then, the main page of the project will be visible at
 
+> http://localhost:999/
+
+## Livereload server
+
+> http://localhost:49153/
