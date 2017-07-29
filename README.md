@@ -13,6 +13,11 @@
      npm install  
      npm start
 
+### Faster way of starting Expressjs with Browserfy on port 5000
+
+     cd server && gulp watch
+     
+
 #### Example of succesfull API running
 
     npm start
