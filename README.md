@@ -13,6 +13,17 @@
      npm install  
      npm start
 
+#### Example of succesfull API running
+
+    npm start
+
+> bike_ride_events_server@0.1.0 start C:\Users\Cesar\Desktop\entrevistaVenturus\bike_ride_events_app\server
+> nodemon ./bin/www
+28 Jul 22:13:20 - [nodemon] v1.3.8
+28 Jul 22:13:20 - [nodemon] to restart at any time, enter `rs`
+28 Jul 22:13:20 - [nodemon] watching: *.*
+28 Jul 22:13:20 - [nodemon] starting `node ./bin/www`
+
 ### API Bikers - End Point
 > http://localhost:3000/api/bikers
 
@@ -50,4 +61,22 @@
      npm install  
      npm start
 
+#### Example of succesfull EmberJS server running
 
+    /bike_ride_events_app/client
+    npm start
+    
+    bike_ride_events_client@0.1.0 start C:\Users\Cesar\Desktop\entrevistaVenturus\bike_ride_events_app\client
+    ember server
+    
+    Looks like you have a different program called watchman.
+    Visit https://ember-cli.com/user-guide/#watchman for more info.
+    
+    Running without permission to symlink will degrade build performance.
+    See http://ember-cli.com/user-guide/#windows for details.
+    
+    DEPRECATION: Addon files were detected in `C:/Users/Cesar/Desktop/entrevistaVenturus/bike_ride_events_app/client/node_modules/ember-flex-grid/addon`, but no JavaScript preprocessors were found for `ember-flex-grid`. Please make sure to add a preprocessor (most likely `ember-cli-babel`) to in `dependencies` (NOT `devDependencies`) in `ember-flex-grid`'s `package.json`.
+    Livereload server on http://localhost:49153
+    'instrument' is imported from external module 'ember-data/-debug' but never used
+    
+    Build successful (7516ms) – Serving on http://localhost:999/
