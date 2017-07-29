@@ -9,7 +9,7 @@
     },
     "scripts": {
         "build": "ember build",
-        "start": "ember server",
+        "start": "ember s",
         "test": "ember test"
     },
     "repository": "",
@@ -41,7 +41,6 @@
         "ember-cli-sri": "^2.1.1",
         "ember-cli-uglify": "^1.2.0",
         "ember-cli-test-loader": "^2.1.0",
-        "ember-cli-browser-sync": "^0.0.2",
         "ember-data": "^2.14.8",
         "ember-export-application-global": "^2.0.0",
         "ember-flex-grid": "^0.0.2",

@@ -593,7 +593,8 @@ define('bike_ride_events_client/router', ['exports', 'ember', 'bike_ride_events_
 
 
   var Router = _ember.default.Router.extend({
-    location: _environment.default.locationType
+    location: _environment.default.locationType,
+    rootURL: _environment.default.rootURL
   });
 
   Router.map(function () {
@@ -611,6 +612,14 @@ define('bike_ride_events_client/router', ['exports', 'ember', 'bike_ride_events_
 
   exports.default = Router;
 });
+define('bike_ride_events_client/routes/about', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Route.extend({});
+});
 define('bike_ride_events_client/routes/biker', ['exports', 'ember'], function (exports, _ember) {
 	'use strict';
 
@@ -624,6 +633,18 @@ define('bike_ride_events_client/routes/biker', ['exports', 'ember'], function (e
 			return this.store.findAll('biker');
 		}
 	});
+});
+define('bike_ride_events_client/routes/index', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Route.extend({
+    beforeModel: function beforeModel() {
+      this.replaceWith('biker');
+    }
+  });
 });
 define('bike_ride_events_client/routes/user', ['exports', 'ember'], function (exports, _ember) {
 	'use strict';
@@ -652,7 +673,7 @@ define('bike_ride_events_client/services/ajax', ['exports', 'ember-ajax/services
     }
   });
 });
-define("bike_ride_events_client/templates/application", ["exports"], function (exports) {
+define("bike_ride_events_client/templates/about", ["exports"], function (exports) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
@@ -662,8 +683,7 @@ define("bike_ride_events_client/templates/application", ["exports"], function (e
     return {
       meta: {
         "fragmentReason": {
-          "name": "missing-wrapper",
-          "problems": ["multiple-nodes", "wrong-type"]
+          "name": "triple-curlies"
         },
         "revision": "Ember@2.4.6",
         "loc": {
@@ -673,8 +693,193 @@ define("bike_ride_events_client/templates/application", ["exports"], function (e
             "column": 0
           },
           "end": {
-            "line": 3,
+            "line": 9,
+            "column": 6
+          }
+        },
+        "moduleName": "bike_ride_events_client/templates/about.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1, "class", "jumbo");
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2, "class", "right tomster");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("h2");
+        var el3 = dom.createTextNode("About Bike Ride Events");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("p");
+        var el3 = dom.createTextNode("\n    The Bike Ride Events APP is a delightful project created to explore Ember.\n    By building a propertyBike Ride Events, we can simultaneously imagine traveling\n    AND building Ember applications.\n  ");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes() {
+        return [];
+      },
+      statements: [],
+      locals: [],
+      templates: []
+    };
+  }());
+});
+define("bike_ride_events_client/templates/application", ["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = Ember.HTMLBars.template(function () {
+    var child0 = function () {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.4.6",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "line": 7,
+              "column": 4
+            }
+          },
+          "moduleName": "bike_ride_events_client/templates/application.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("      ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("h1");
+          var el2 = dom.createTextNode("\n        ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("em");
+          var el3 = dom.createTextNode("SuperRentals");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n      ");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() {
+          return [];
+        },
+        statements: [],
+        locals: [],
+        templates: []
+      };
+    }();
+    var child1 = function () {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.4.6",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 9,
+              "column": 6
+            },
+            "end": {
+              "line": 11,
+              "column": 6
+            }
+          },
+          "moduleName": "bike_ride_events_client/templates/application.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("        About\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() {
+          return [];
+        },
+        statements: [],
+        locals: [],
+        templates: []
+      };
+    }();
+    var child2 = function () {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.4.6",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 12,
+              "column": 6
+            },
+            "end": {
+              "line": 14,
+              "column": 6
+            }
+          },
+          "moduleName": "bike_ride_events_client/templates/application.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("        Contact\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() {
+          return [];
+        },
+        statements: [],
+        locals: [],
+        templates: []
+      };
+    }();
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.4.6",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
             "column": 0
+          },
+          "end": {
+            "line": 20,
+            "column": 6
           }
         },
         "moduleName": "bike_ride_events_client/templates/application.hbs"
@@ -685,26 +890,62 @@ define("bike_ride_events_client/templates/application", ["exports"], function (e
       hasRendered: false,
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
-        var el1 = dom.createElement("h2");
-        var el2 = dom.createTextNode("Welcome to Ember.js");
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1, "class", "container");
+        var el2 = dom.createTextNode("\n  ");
         dom.appendChild(el1, el2);
-        dom.appendChild(el0, el1);
-        var el1 = dom.createTextNode("\n");
-        dom.appendChild(el0, el1);
-        var el1 = dom.createComment("");
-        dom.appendChild(el0, el1);
-        var el1 = dom.createTextNode("\n");
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2, "class", "menu");
+        var el3 = dom.createTextNode("\n");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3, "class", "links");
+        var el4 = dom.createTextNode("\n");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createComment("");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createComment("");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("    ");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n  ");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2, "class", "body");
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n  ");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n");
+        dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var morphs = new Array(1);
-        morphs[0] = dom.createMorphAt(fragment, 2, 2, contextualElement);
+        var element0 = dom.childAt(fragment, [0]);
+        var element1 = dom.childAt(element0, [1]);
+        var element2 = dom.childAt(element1, [3]);
+        var morphs = new Array(4);
+        morphs[0] = dom.createMorphAt(element1, 1, 1);
+        morphs[1] = dom.createMorphAt(element2, 1, 1);
+        morphs[2] = dom.createMorphAt(element2, 2, 2);
+        morphs[3] = dom.createMorphAt(dom.childAt(element0, [3]), 1, 1);
         return morphs;
       },
-      statements: [["content", "outlet", ["loc", [null, [2, 0], [2, 10]]]]],
+      statements: [["block", "link-to", ["index"], [], 0, null, ["loc", [null, [3, 4], [7, 16]]]], ["block", "link-to", ["about"], [], 1, null, ["loc", [null, [9, 6], [11, 18]]]], ["block", "link-to", ["contact"], [], 2, null, ["loc", [null, [12, 6], [14, 18]]]], ["content", "outlet", ["loc", [null, [18, 4], [18, 14]]]]],
       locals: [],
-      templates: []
+      templates: [child0, child1, child2]
     };
   }());
 });
@@ -1006,6 +1247,57 @@ define("bike_ride_events_client/templates/components/flex-grid", ["exports"], fu
     };
   }());
 });
+define("bike_ride_events_client/templates/index", ["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = Ember.HTMLBars.template(function () {
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": ["wrong-type"]
+        },
+        "revision": "Ember@2.4.6",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 2,
+            "column": 0
+          }
+        },
+        "moduleName": "bike_ride_events_client/templates/index.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(1);
+        morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
+        dom.insertBoundary(fragment, 0);
+        return morphs;
+      },
+      statements: [["content", "outlet", ["loc", [null, [1, 0], [1, 10]]]]],
+      locals: [],
+      templates: []
+    };
+  }());
+});
 define("bike_ride_events_client/templates/user", ["exports"], function (exports) {
   "use strict";
 
@@ -1284,6 +1576,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("client/app")["default"].create({"name":"bike_ride_events_client","version":"0.1.0+3fe6c451"});
+  require("client/app")["default"].create({"name":"bike_ride_events_client","version":"0.1.0+be28d255"});
 }
 //# sourceMappingURL=bike_ride_events_client.map
