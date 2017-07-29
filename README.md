@@ -80,3 +80,8 @@
     'instrument' is imported from external module 'ember-data/-debug' but never used
     
     Build successful (7516ms) – Serving on http://localhost:999/
+
+License
+-------
+
+MIT
