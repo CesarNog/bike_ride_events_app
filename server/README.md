@@ -4,9 +4,9 @@
 3. npm start
 
 ## Easier way to start the backend API
-cd server && gulp watch
+1. cd server && gulp watch
 
-### It will open http://localhost:5000/api
+#### It will open http://localhost:5000/api
 
 ## API End Point
 http://localhost:3000/api/bikers
