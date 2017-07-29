@@ -1,14 +1,50 @@
-# Frontend details of Bike Ride Events App by @cesarnogcps
+# library-app
 
-## Start EmberJS Server
-       cd client
-       npm install  
-       npm start
+This README outlines the details of collaborating on this Ember application.
+A short introduction of this app could easily go here.
 
-## Then, the main page of the project will be visible at
+## Prerequisites
 
-> http://localhost:999/
+You will need the following things properly installed on your computer.
 
-## Livereload server
+* [Git](https://git-scm.com/)
+* [Node.js](https://nodejs.org/) (with NPM)
+* [Ember CLI](https://ember-cli.com/)
+* [PhantomJS](http://phantomjs.org/)
 
-> http://localhost:49153/
+## Installation
+
+* `git clone <repository-url>` this repository
+* `cd library-app`
+* `npm install`
+
+## Running / Development
+
+* `ember serve`
+* Visit your app at [http://localhost:4200](http://localhost:4200).
+
+### Code Generators
+
+Make use of the many generators for code, try `ember help generate` for more details
+
+### Running Tests
+
+* `ember test`
+* `ember test --server`
+
+### Building
+
+* `ember build` (development)
+* `ember build --environment production` (production)
+
+### Deploying
+
+Specify what it takes to deploy your app.
+
+## Further Reading / Useful Links
+
+* [ember.js](http://emberjs.com/)
+* [ember-cli](https://ember-cli.com/)
+* Development Browser Extensions
+  * [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
+  * [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)

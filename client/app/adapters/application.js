@@ -1,8 +1,4 @@
-import DS from 'ember-data';
+import FirebaseAdapter from 'emberfire/adapters/firebase';
 
-const { JSONAPIAdapter: Adapter } = DS;
-
-export default Adapter.extend({
-	namespace: 'api',
-	host: 'http://localhost:3000'
+export default FirebaseAdapter.extend({
 });
