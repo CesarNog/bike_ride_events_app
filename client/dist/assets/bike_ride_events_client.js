@@ -608,6 +608,7 @@ define('bike_ride_events_client/router', ['exports', 'ember', 'bike_ride_events_
       this.route("new", { path: "/new" });
       this.route("edit", { path: "/:biker_id" });
     });
+    this.route('scientists');
   });
 
   exports.default = Router;
@@ -645,6 +646,14 @@ define('bike_ride_events_client/routes/index', ['exports', 'ember'], function (e
       this.replaceWith('biker');
     }
   });
+});
+define('bike_ride_events_client/routes/scientists', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Route.extend({});
 });
 define('bike_ride_events_client/routes/user', ['exports', 'ember'], function (exports, _ember) {
 	'use strict';
@@ -775,7 +784,7 @@ define("bike_ride_events_client/templates/application", ["exports"], function (e
           var el2 = dom.createTextNode("\n        ");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("em");
-          var el3 = dom.createTextNode("SuperRentals");
+          var el3 = dom.createTextNode("Venturus - Biker Ride Events");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
           var el2 = dom.createTextNode("\n      ");
@@ -964,11 +973,11 @@ define("bike_ride_events_client/templates/bikers", ["exports"], function (export
           "loc": {
             "source": null,
             "start": {
-              "line": 2,
+              "line": 3,
               "column": 2
             },
             "end": {
-              "line": 5,
+              "line": 7,
               "column": 2
             }
           },
@@ -992,17 +1001,24 @@ define("bike_ride_events_client/templates/bikers", ["exports"], function (export
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n    ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("li");
+          var el2 = dom.createComment("");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var morphs = new Array(2);
+          var morphs = new Array(3);
           morphs[0] = dom.createMorphAt(dom.childAt(fragment, [1]), 0, 0);
           morphs[1] = dom.createMorphAt(dom.childAt(fragment, [3]), 0, 0);
+          morphs[2] = dom.createMorphAt(dom.childAt(fragment, [5]), 0, 0);
           return morphs;
         },
-        statements: [["content", "biker.fullname", ["loc", [null, [3, 8], [3, 26]]]], ["content", "biker.email", ["loc", [null, [4, 8], [4, 23]]]]],
+        statements: [["content", "biker.fullname", ["loc", [null, [4, 8], [4, 26]]]], ["content", "biker.email", ["loc", [null, [5, 8], [5, 23]]]], ["content", "biker.city", ["loc", [null, [6, 8], [6, 22]]]]],
         locals: [],
         templates: []
       };
@@ -1015,11 +1031,11 @@ define("bike_ride_events_client/templates/bikers", ["exports"], function (export
           "loc": {
             "source": null,
             "start": {
-              "line": 5,
+              "line": 7,
               "column": 2
             },
             "end": {
-              "line": 7,
+              "line": 9,
               "column": 2
             }
           },
@@ -1052,7 +1068,8 @@ define("bike_ride_events_client/templates/bikers", ["exports"], function (export
     return {
       meta: {
         "fragmentReason": {
-          "name": "triple-curlies"
+          "name": "missing-wrapper",
+          "problems": ["multiple-nodes"]
         },
         "revision": "Ember@2.4.6",
         "loc": {
@@ -1062,7 +1079,7 @@ define("bike_ride_events_client/templates/bikers", ["exports"], function (export
             "column": 0
           },
           "end": {
-            "line": 8,
+            "line": 10,
             "column": 5
           }
         },
@@ -1074,6 +1091,12 @@ define("bike_ride_events_client/templates/bikers", ["exports"], function (export
       hasRendered: false,
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("h2");
+        var el2 = dom.createTextNode("Bikers");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
         var el1 = dom.createElement("ul");
         dom.setAttribute(el1, "class", "bikers-listing");
         var el2 = dom.createTextNode("\n");
@@ -1085,10 +1108,10 @@ define("bike_ride_events_client/templates/bikers", ["exports"], function (export
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
         var morphs = new Array(1);
-        morphs[0] = dom.createMorphAt(dom.childAt(fragment, [0]), 1, 1);
+        morphs[0] = dom.createMorphAt(dom.childAt(fragment, [2]), 1, 1);
         return morphs;
       },
-      statements: [["block", "each", [["get", "biker", ["loc", [null, [2, 10], [2, 15]]]]], [], 0, 1, ["loc", [null, [2, 2], [7, 11]]]]],
+      statements: [["block", "each", [["get", "biker", ["loc", [null, [3, 10], [3, 15]]]]], [], 0, 1, ["loc", [null, [3, 2], [9, 11]]]]],
       locals: [],
       templates: [child0, child1]
     };
@@ -1273,6 +1296,57 @@ define("bike_ride_events_client/templates/index", ["exports"], function (exports
           }
         },
         "moduleName": "bike_ride_events_client/templates/index.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(1);
+        morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
+        dom.insertBoundary(fragment, 0);
+        return morphs;
+      },
+      statements: [["content", "outlet", ["loc", [null, [1, 0], [1, 10]]]]],
+      locals: [],
+      templates: []
+    };
+  }());
+});
+define("bike_ride_events_client/templates/scientists", ["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = Ember.HTMLBars.template(function () {
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": ["wrong-type"]
+        },
+        "revision": "Ember@2.4.6",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 2,
+            "column": 0
+          }
+        },
+        "moduleName": "bike_ride_events_client/templates/scientists.hbs"
       },
       isEmpty: false,
       arity: 0,
@@ -1576,6 +1650,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("client/app")["default"].create({"name":"bike_ride_events_client","version":"0.1.0+be28d255"});
+  require("client/app")["default"].create({"name":"bike_ride_events_client","version":"0.1.0+88f60f03"});
 }
 //# sourceMappingURL=bike_ride_events_client.map
