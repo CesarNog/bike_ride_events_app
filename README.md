@@ -1,5 +1,7 @@
-# Backend
-## Starting Expressjs Bikers API
+# Project Bike Ride Events by @cesarnogcps
+
+## Backend
+### Starting Expressjs Bikers API
 
      cd server
      npm install  
@@ -23,9 +25,9 @@
     }
 
 ----------
-# Database (MongoDB)
+## Database (MongoDB)
 
-## Starting MongoDB database
+### Starting MongoDB database
 
     C:\Program Files\MongoDB\Server\3.4\bin>mongod --dbpath C:\data\db
 
@@ -34,9 +36,9 @@
 2017-07-28T23:46:08.283-0300 I NETWORK  [thread1] waiting for connections on port **27017**
 2017-07-28T23:46:08.323-0300 I NETWORK  [thread1] ***connection accepted from 127.0.0.1:23342 #1 (1 connection now open)***
 
-# Frontend
+## Frontend
 
-## Starting Ember.JS Server to visualizer frontend
+### Starting Ember.JS Server to visualizer frontend
 
      cd client
      npm install  
