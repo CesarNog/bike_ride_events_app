@@ -5,7 +5,9 @@ const {
 	computed
 } = Ember;
 
-const { alias } = computed;
+const {
+	alias
+} = computed;
 
 export default Controller.extend({
 
@@ -18,16 +20,20 @@ export default Controller.extend({
 
 	id: '',
 
-	cannotCreate: computed('name', 'email', function() {
-		return !this.get('name') || !this.get('email');
+	cannotCreate: computed('fullname', 'email', function () {
+		return !this.get('fullname') || !this.get('email');
 	}),
 
 	actions: {
 
 		createBiker() {
-			const { name, email } = this.getProperties('name', 'email');
+			const {
+				name,
+				email
+			} = this.getProperties('fullname', 'email');
 			this.store.createRecord('biker', {
-				name, email
+				name,
+				email
 			}).save();
 		},
 
@@ -41,20 +47,25 @@ export default Controller.extend({
 		},
 
 		updateBiker() {
-			const { id, name, email } = this.getProperties('id', 'fullname', 'email');
-			this.store.findRecord('biker', id).then(function(biker) {
-			  biker.setProperties({
-			  	name, email
-			  });
+			const {
+				id,
+				name,
+				email
+			} = this.getProperties('id', 'fullname', 'email');
+			this.store.findRecord('biker', id).then(function (biker) {
+				biker.setProperties({
+					name,
+					email
+				});
 
-			  biker.save(); // => PUT to '/bikers/{id}'
+				biker.save(); // => PUT to '/bikers/{id}'
 			});
 		},
 
 		deleteBiker() {
 			const id = this.get('id');
-			this.store.findRecord('biker', id).then(function(biker) {
-			  biker.destroyRecord(); // => DELETE to /bikers/{id}
+			this.store.findRecord('biker', id).then(function (biker) {
+				biker.destroyRecord(); // => DELETE to /bikers/{id}
 			});
 		}
 	}

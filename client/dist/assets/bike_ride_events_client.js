@@ -229,18 +229,19 @@ define('bike_ride_events_client/controllers/biker', ['exports', 'ember'], functi
 
 		id: '',
 
-		cannotCreate: computed('name', 'email', function () {
-			return !this.get('name') || !this.get('email');
+		cannotCreate: computed('fullname', 'email', function () {
+			return !this.get('fullname') || !this.get('email');
 		}),
 
 		actions: {
 			createBiker: function createBiker() {
-				var _getProperties = this.getProperties('name', 'email'),
+				var _getProperties = this.getProperties('fullname', 'email'),
 				    name = _getProperties.name,
 				    email = _getProperties.email;
 
 				this.store.createRecord('biker', {
-					name: name, email: email
+					name: name,
+					email: email
 				}).save();
 			},
 			readBiker: function readBiker() {
@@ -259,7 +260,8 @@ define('bike_ride_events_client/controllers/biker', ['exports', 'ember'], functi
 
 				this.store.findRecord('biker', id).then(function (biker) {
 					biker.setProperties({
-						name: name, email: email
+						name: name,
+						email: email
 					});
 
 					biker.save(); // => PUT to '/bikers/{id}'
@@ -530,33 +532,36 @@ define("bike_ride_events_client/instance-initializers/ember-data", ["exports", "
     initialize: _initializeStoreService.default
   };
 });
-/* /models/phonebook.js
-*/
-/*PhoneBookApp.PhoneBook = DS.Model.extend({
-  
-  firstname       : DS.attr(),
-  lastname        : DS.attr(),
-  phonenumber     : DS.attr()
- 
- });
+define('bike_ride_events_client/models/biker', ['exports', 'ember-data'], function (exports, _emberData) {
+  'use strict';
 
-PhoneBookApp.PhoneBook.FIXTURES = 
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var Model = _emberData.default.Model,
+      attr = _emberData.default.attr;
+  exports.default = Model.extend({
+    fullname: attr('string'),
+    email: attr('string'),
+    city: attr('string'),
+    group_ride: attr('number'),
+    days_week: attr('string')
+  });
 
-[
-  {
-    "firstname": "aman",
-    "lastname": "patial",
-    "phonenumber": 9900273410   
-  },
-  {
-    "firstname": "raman",
-    "lastname": "patial",
-    "phonenumber": 9900273425  
-  }
-];
-*/
-define("bike_ride_events_client/models/phonebook", [], function () {
-  "use strict";
+
+  BikerApp.Biker.FIXTURES = [{
+    "fullname": "Cesar Augusto Nogueira",
+    "email": "cesarnogueira1210@gmail.com",
+    "city": "Campinas",
+    "group_ride": 1,
+    "days_week": "Sat,Sun"
+  }, {
+    "fullname": "Erika Pinho Lemos",
+    "email": "erika@gmail.com",
+    "city": "Indaiatuba",
+    "group_ride": 1,
+    "days_week": "Sat,Sun"
+  }];
 });
 define('bike_ride_events_client/models/user', ['exports', 'ember-data'], function (exports, _emberData) {
   'use strict';
@@ -619,17 +624,6 @@ define('bike_ride_events_client/routes/biker', ['exports', 'ember'], function (e
 			return this.store.findAll('biker');
 		}
 	});
-});
-define('bike_ride_events_client/routes/phonebooksRoute', [], function () {
-  'use strict';
-
-  /* /store.js
-  */
-  App.PhonebooksRoute = Ember.Route.extend({
-    model: function model() {
-      return this.store.find('phonebook');
-    }
-  });
 });
 define('bike_ride_events_client/routes/user', ['exports', 'ember'], function (exports, _ember) {
 	'use strict';
@@ -1290,6 +1284,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("client/app")["default"].create({"name":"bike_ride_events_client","version":"0.1.0+"});
+  require("client/app")["default"].create({"name":"bike_ride_events_client","version":"0.1.0+3fe6c451"});
 }
 //# sourceMappingURL=bike_ride_events_client.map

@@ -9,7 +9,7 @@ var bodyParser = require('body-parser');
 var mongoose   = require('mongoose');
 
 // Connect to our database
-mongoose.connect('mongodb://localhost:27017/phonebookexpress'); 
+mongoose.connect('mongodb://localhost:27017/bikerevents'); 
 
 
 // ## CORS middleware
@@ -32,7 +32,6 @@ var allowCrossDomain = function(req, res, next) {
 // ROUTES
 var routes = require('./routes/index');
 var bikers = require('./routes/biker');
-// var phonebook = require('./routes/phonebook');
 
 var app = express();
 
@@ -43,7 +42,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

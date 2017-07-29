@@ -5,7 +5,7 @@
  */
 
 var app = require('../app');
-var debug = require('debug')('phonebook:server');
+var debug = require('debug')('biker:server');
 var http = require('http');
 
 /**

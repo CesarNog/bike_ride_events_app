@@ -28,25 +28,27 @@ var Biker = require('../models/biker');
 
 router.route('/bikers')
 
-    // create a new biker (accessed at POST /api/bikers 
-    // params e.g. fullname, email, city, groupRide, daysWeek)
+    // create a new biker (accessed at POST /api/bikers)
+    // params e.g. fullname, email, city, group_ride, days_week
 
     .post(function (req, res) {
 
-        var bikerInstance = new Biker(); // create a new instance of the Phonebook model
+        var bikerInstance = new Biker(); // create a new instance of the Biker model
 
         bikerInstance.fullname = req.body.biker.fullname;
         bikerInstance.email = req.body.biker.email;
         bikerInstance.city = req.body.biker.city;
+        bikerInstance.group_ride = req.body.biker.group_ride;
+        bikerInstance.days_week = req.body.biker.days_week;
 
-        // save the phonebook and check for errors
+        // save the biker and check for errors
         bikerInstance.save(function (err) {
             if (err)
                 res.send(err);
 
             res.json({
                 status: "OK",
-                message: 'Phonebook is created successfully!'
+                message: 'Biker was created successfully!'
             });
 
         });
@@ -85,9 +87,11 @@ router.route('/bikers/:biker_id')
                 res.send(err);
 
             // update the biker info
-            biker.firstname = req.body.biker.firstname;
-            biker.lastname = req.body.biker.lastname;
-            biker.phonenumber = req.body.biker.phonenumber;
+            biker.fullname = req.body.biker.fullname;
+            biker.email = req.body.biker.email;
+            biker.city = req.body.biker.city;
+            biker.group_ride = req.body.biker.group_ride;
+            biker.days_week = req.body.biker.days_week;
 
             // save the biker
             biker.save(function (err) {

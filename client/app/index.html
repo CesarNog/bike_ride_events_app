@@ -9,17 +9,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"> {{content-for "head"}}
 
   <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/bootstrap.min.css" media="screen">
-  <link rel="stylesheet" href="css/style.css">
-
-  <link rel="stylesheet" href="assets/vendor.css">
-  <link rel="stylesheet" href="assets/client.css"> {{content-for "head-footer"}}
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" media="screen">  
+  {{content-for "head-footer"}}
 </head>
 
 <body>
-
-  <script src="assets/vendor.js"></script>
-  <script src="assets/client.js"></script>
 
   <script type="text/x-handlebars" data-template-name="application">
     <div class="container">
@@ -29,8 +23,8 @@
         <div class="navbar-inner">
           <ul class="nav">
 
-            {{#view BikersApp.NavView}} {{#linkTo "index"}}Home{{/linkTo}} {{/view}} {{#view BikersApp.NavView}} {{#linkTo "phonebooks"}}Phone
-            Book{{/linkTo}} {{/view}} {{#view BikersApp.NavView}} {{#linkTo "about"}}About{{/linkTo}} {{/view}}
+            {{#view BikersApp.NavView}} {{#linkTo "index"}}Home{{/linkTo}} {{/view}} {{#view BikersApp.NavView}} {{#linkTo "bikers"}}Bikers
+            {{/linkTo}} {{/view}} {{#view BikersApp.NavView}} {{#linkTo "about"}}About{{/linkTo}} {{/view}}
 
           </ul>
         </div>
@@ -47,10 +41,10 @@
   <script type="text/x-handlebars" data-template-name="bikers/index">
 
     {{#if bikersPresent}}
-    <p>No. of phonebooks = {{content.length}}</p>
+    <p>No. of bikers = {{content.length}}</p>
 
     {{#if itemsSelected}}
-    <p><button {{action 'removeSelectedPhonebooks'}}>Remove {{editCounter}} selected phonebooks</button></p>
+    <p><button {{action 'removeSelectedBikers'}}>Remove {{editCounter}} selected bikers</button></p>
     {{/if}}
 
     <table class="table table-hover">
@@ -62,10 +56,10 @@
         <th></th>
         <th></th>
       </tr>
-      {{#each location in controller itemController="phonebooksEdit"}}
+      {{#each location in controller itemController="bikersEdit"}}
       <tr {{bindAttr class="selected:warning" }}>
         <td>{{view Ember.Checkbox checkedBinding="selected"}}</td>
-        <td>{{location.firstname}}</td>
+        <td>{{location.fullname}}</td>
         <td>{{location.lastname}}</td>
         <td>{{location.phonenumber}}</td>
         <td>{{#linkTo "phonebooks.edit" location}}<img src="images/edit-icon.png" />{{/linkTo}}</td>
@@ -74,58 +68,38 @@
       {{/each}}
     </table>
 
-    {{else}} No phonebooks present. {{/if}}
+    {{else}} No bikers present. {{/if}}
 
     <p>{{#linkTo "bikers.new"}}<img src="images/add-icon.png" /> New biker{{/linkTo}}</p>
 
 
   </script>
 
-  <script type="text/x-handlebars" data-template-name="_phonebookForm">
+  <script type="text/x-handlebars" data-template-name="_bikerForm">
     <form class="form-horizontal">
       <div class="control-group">
         <label class="control-label" for="fullname">Fullname</label>
         <div class="controls">
           {{view Ember.TextField valueBinding="fullname"}}
         </div>
-      </div>
-      <!--<div class="control-group">
-        <label class="control-label" for="lastname">Last Name</label>
-        <div class="controls">
-          {{view Ember.TextField valueBinding="lastname"}}
-        </div>
-      </div>
-      <div class="control-group">
-        <label class="control-label" for="phonenumber">Phone No.</label>
-        <div class="controls">
-          {{view Ember.TextField valueBinding="phonenumber"}}
-        </div>
-      </div>-->
+      </div>    
     </form>
   </script>
 
-  <script type="text/x-handlebars" data-template-name="phonebooks/edit">
+  <script type="text/x-handlebars" data-template-name="bikers/edit">
 
     {{#if controller.isNew}}
-    <h1>New phonebook</h1>
+    <h1>New biker</h1>
     {{else}}
-    <h1>Edit phonebook</h1>
-    {{/if}} {{partial "phonebookForm"}}
+    <h1>Edit biker</h1>
+    {{/if}} {{partial "bikerForm"}}
 
     <p><button {{action updateItem this}}>Update record</button></p>
 
   </script>
 
   <script type="text/x-handlebars" data-template-name="about">
-    <p>Aman patial is a technologist and qualified in PGDBA (IB), B-Tech (CSE) with 8 plus years of experience in software development
-      in Telecom, Digital Media, Healthcare and Education domains, and spearheaded the multiple business projects through
-      conceptual design, architecture and development while allow the team to deliver their best.Through his experience and
-      business acumen, he successfully bridged the gap between the multiple teams to make sure on-time, within budget delivery
-      of high quality software. His specialties are Solution and Services Architecture, Web Programming and Development,
-      Database Design and Analytic, Cloud Computing, Mobile Applications Development, Project Management. He is an IT professional
-      who believes in the enrichment of human lives and positive mass impact on societies through technology. Personally,
-      he also loves music, books and nature and believes to pay back to the community more than what has been received till
-      today through direct and indirect form.</p>
+    <p>Biker Events API About.</p>
   </script>
 
   <script src="js/jquery-1.9.1.js"></script>

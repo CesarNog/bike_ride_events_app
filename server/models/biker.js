@@ -5,8 +5,8 @@ var BikerSchema = new Schema({
     fullname: String,
     email: String,
     city: String,
-    groupRide: String,
-    daysWeek: String
+    group_ride: String,
+    days_week: String
 });
 
 module.exports = mongoose.model('BikerSchema', BikerSchema);

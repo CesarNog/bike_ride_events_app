@@ -32,9 +32,9 @@ module.exports = {
     "middleware": false,
     "serveStatic": [],
     "ghostMode": {
-        "clicks": true,
-        "scroll": true,
-        "location": true,
+        "clicks": false,
+        "scroll": false,
+        "location": false,
         "forms": {
             "submit": true,
             "inputs": true,
@@ -54,7 +54,7 @@ module.exports = {
     "hostnameSuffix": false,
     "reloadOnRestart": false,
     "notify": true,
-    "scrollProportionally": true,
+    "scrollProportionally": false,
     "scrollThrottle": 0,
     "scrollRestoreTechnique": "window.name",
     "scrollElements": [],
