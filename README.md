@@ -104,7 +104,10 @@
     Livereload server on http://localhost:49153
     'instrument' is imported from external module 'ember-data/-debug' but never used
     
-    Build successful (7516ms) – Serving on http://localhost:999/
+    Build successful (7516ms) – Serving on http://localhost:4200/
+
+### Frontend access
+> http://localhost:4200/
 
 License
 -------
