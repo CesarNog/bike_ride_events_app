@@ -15,6 +15,11 @@ define('client/tests/app.lint-test', [], function () {
     assert.ok(true, 'app.js should pass ESLint\n\n');
   });
 
+  QUnit.test('controllers/biker.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'controllers/biker.js should pass ESLint\n\n');
+  });
+
   QUnit.test('controllers/index.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'controllers/index.js should pass ESLint\n\n');
@@ -50,9 +55,9 @@ define('client/tests/app.lint-test', [], function () {
     assert.ok(true, 'routes/about.js should pass ESLint\n\n');
   });
 
-  QUnit.test('routes/posts/index.js', function (assert) {
+  QUnit.test('routes/posts.js', function (assert) {
     assert.expect(1);
-    assert.ok(true, 'routes/posts/index.js should pass ESLint\n\n');
+    assert.ok(true, 'routes/posts.js should pass ESLint\n\n');
   });
 });
 define('client/tests/helpers/create-offline-ref', ['exports', 'firebase'], function (exports, _firebase) {
