@@ -1,0 +1,8 @@
+<ul class="bikers-listing">
+  {{#each biker}}
+    <li>{{biker.fullname}}</li>
+    <li>{{biker.email}}</li>
+  {{else}}
+    <li>no biker found... :-(</li>
+  {{/each}}
+</ul>

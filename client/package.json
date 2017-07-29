@@ -1,0 +1,55 @@
+{
+  "name": "bike_ride_events_client",
+  "version": "0.1.0",
+  "description": "Bike Ride Events CLIENT",
+  "private": true,
+  "directories": {
+    "doc": "doc",
+    "test": "tests"
+  },
+  "scripts": {
+    "build": "ember build",
+    "start": "ember server",
+    "test": "ember test"
+  },
+  "repository": "",
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "author": "Cesar A. Nogueira <cesarnogueira1210@gmail.com>",
+  "contributors": [{
+    "name": "Cesar A. Nogueira",
+    "email": "cesarnogueira1210@gmail.com"
+  }],
+  "license": "MIT",
+  "dependencies": {
+    "ember-cli-babel": "^6.6.0"
+  },
+  "devDependencies": {
+    "broccoli-asset-rev": "^2.4.2",
+    "ember-ajax": "0.7.1",
+    "ember-cli": "^2.14.1",
+    "ember-cli-app-version": "^3.0.0",
+    "ember-cli-dependency-checker": "^2.0.1",
+    "ember-cli-htmlbars": "^2.0.2",
+    "ember-cli-htmlbars-inline-precompile": "^0.4.3",
+    "ember-cli-inject-live-reload": "^1.7.0",
+    "ember-cli-qunit": "^4.0.0",
+    "ember-cli-release": "^1.0.0-beta.2",
+    "ember-cli-sri": "^2.1.1",
+    "ember-cli-uglify": "^1.2.0",
+    "ember-cli-test-loader": "^2.1.0",
+    "ember-data": "^2.14.8",
+    "ember-export-application-global": "^2.0.0",
+    "ember-flex-grid": "^0.0.2",
+    "ember-load-initializers": "^1.0.0",
+    "ember-resolver": "^4.3.0",
+    "loader.js": "^4.6.0",
+    "phantomjs-prebuilt": "^2.1.14",
+    "watchman": "^0.1.8"
+  },
+  "keywords": [
+    "ember-biker-addon",
+    "biker"
+  ]
+}

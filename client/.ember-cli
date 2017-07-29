@@ -1,0 +1,8 @@
+{
+  "skipGit" : true,
+  "port" : 999,
+  "host" : "localhost",
+  "liveReload" : true,
+  "environment" : "mock-development",
+  "checkForUpdates" : true
+}
