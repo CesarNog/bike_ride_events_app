@@ -1,7 +1,7 @@
 # Project Bike Ride Events by @cesarnogcps
 
 # Table of Contents
-1. [Starting this application](#starting)
+1. [Starting this application](#startingtheapplication)
 2. [Backend](#backend)
 3. [Database](#database)
 4. [Frontend](#frontend)
