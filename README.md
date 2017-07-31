@@ -53,9 +53,6 @@
 ### API Bikers - End Point
 > http://localhost:3000/api/bikers
 
-#### Header Parameters
-> Content-Type  application/json
-
 ### API REST- Biker API 
  
 Route | HTTP Verb | Description |
@@ -66,16 +63,8 @@ Route | HTTP Verb | Description |
  /api/bikers/:biker_id | PUT | Update a single biker    |
  /api/bikers/:biker_id | DELETE | Delete a single biker  |
 
-
-
-### Example of the body needed to do a succesfull post
-{
-     "fullname": "Amanda",
-     "email" : "amanda@email.com"
-     "city" : "Campinas",
-     "group_ride": 1,
-     "days_week" : "Sat,Sun"
-}
+#### Header Parameters
+> Content-Type  application/json
 
 ### Request body (POST) to create a new biker entry
     {
