@@ -4,7 +4,8 @@
   "description": "Bike Ride Events SERVER",
   "private": true,
   "scripts": {
-    "test": "./node_modules/jshint/bin/jshint test_travis.js"
+    "test": "./node_modules/jshint/bin/jshint test_travis.js",
+    "start": "nodemon ./bin/www"
   },
   "author": "Cesar A. Nogueira <cesarnogueira1210@gmail.com>",
   "contributors": [
@@ -20,7 +21,8 @@
     "gulp-nodemon": "^2.2.1",
     "gulp-util": "^3.0.8",
     "jshint": "^2.9.5",
-    "nodemon": "~1.3.8"
+    "nodemon": "~1.3.8",
+    "browser-sync": "~2.18.11"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
