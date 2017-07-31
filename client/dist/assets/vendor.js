@@ -68113,14 +68113,14 @@ createDeprecatedModule('resolver');
 	    value: true
 	});
 	var firebase = __webpack_require__(1);
-	__webpack_require__(5);
+	__webpack_require__(6);
 	var Storage, XMLHttpRequest;
 
-	__webpack_require__(6);
 	__webpack_require__(7);
+	__webpack_require__(8);
 	var AsyncStorage;
 
-	__webpack_require__(8);
+	__webpack_require__(9);
 	exports.default = firebase;
 	module.exports = exports['default'];
 	//# sourceMappingURL=firebase.js.map
@@ -68194,8 +68194,9 @@ createDeprecatedModule('resolver');
 
 	// setimmediate attaches itself to the global object
 	__webpack_require__(3);
-	exports.setImmediate = setImmediate;
-	exports.clearImmediate = clearImmediate;
+	var global = __webpack_require__(5);
+	exports.setImmediate = global.setImmediate;
+	exports.clearImmediate = global.clearImmediate;
 
 
 /***/ }),
@@ -68583,6 +68584,26 @@ createDeprecatedModule('resolver');
 
 /***/ }),
 /* 5 */
+/***/ (function(module, exports) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {var win;
+
+	if (typeof window !== "undefined") {
+	    win = window;
+	} else if (typeof global !== "undefined") {
+	    win = global;
+	} else if (typeof self !== "undefined"){
+	    win = self;
+	} else {
+	    win = {};
+	}
+
+	module.exports = win;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ }),
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*! @license Firebase v3.9.0
@@ -68844,7 +68865,7 @@ createDeprecatedModule('resolver');
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*! @license Firebase v3.9.0
@@ -69114,7 +69135,7 @@ createDeprecatedModule('resolver');
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*! @license Firebase v3.9.0
@@ -69178,7 +69199,7 @@ createDeprecatedModule('resolver');
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*! @license Firebase v3.9.0
@@ -94962,6 +94983,13 @@ var InternalModel = function () {
       this.cancelDestroy();
     }
     this._checkForOrphanedInternalModels();
+    if (this.isDestroyed || this.isDestroying) {
+      return;
+    }
+
+    // just in-case we are not one of the orphaned, we should still
+    // still destroy ourselves
+    this.destroy();
   };
 
   InternalModel.prototype._checkForOrphanedInternalModels = function _checkForOrphanedInternalModels() {
@@ -99100,15 +99128,16 @@ Store = Service.extend({
     var trueId = coerceId(id);
     var internalModel = this._internalModelsFor(modelName).get(trueId);
 
-    if (!internalModel) {
-      internalModel = this._buildInternalModel(modelName, trueId);
+    if (internalModel) {
+      if (internalModel.hasScheduledDestroy()) {
+        internalModel.destroySync();
+        return this._buildInternalModel(modelName, trueId);
+      } else {
+        return internalModel;
+      }
     } else {
-      // if we already have an internalModel, we need to ensure any async teardown is cancelled
-      //   since we want it again.
-      internalModel.cancelDestroy();
+      return this._buildInternalModel(modelName, trueId);
     }
-
-    return internalModel;
   },
   _internalModelDidReceiveRelationshipData: function _internalModelDidReceiveRelationshipData(modelName, id, relationshipData) {
     this._relationshipsPayloads.push(modelName, id, relationshipData);
@@ -106808,7 +106837,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = "2.14.8";
+  exports.default = "2.14.9";
 });
 ;
 //# sourceMappingURL=vendor.map

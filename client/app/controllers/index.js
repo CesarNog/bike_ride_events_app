@@ -3,10 +3,15 @@ import Ember from 'ember';
 export default Ember.Controller.extend({
   headerMessage: 'Coming Soon',
   responseMessage: '',
+  fullname: '',
   emailAddress: '',
+  city: '',
+  group_ride: 0,
+  days_week: '',
 
-  isValid: Ember.computed.match('emailAddress', /^.+@.+\..+$/),
+  isEmailValid: Ember.computed.match('emailAddress', /^.+@.+\..+$/),
   isDisabled: Ember.computed.empty('emailAddress'),
+  isDeleteAllDisable: true,
 
   actualEmailAddress: Ember.computed('emailAddress', function () {
     console.log('actualEmailAddress function is called: ', this.get('emailAddress'));
@@ -39,6 +44,14 @@ export default Ember.Controller.extend({
       newPost.save();
     },
 
+    saveNewBiker() {
+      var newPost = this.store.createRecord('biker', {
+        fullname: 'EmberFire is flaming hot!',
+        body: 'You can store and sync data in realtime without a backend.'
+      });
+      newPost.save();
+    },
+
     generateDummyList() {
       for (let i = 1; i <= 5; i++) {
         const newBiker = this.store.createRecord('biker', {fullname: `Dummy Name ${i}` , email: `${i}-1234-${i}`});
@@ -47,7 +60,9 @@ export default Ember.Controller.extend({
     },
 
     deleteAll() {
-      this.get('model').forEach(item => item.destroyRecord());
+      if (this.get('biker') != undefined){
+          this.get('biker').forEach(item => item.destroyRecord());
+      }
     }
   }
 });

@@ -20,7 +20,7 @@
    {{/if}}
 
   <button {{action "generateDummyList"}} class="btn btn-info">Generate 5 random record</button>
-  <button {{action "deleteAll"}} class="btn btn-danger">Delete All</button>
+  <button {{action "deleteAll"}} disabled={{isDeleteAllDisable}} class="btn btn-danger">Delete All</button>
   <p>Size: {{model.length}}</p>
 
   <br/><br/>
