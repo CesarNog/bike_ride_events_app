@@ -7,13 +7,13 @@
 4. [Frontend](#frontend)
 
 ## Starting the application
-     1. Start MongoDB
+     1. Start MongoDB on port 27017
      mongod --dbpath C:\data\db
      
-     2. Start Node.JS API
+     2. Start Node.JS API, it will be visible on port 3000
      cd server && npm install && gulp watch
      
-     3. Start the frontend client (Ember.JS) 
+     3. Start the frontend client (Ember.JS) , it will be visible on port 4200
      cd client && npm start
 
 ## Backend
