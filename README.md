@@ -108,6 +108,7 @@ Route | HTTP Verb | Description |
 
      cd client
      npm install  
+     bower install
      npm start
 
 #### Example of succesfull EmberJS server running
