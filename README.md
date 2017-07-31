@@ -67,6 +67,30 @@
       }
     }
 
+
+
+### CRUD routes for Biker API 
+ 
+Route | HTTP Verb | Description |
+----- | ---- | ---- 
+ /api/bikers | POST | Create a biker     |  
+ /api/bikers | GET  | Get all the bikers |
+ /api/bikers/:biker_id | GET | Get a single biker   |
+ /api/bikers/:biker_id | PUT | Update a single biker    |
+ /api/bikers/:biker_id | DELETE | Delete a single biker  |
+
+
+
+### Example of the body needed to do a succesfull post
+{
+     "fullname": "Amanda",
+     "email" : "amanda@email.com"
+     "city" : "Campinas",
+     "group_ride": 1,
+     "days_week" : "Sat,Sun"
+}
+
+
 ----------
 ## Database
 
