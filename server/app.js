@@ -21,11 +21,11 @@ mongoose.connection.on("error", function(err) {
 var db_address = "localhost:27017/bikerevents"
 
 try {
-  mongoose.createConnection("mongodb://" + db_address);
+  mongoose.connect("mongodb://" + db_address);
   db = mongoose.connection;
-  console.log("Started MongoDB database connection on " + ("mongodb://" + db_address));
+  console.log("Started MongoDB database connection on: " + ("mongodb://" + db_address));
 } catch (err) {
-  console.log("Setting up failed to connect to " + db_address);
+  console.log("Setting up failed to connect to: " + db_address);
   console.log(err.message);
 }
 
