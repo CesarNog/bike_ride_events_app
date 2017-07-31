@@ -1,10 +1,20 @@
 # Project Bike Ride Events by @cesarnogcps
 
 # Table of Contents
-1. [Backend](#backend)
-2. [Database](#database)
-3. [Frontend](#frontend)
+1. [Starting this application](#starting)
+2. [Backend](#backend)
+3. [Database](#database)
+4. [Frontend](#frontend)
 
+## Starting the application
+     1. Start MongoDB
+     mongod --dbpath C:\data\db
+     
+     2. Start Node.JS API
+     cd server && npm install && gulp watch
+     
+     3. Start the frontend client (Ember.JS) 
+     cd client && npm start
 
 ## Backend
 ### Starting Expressjs Bikers API
