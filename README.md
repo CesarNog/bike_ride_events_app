@@ -7,7 +7,8 @@
 4. [Frontend](#frontend)
 
 ## Starting the application
-     1. Start MongoDB on port 27017
+     1. Start MongoDB on port 27017 (Instructions of how to install on Windows at: 
+     [MongoDB Installation Intructions for Windows](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows)
      mongod --dbpath C:\data\db
      
      2. Start Node.JS API, it will be visible on port 3000
