@@ -15,19 +15,17 @@ mongoose.connection.on("open", function(ref) {
 
 mongoose.connection.on("error", function(err) {
   console.log("Could not connect to mongo server!");
-  console.log("Please start MongoDB database listening on port 27017");
   return console.log(err);
 });
 
 var db_address = "localhost:27017/bikerevents"
-mongoose.connect('mongodb://localhost:27017/bikerevents');
 
 try {
   mongoose.connect("mongodb://" + db_address);
   db = mongoose.connection;
-  console.log("Started MongoDB database connection on " + ("mongodb://" + db_address) + ", waiting for it to open...");
+  console.log("Started MongoDB database connection on: " + ("mongodb://" + db_address));
 } catch (err) {
-  console.log("Setting up failed to connect to " + db_address);
+  console.log("Setting up failed to connect to: " + db_address);
   console.log(err.message);
 }
 

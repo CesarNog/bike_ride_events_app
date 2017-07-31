@@ -1,4 +1,4 @@
-# Project Bike Ride Events by @cesarnogcps
+# Bike Ride Events by [@cesarnogcps](http://twitter.com/cesarnogcps)
 
 # Table of Contents
 1. [Starting this application](#starting-the-application)
@@ -7,14 +7,17 @@
 4. [Frontend](#frontend)
 
 ## Starting the application
-     1. Start MongoDB on port 27017
-     mongod --dbpath C:\data\db
+     1. Start MongoDB on port 27017 
+>  Instructions of how to install MongoDB on Windows:
+>  http://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows 
+
+	mongod --dbpath C:\data\db
      
      2. Start Node.JS API, it will be visible on port 3000
-     cd server && npm install && gulp watch
+ 	cd server && npm install && gulp watch
      
      3. Start the frontend client (Ember.JS) , it will be visible on port 4200
-     cd client && npm start
+ 	cd client && npm start
 
 ## Backend
 ### Starting Expressjs Bikers API
@@ -133,5 +136,3 @@ License
 -------
 
 MIT
-
-
