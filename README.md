@@ -15,7 +15,7 @@
 
 ### Faster way of starting Expressjs with Browserfy on port 5000
 
-     cd server && gulp watch
+     cd server && npm install && gulp watch
      
 
 #### Example of succesfull API running
