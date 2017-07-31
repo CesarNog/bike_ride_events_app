@@ -56,20 +56,7 @@
 #### Header Parameters
 > Content-Type  application/json
 
-### Request body to create(POST) biker entry
-    {
-     "biker": {
-      "fullname": "Cesar Augusto Nogueira",
-      "email": "bikerCesar@email.com",
-      "city": "Campinas",
-      "group_ride": 1,
-      "days_week": "Mon,Tues,Wed,Thurs,Fri,Sat,Sun"
-      }
-    }
-
-
-
-### CRUD routes for Biker API 
+### API REST- Biker API 
  
 Route | HTTP Verb | Description |
 ----- | ---- | ---- 
@@ -90,6 +77,16 @@ Route | HTTP Verb | Description |
      "days_week" : "Sat,Sun"
 }
 
+### Request body (POST) to create a new biker entry
+    {
+     "biker": {
+      "fullname": "Cesar Augusto Nogueira",
+      "email": "bikerCesar@email.com",
+      "city": "Campinas",
+      "group_ride": 1,
+      "days_week": "Mon,Tues,Wed,Thurs,Fri,Sat,Sun"
+      }
+    }
 
 ----------
 ## Database
