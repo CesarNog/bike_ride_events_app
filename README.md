@@ -99,7 +99,7 @@ Route | HTTP Verb | Description |
  /api/users/:user_id | GET | Get a single user   |
  /api/users/:user_id | PUT | Update a single user    |
  /api/users/:user_id | DELETE | Delete a single user  |
- /api/create | GET | Create ADMIN user (login: admin / password: admin2017 |
+ /api/create | GET | Create ADMIN user (login: admin / password: admin2017) |
  
  ### Request body (POST) to create a new user entry
 	{
