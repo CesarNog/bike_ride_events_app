@@ -66,7 +66,10 @@
 ### API Bikers - End Point
 > http://localhost:3000/api/bikers
 
-### API REST- Biker API 
+#### Header Parameters
+> Content-Type  application/json
+
+### API REST - Biker API 
  
 Route | HTTP Verb | Description |
 ----- | ---- | ---- 
@@ -75,11 +78,8 @@ Route | HTTP Verb | Description |
  /api/bikers/:biker_id | GET | Get a single biker   |
  /api/bikers/:biker_id | PUT | Update a single biker    |
  /api/bikers/:biker_id | DELETE | Delete a single biker  |
-
-#### Header Parameters
-> Content-Type  application/json
-
-### Request body (POST) to create a new biker entry
+ 
+ ### Request body (POST) to create a new biker entry
     {
      "biker": {
       "fullname": "Cesar Augusto Nogueira",
@@ -89,6 +89,27 @@ Route | HTTP Verb | Description |
       "days_week": "Mon,Tues,Wed,Thurs,Fri,Sat,Sun"
       }
     }
+ 
+### API REST - User API 
+ 
+Route | HTTP Verb | Description |
+----- | ---- | ---- 
+ /api/users | POST | Create a user     |  
+ /api/users | GET  | Get all the users registered |
+ /api/users/:user_id | GET | Get a single user   |
+ /api/users/:user_id | PUT | Update a single user    |
+ /api/users/:user_id | DELETE | Delete a single user  |
+ /api/create | GET | Create ADMIN user (login: admin / password: admin2017 |
+ 
+ ### Request body (POST) to create a new user entry
+	{
+	"user": {
+	"name": "Cesar A. Nogueira",
+	"login": "cesarnogueira1210@gmail.com",
+	"password": "cesar123",
+	"admin": 0      
+	}
+	}
 
 ----------
 ## Database
