@@ -104,11 +104,11 @@ Route | HTTP Verb | Description |
  ### Request body (POST) to create a new user entry
 	{
 	"user": {
-	"name": "Cesar A. Nogueira",
-	"login": "cesarnogueira1210@gmail.com",
-	"password": "cesar123",
-	"admin": 0      
-	}
+	 "name": "Cesar A. Nogueira",
+	 "login": "cesarnogueira1210@gmail.com",
+	 "password": "cesar123",
+	 "admin": 0      
+	 }
 	}
 
 ----------
