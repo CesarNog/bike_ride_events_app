@@ -1,16 +1,11 @@
 {
     "development": {
-      "username": "root",
-      "password": null,
-      "database": "database_development",
+      "configName": "auth2017",
+      "username": "admin",
+      "password": "admin2017",
+      "database": "mongodb://localhost:27017/bikerevents",
       "host": "127.0.0.1",
+      "port": "27017",
       "dialect": "mongodb"
-    }/*,
-    "production": {
-      "username": "root",
-      "password": null,
-      "database": "database_production",
-      "host": "127.0.0.1",
-      "dialect": "mongodb"
-    }*/
+    }
  }

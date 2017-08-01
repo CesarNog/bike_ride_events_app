@@ -52,6 +52,14 @@ export default Ember.Controller.extend({
       newPost.save();
     },
 
+    cancel() {
+       this.set('fullname', '');
+       this.set('emailAddress', '');
+       this.set('city', '');
+       this.set('group_ride', '');
+       this.set('days_week', '');
+    },
+
     generateDummyList() {
       for (let i = 1; i <= 5; i++) {
         const newBiker = this.store.createRecord('biker', {fullname: `Dummy Name ${i}` , email: `${i}-1234-${i}`});

@@ -65400,6 +65400,7 @@ requireModule('ember')
 
 }());
 
+;Ember.libraries.register('Ember Bootstrap', '1.0.0-rc.1');
 ;/*!
  * Bootstrap v3.3.7 (http://getbootstrap.com)
  * Copyright 2011-2016 Twitter, Inc.
@@ -68113,14 +68114,14 @@ createDeprecatedModule('resolver');
 	    value: true
 	});
 	var firebase = __webpack_require__(1);
-	__webpack_require__(6);
+	__webpack_require__(5);
 	var Storage, XMLHttpRequest;
 
+	__webpack_require__(6);
 	__webpack_require__(7);
-	__webpack_require__(8);
 	var AsyncStorage;
 
-	__webpack_require__(9);
+	__webpack_require__(8);
 	exports.default = firebase;
 	module.exports = exports['default'];
 	//# sourceMappingURL=firebase.js.map
@@ -68194,9 +68195,8 @@ createDeprecatedModule('resolver');
 
 	// setimmediate attaches itself to the global object
 	__webpack_require__(3);
-	var global = __webpack_require__(5);
-	exports.setImmediate = global.setImmediate;
-	exports.clearImmediate = global.clearImmediate;
+	exports.setImmediate = setImmediate;
+	exports.clearImmediate = clearImmediate;
 
 
 /***/ }),
@@ -68584,26 +68584,6 @@ createDeprecatedModule('resolver');
 
 /***/ }),
 /* 5 */
-/***/ (function(module, exports) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {var win;
-
-	if (typeof window !== "undefined") {
-	    win = window;
-	} else if (typeof global !== "undefined") {
-	    win = global;
-	} else if (typeof self !== "undefined"){
-	    win = self;
-	} else {
-	    win = {};
-	}
-
-	module.exports = win;
-
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ }),
-/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*! @license Firebase v3.9.0
@@ -68865,7 +68845,7 @@ createDeprecatedModule('resolver');
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*! @license Firebase v3.9.0
@@ -69135,7 +69115,7 @@ createDeprecatedModule('resolver');
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*! @license Firebase v3.9.0
@@ -69199,7 +69179,7 @@ createDeprecatedModule('resolver');
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*! @license Firebase v3.9.0
@@ -69248,6 +69228,2384 @@ createDeprecatedModule('resolver');
 
 /***/ })
 /******/ ])});;
+;/*!
+ * Bootstrap v3.3.7 (http://getbootstrap.com)
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under the MIT license
+ */
+
+if (typeof jQuery === 'undefined') {
+  throw new Error('Bootstrap\'s JavaScript requires jQuery')
+}
+
++function ($) {
+  'use strict';
+  var version = $.fn.jquery.split(' ')[0].split('.')
+  if ((version[0] < 2 && version[1] < 9) || (version[0] == 1 && version[1] == 9 && version[2] < 1) || (version[0] > 3)) {
+    throw new Error('Bootstrap\'s JavaScript requires jQuery version 1.9.1 or higher, but lower than version 4')
+  }
+}(jQuery);
+
+/* ========================================================================
+ * Bootstrap: transition.js v3.3.7
+ * http://getbootstrap.com/javascript/#transitions
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
+  // ============================================================
+
+  function transitionEnd() {
+    var el = document.createElement('bootstrap')
+
+    var transEndEventNames = {
+      WebkitTransition : 'webkitTransitionEnd',
+      MozTransition    : 'transitionend',
+      OTransition      : 'oTransitionEnd otransitionend',
+      transition       : 'transitionend'
+    }
+
+    for (var name in transEndEventNames) {
+      if (el.style[name] !== undefined) {
+        return { end: transEndEventNames[name] }
+      }
+    }
+
+    return false // explicit for ie8 (  ._.)
+  }
+
+  // http://blog.alexmaccaw.com/css-transitions
+  $.fn.emulateTransitionEnd = function (duration) {
+    var called = false
+    var $el = this
+    $(this).one('bsTransitionEnd', function () { called = true })
+    var callback = function () { if (!called) $($el).trigger($.support.transition.end) }
+    setTimeout(callback, duration)
+    return this
+  }
+
+  $(function () {
+    $.support.transition = transitionEnd()
+
+    if (!$.support.transition) return
+
+    $.event.special.bsTransitionEnd = {
+      bindType: $.support.transition.end,
+      delegateType: $.support.transition.end,
+      handle: function (e) {
+        if ($(e.target).is(this)) return e.handleObj.handler.apply(this, arguments)
+      }
+    }
+  })
+
+}(jQuery);
+
+/* ========================================================================
+ * Bootstrap: alert.js v3.3.7
+ * http://getbootstrap.com/javascript/#alerts
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // ALERT CLASS DEFINITION
+  // ======================
+
+  var dismiss = '[data-dismiss="alert"]'
+  var Alert   = function (el) {
+    $(el).on('click', dismiss, this.close)
+  }
+
+  Alert.VERSION = '3.3.7'
+
+  Alert.TRANSITION_DURATION = 150
+
+  Alert.prototype.close = function (e) {
+    var $this    = $(this)
+    var selector = $this.attr('data-target')
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+    }
+
+    var $parent = $(selector === '#' ? [] : selector)
+
+    if (e) e.preventDefault()
+
+    if (!$parent.length) {
+      $parent = $this.closest('.alert')
+    }
+
+    $parent.trigger(e = $.Event('close.bs.alert'))
+
+    if (e.isDefaultPrevented()) return
+
+    $parent.removeClass('in')
+
+    function removeElement() {
+      // detach from parent, fire event then clean up data
+      $parent.detach().trigger('closed.bs.alert').remove()
+    }
+
+    $.support.transition && $parent.hasClass('fade') ?
+      $parent
+        .one('bsTransitionEnd', removeElement)
+        .emulateTransitionEnd(Alert.TRANSITION_DURATION) :
+      removeElement()
+  }
+
+
+  // ALERT PLUGIN DEFINITION
+  // =======================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this = $(this)
+      var data  = $this.data('bs.alert')
+
+      if (!data) $this.data('bs.alert', (data = new Alert(this)))
+      if (typeof option == 'string') data[option].call($this)
+    })
+  }
+
+  var old = $.fn.alert
+
+  $.fn.alert             = Plugin
+  $.fn.alert.Constructor = Alert
+
+
+  // ALERT NO CONFLICT
+  // =================
+
+  $.fn.alert.noConflict = function () {
+    $.fn.alert = old
+    return this
+  }
+
+
+  // ALERT DATA-API
+  // ==============
+
+  $(document).on('click.bs.alert.data-api', dismiss, Alert.prototype.close)
+
+}(jQuery);
+
+/* ========================================================================
+ * Bootstrap: button.js v3.3.7
+ * http://getbootstrap.com/javascript/#buttons
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // BUTTON PUBLIC CLASS DEFINITION
+  // ==============================
+
+  var Button = function (element, options) {
+    this.$element  = $(element)
+    this.options   = $.extend({}, Button.DEFAULTS, options)
+    this.isLoading = false
+  }
+
+  Button.VERSION  = '3.3.7'
+
+  Button.DEFAULTS = {
+    loadingText: 'loading...'
+  }
+
+  Button.prototype.setState = function (state) {
+    var d    = 'disabled'
+    var $el  = this.$element
+    var val  = $el.is('input') ? 'val' : 'html'
+    var data = $el.data()
+
+    state += 'Text'
+
+    if (data.resetText == null) $el.data('resetText', $el[val]())
+
+    // push to event loop to allow forms to submit
+    setTimeout($.proxy(function () {
+      $el[val](data[state] == null ? this.options[state] : data[state])
+
+      if (state == 'loadingText') {
+        this.isLoading = true
+        $el.addClass(d).attr(d, d).prop(d, true)
+      } else if (this.isLoading) {
+        this.isLoading = false
+        $el.removeClass(d).removeAttr(d).prop(d, false)
+      }
+    }, this), 0)
+  }
+
+  Button.prototype.toggle = function () {
+    var changed = true
+    var $parent = this.$element.closest('[data-toggle="buttons"]')
+
+    if ($parent.length) {
+      var $input = this.$element.find('input')
+      if ($input.prop('type') == 'radio') {
+        if ($input.prop('checked')) changed = false
+        $parent.find('.active').removeClass('active')
+        this.$element.addClass('active')
+      } else if ($input.prop('type') == 'checkbox') {
+        if (($input.prop('checked')) !== this.$element.hasClass('active')) changed = false
+        this.$element.toggleClass('active')
+      }
+      $input.prop('checked', this.$element.hasClass('active'))
+      if (changed) $input.trigger('change')
+    } else {
+      this.$element.attr('aria-pressed', !this.$element.hasClass('active'))
+      this.$element.toggleClass('active')
+    }
+  }
+
+
+  // BUTTON PLUGIN DEFINITION
+  // ========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.button')
+      var options = typeof option == 'object' && option
+
+      if (!data) $this.data('bs.button', (data = new Button(this, options)))
+
+      if (option == 'toggle') data.toggle()
+      else if (option) data.setState(option)
+    })
+  }
+
+  var old = $.fn.button
+
+  $.fn.button             = Plugin
+  $.fn.button.Constructor = Button
+
+
+  // BUTTON NO CONFLICT
+  // ==================
+
+  $.fn.button.noConflict = function () {
+    $.fn.button = old
+    return this
+  }
+
+
+  // BUTTON DATA-API
+  // ===============
+
+  $(document)
+    .on('click.bs.button.data-api', '[data-toggle^="button"]', function (e) {
+      var $btn = $(e.target).closest('.btn')
+      Plugin.call($btn, 'toggle')
+      if (!($(e.target).is('input[type="radio"], input[type="checkbox"]'))) {
+        // Prevent double click on radios, and the double selections (so cancellation) on checkboxes
+        e.preventDefault()
+        // The target component still receive the focus
+        if ($btn.is('input,button')) $btn.trigger('focus')
+        else $btn.find('input:visible,button:visible').first().trigger('focus')
+      }
+    })
+    .on('focus.bs.button.data-api blur.bs.button.data-api', '[data-toggle^="button"]', function (e) {
+      $(e.target).closest('.btn').toggleClass('focus', /^focus(in)?$/.test(e.type))
+    })
+
+}(jQuery);
+
+/* ========================================================================
+ * Bootstrap: carousel.js v3.3.7
+ * http://getbootstrap.com/javascript/#carousel
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // CAROUSEL CLASS DEFINITION
+  // =========================
+
+  var Carousel = function (element, options) {
+    this.$element    = $(element)
+    this.$indicators = this.$element.find('.carousel-indicators')
+    this.options     = options
+    this.paused      = null
+    this.sliding     = null
+    this.interval    = null
+    this.$active     = null
+    this.$items      = null
+
+    this.options.keyboard && this.$element.on('keydown.bs.carousel', $.proxy(this.keydown, this))
+
+    this.options.pause == 'hover' && !('ontouchstart' in document.documentElement) && this.$element
+      .on('mouseenter.bs.carousel', $.proxy(this.pause, this))
+      .on('mouseleave.bs.carousel', $.proxy(this.cycle, this))
+  }
+
+  Carousel.VERSION  = '3.3.7'
+
+  Carousel.TRANSITION_DURATION = 600
+
+  Carousel.DEFAULTS = {
+    interval: 5000,
+    pause: 'hover',
+    wrap: true,
+    keyboard: true
+  }
+
+  Carousel.prototype.keydown = function (e) {
+    if (/input|textarea/i.test(e.target.tagName)) return
+    switch (e.which) {
+      case 37: this.prev(); break
+      case 39: this.next(); break
+      default: return
+    }
+
+    e.preventDefault()
+  }
+
+  Carousel.prototype.cycle = function (e) {
+    e || (this.paused = false)
+
+    this.interval && clearInterval(this.interval)
+
+    this.options.interval
+      && !this.paused
+      && (this.interval = setInterval($.proxy(this.next, this), this.options.interval))
+
+    return this
+  }
+
+  Carousel.prototype.getItemIndex = function (item) {
+    this.$items = item.parent().children('.item')
+    return this.$items.index(item || this.$active)
+  }
+
+  Carousel.prototype.getItemForDirection = function (direction, active) {
+    var activeIndex = this.getItemIndex(active)
+    var willWrap = (direction == 'prev' && activeIndex === 0)
+                || (direction == 'next' && activeIndex == (this.$items.length - 1))
+    if (willWrap && !this.options.wrap) return active
+    var delta = direction == 'prev' ? -1 : 1
+    var itemIndex = (activeIndex + delta) % this.$items.length
+    return this.$items.eq(itemIndex)
+  }
+
+  Carousel.prototype.to = function (pos) {
+    var that        = this
+    var activeIndex = this.getItemIndex(this.$active = this.$element.find('.item.active'))
+
+    if (pos > (this.$items.length - 1) || pos < 0) return
+
+    if (this.sliding)       return this.$element.one('slid.bs.carousel', function () { that.to(pos) }) // yes, "slid"
+    if (activeIndex == pos) return this.pause().cycle()
+
+    return this.slide(pos > activeIndex ? 'next' : 'prev', this.$items.eq(pos))
+  }
+
+  Carousel.prototype.pause = function (e) {
+    e || (this.paused = true)
+
+    if (this.$element.find('.next, .prev').length && $.support.transition) {
+      this.$element.trigger($.support.transition.end)
+      this.cycle(true)
+    }
+
+    this.interval = clearInterval(this.interval)
+
+    return this
+  }
+
+  Carousel.prototype.next = function () {
+    if (this.sliding) return
+    return this.slide('next')
+  }
+
+  Carousel.prototype.prev = function () {
+    if (this.sliding) return
+    return this.slide('prev')
+  }
+
+  Carousel.prototype.slide = function (type, next) {
+    var $active   = this.$element.find('.item.active')
+    var $next     = next || this.getItemForDirection(type, $active)
+    var isCycling = this.interval
+    var direction = type == 'next' ? 'left' : 'right'
+    var that      = this
+
+    if ($next.hasClass('active')) return (this.sliding = false)
+
+    var relatedTarget = $next[0]
+    var slideEvent = $.Event('slide.bs.carousel', {
+      relatedTarget: relatedTarget,
+      direction: direction
+    })
+    this.$element.trigger(slideEvent)
+    if (slideEvent.isDefaultPrevented()) return
+
+    this.sliding = true
+
+    isCycling && this.pause()
+
+    if (this.$indicators.length) {
+      this.$indicators.find('.active').removeClass('active')
+      var $nextIndicator = $(this.$indicators.children()[this.getItemIndex($next)])
+      $nextIndicator && $nextIndicator.addClass('active')
+    }
+
+    var slidEvent = $.Event('slid.bs.carousel', { relatedTarget: relatedTarget, direction: direction }) // yes, "slid"
+    if ($.support.transition && this.$element.hasClass('slide')) {
+      $next.addClass(type)
+      $next[0].offsetWidth // force reflow
+      $active.addClass(direction)
+      $next.addClass(direction)
+      $active
+        .one('bsTransitionEnd', function () {
+          $next.removeClass([type, direction].join(' ')).addClass('active')
+          $active.removeClass(['active', direction].join(' '))
+          that.sliding = false
+          setTimeout(function () {
+            that.$element.trigger(slidEvent)
+          }, 0)
+        })
+        .emulateTransitionEnd(Carousel.TRANSITION_DURATION)
+    } else {
+      $active.removeClass('active')
+      $next.addClass('active')
+      this.sliding = false
+      this.$element.trigger(slidEvent)
+    }
+
+    isCycling && this.cycle()
+
+    return this
+  }
+
+
+  // CAROUSEL PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.carousel')
+      var options = $.extend({}, Carousel.DEFAULTS, $this.data(), typeof option == 'object' && option)
+      var action  = typeof option == 'string' ? option : options.slide
+
+      if (!data) $this.data('bs.carousel', (data = new Carousel(this, options)))
+      if (typeof option == 'number') data.to(option)
+      else if (action) data[action]()
+      else if (options.interval) data.pause().cycle()
+    })
+  }
+
+  var old = $.fn.carousel
+
+  $.fn.carousel             = Plugin
+  $.fn.carousel.Constructor = Carousel
+
+
+  // CAROUSEL NO CONFLICT
+  // ====================
+
+  $.fn.carousel.noConflict = function () {
+    $.fn.carousel = old
+    return this
+  }
+
+
+  // CAROUSEL DATA-API
+  // =================
+
+  var clickHandler = function (e) {
+    var href
+    var $this   = $(this)
+    var $target = $($this.attr('data-target') || (href = $this.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '')) // strip for ie7
+    if (!$target.hasClass('carousel')) return
+    var options = $.extend({}, $target.data(), $this.data())
+    var slideIndex = $this.attr('data-slide-to')
+    if (slideIndex) options.interval = false
+
+    Plugin.call($target, options)
+
+    if (slideIndex) {
+      $target.data('bs.carousel').to(slideIndex)
+    }
+
+    e.preventDefault()
+  }
+
+  $(document)
+    .on('click.bs.carousel.data-api', '[data-slide]', clickHandler)
+    .on('click.bs.carousel.data-api', '[data-slide-to]', clickHandler)
+
+  $(window).on('load', function () {
+    $('[data-ride="carousel"]').each(function () {
+      var $carousel = $(this)
+      Plugin.call($carousel, $carousel.data())
+    })
+  })
+
+}(jQuery);
+
+/* ========================================================================
+ * Bootstrap: collapse.js v3.3.7
+ * http://getbootstrap.com/javascript/#collapse
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+/* jshint latedef: false */
+
++function ($) {
+  'use strict';
+
+  // COLLAPSE PUBLIC CLASS DEFINITION
+  // ================================
+
+  var Collapse = function (element, options) {
+    this.$element      = $(element)
+    this.options       = $.extend({}, Collapse.DEFAULTS, options)
+    this.$trigger      = $('[data-toggle="collapse"][href="#' + element.id + '"],' +
+                           '[data-toggle="collapse"][data-target="#' + element.id + '"]')
+    this.transitioning = null
+
+    if (this.options.parent) {
+      this.$parent = this.getParent()
+    } else {
+      this.addAriaAndCollapsedClass(this.$element, this.$trigger)
+    }
+
+    if (this.options.toggle) this.toggle()
+  }
+
+  Collapse.VERSION  = '3.3.7'
+
+  Collapse.TRANSITION_DURATION = 350
+
+  Collapse.DEFAULTS = {
+    toggle: true
+  }
+
+  Collapse.prototype.dimension = function () {
+    var hasWidth = this.$element.hasClass('width')
+    return hasWidth ? 'width' : 'height'
+  }
+
+  Collapse.prototype.show = function () {
+    if (this.transitioning || this.$element.hasClass('in')) return
+
+    var activesData
+    var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
+
+    if (actives && actives.length) {
+      activesData = actives.data('bs.collapse')
+      if (activesData && activesData.transitioning) return
+    }
+
+    var startEvent = $.Event('show.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    if (actives && actives.length) {
+      Plugin.call(actives, 'hide')
+      activesData || actives.data('bs.collapse', null)
+    }
+
+    var dimension = this.dimension()
+
+    this.$element
+      .removeClass('collapse')
+      .addClass('collapsing')[dimension](0)
+      .attr('aria-expanded', true)
+
+    this.$trigger
+      .removeClass('collapsed')
+      .attr('aria-expanded', true)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse in')[dimension]('')
+      this.transitioning = 0
+      this.$element
+        .trigger('shown.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    var scrollSize = $.camelCase(['scroll', dimension].join('-'))
+
+    this.$element
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize])
+  }
+
+  Collapse.prototype.hide = function () {
+    if (this.transitioning || !this.$element.hasClass('in')) return
+
+    var startEvent = $.Event('hide.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    var dimension = this.dimension()
+
+    this.$element[dimension](this.$element[dimension]())[0].offsetHeight
+
+    this.$element
+      .addClass('collapsing')
+      .removeClass('collapse in')
+      .attr('aria-expanded', false)
+
+    this.$trigger
+      .addClass('collapsed')
+      .attr('aria-expanded', false)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.transitioning = 0
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse')
+        .trigger('hidden.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    this.$element
+      [dimension](0)
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)
+  }
+
+  Collapse.prototype.toggle = function () {
+    this[this.$element.hasClass('in') ? 'hide' : 'show']()
+  }
+
+  Collapse.prototype.getParent = function () {
+    return $(this.options.parent)
+      .find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]')
+      .each($.proxy(function (i, element) {
+        var $element = $(element)
+        this.addAriaAndCollapsedClass(getTargetFromTrigger($element), $element)
+      }, this))
+      .end()
+  }
+
+  Collapse.prototype.addAriaAndCollapsedClass = function ($element, $trigger) {
+    var isOpen = $element.hasClass('in')
+
+    $element.attr('aria-expanded', isOpen)
+    $trigger
+      .toggleClass('collapsed', !isOpen)
+      .attr('aria-expanded', isOpen)
+  }
+
+  function getTargetFromTrigger($trigger) {
+    var href
+    var target = $trigger.attr('data-target')
+      || (href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
+
+    return $(target)
+  }
+
+
+  // COLLAPSE PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.collapse')
+      var options = $.extend({}, Collapse.DEFAULTS, $this.data(), typeof option == 'object' && option)
+
+      if (!data && options.toggle && /show|hide/.test(option)) options.toggle = false
+      if (!data) $this.data('bs.collapse', (data = new Collapse(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.collapse
+
+  $.fn.collapse             = Plugin
+  $.fn.collapse.Constructor = Collapse
+
+
+  // COLLAPSE NO CONFLICT
+  // ====================
+
+  $.fn.collapse.noConflict = function () {
+    $.fn.collapse = old
+    return this
+  }
+
+
+  // COLLAPSE DATA-API
+  // =================
+
+  $(document).on('click.bs.collapse.data-api', '[data-toggle="collapse"]', function (e) {
+    var $this   = $(this)
+
+    if (!$this.attr('data-target')) e.preventDefault()
+
+    var $target = getTargetFromTrigger($this)
+    var data    = $target.data('bs.collapse')
+    var option  = data ? 'toggle' : $this.data()
+
+    Plugin.call($target, option)
+  })
+
+}(jQuery);
+
+/* ========================================================================
+ * Bootstrap: dropdown.js v3.3.7
+ * http://getbootstrap.com/javascript/#dropdowns
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // DROPDOWN CLASS DEFINITION
+  // =========================
+
+  var backdrop = '.dropdown-backdrop'
+  var toggle   = '[data-toggle="dropdown"]'
+  var Dropdown = function (element) {
+    $(element).on('click.bs.dropdown', this.toggle)
+  }
+
+  Dropdown.VERSION = '3.3.7'
+
+  function getParent($this) {
+    var selector = $this.attr('data-target')
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+    }
+
+    var $parent = selector && $(selector)
+
+    return $parent && $parent.length ? $parent : $this.parent()
+  }
+
+  function clearMenus(e) {
+    if (e && e.which === 3) return
+    $(backdrop).remove()
+    $(toggle).each(function () {
+      var $this         = $(this)
+      var $parent       = getParent($this)
+      var relatedTarget = { relatedTarget: this }
+
+      if (!$parent.hasClass('open')) return
+
+      if (e && e.type == 'click' && /input|textarea/i.test(e.target.tagName) && $.contains($parent[0], e.target)) return
+
+      $parent.trigger(e = $.Event('hide.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this.attr('aria-expanded', 'false')
+      $parent.removeClass('open').trigger($.Event('hidden.bs.dropdown', relatedTarget))
+    })
+  }
+
+  Dropdown.prototype.toggle = function (e) {
+    var $this = $(this)
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    clearMenus()
+
+    if (!isActive) {
+      if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
+        // if mobile we use a backdrop because click events don't delegate
+        $(document.createElement('div'))
+          .addClass('dropdown-backdrop')
+          .insertAfter($(this))
+          .on('click', clearMenus)
+      }
+
+      var relatedTarget = { relatedTarget: this }
+      $parent.trigger(e = $.Event('show.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this
+        .trigger('focus')
+        .attr('aria-expanded', 'true')
+
+      $parent
+        .toggleClass('open')
+        .trigger($.Event('shown.bs.dropdown', relatedTarget))
+    }
+
+    return false
+  }
+
+  Dropdown.prototype.keydown = function (e) {
+    if (!/(38|40|27|32)/.test(e.which) || /input|textarea/i.test(e.target.tagName)) return
+
+    var $this = $(this)
+
+    e.preventDefault()
+    e.stopPropagation()
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    if (!isActive && e.which != 27 || isActive && e.which == 27) {
+      if (e.which == 27) $parent.find(toggle).trigger('focus')
+      return $this.trigger('click')
+    }
+
+    var desc = ' li:not(.disabled):visible a'
+    var $items = $parent.find('.dropdown-menu' + desc)
+
+    if (!$items.length) return
+
+    var index = $items.index(e.target)
+
+    if (e.which == 38 && index > 0)                 index--         // up
+    if (e.which == 40 && index < $items.length - 1) index++         // down
+    if (!~index)                                    index = 0
+
+    $items.eq(index).trigger('focus')
+  }
+
+
+  // DROPDOWN PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this = $(this)
+      var data  = $this.data('bs.dropdown')
+
+      if (!data) $this.data('bs.dropdown', (data = new Dropdown(this)))
+      if (typeof option == 'string') data[option].call($this)
+    })
+  }
+
+  var old = $.fn.dropdown
+
+  $.fn.dropdown             = Plugin
+  $.fn.dropdown.Constructor = Dropdown
+
+
+  // DROPDOWN NO CONFLICT
+  // ====================
+
+  $.fn.dropdown.noConflict = function () {
+    $.fn.dropdown = old
+    return this
+  }
+
+
+  // APPLY TO STANDARD DROPDOWN ELEMENTS
+  // ===================================
+
+  $(document)
+    .on('click.bs.dropdown.data-api', clearMenus)
+    .on('click.bs.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
+    .on('click.bs.dropdown.data-api', toggle, Dropdown.prototype.toggle)
+    .on('keydown.bs.dropdown.data-api', toggle, Dropdown.prototype.keydown)
+    .on('keydown.bs.dropdown.data-api', '.dropdown-menu', Dropdown.prototype.keydown)
+
+}(jQuery);
+
+/* ========================================================================
+ * Bootstrap: modal.js v3.3.7
+ * http://getbootstrap.com/javascript/#modals
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // MODAL CLASS DEFINITION
+  // ======================
+
+  var Modal = function (element, options) {
+    this.options             = options
+    this.$body               = $(document.body)
+    this.$element            = $(element)
+    this.$dialog             = this.$element.find('.modal-dialog')
+    this.$backdrop           = null
+    this.isShown             = null
+    this.originalBodyPad     = null
+    this.scrollbarWidth      = 0
+    this.ignoreBackdropClick = false
+
+    if (this.options.remote) {
+      this.$element
+        .find('.modal-content')
+        .load(this.options.remote, $.proxy(function () {
+          this.$element.trigger('loaded.bs.modal')
+        }, this))
+    }
+  }
+
+  Modal.VERSION  = '3.3.7'
+
+  Modal.TRANSITION_DURATION = 300
+  Modal.BACKDROP_TRANSITION_DURATION = 150
+
+  Modal.DEFAULTS = {
+    backdrop: true,
+    keyboard: true,
+    show: true
+  }
+
+  Modal.prototype.toggle = function (_relatedTarget) {
+    return this.isShown ? this.hide() : this.show(_relatedTarget)
+  }
+
+  Modal.prototype.show = function (_relatedTarget) {
+    var that = this
+    var e    = $.Event('show.bs.modal', { relatedTarget: _relatedTarget })
+
+    this.$element.trigger(e)
+
+    if (this.isShown || e.isDefaultPrevented()) return
+
+    this.isShown = true
+
+    this.checkScrollbar()
+    this.setScrollbar()
+    this.$body.addClass('modal-open')
+
+    this.escape()
+    this.resize()
+
+    this.$element.on('click.dismiss.bs.modal', '[data-dismiss="modal"]', $.proxy(this.hide, this))
+
+    this.$dialog.on('mousedown.dismiss.bs.modal', function () {
+      that.$element.one('mouseup.dismiss.bs.modal', function (e) {
+        if ($(e.target).is(that.$element)) that.ignoreBackdropClick = true
+      })
+    })
+
+    this.backdrop(function () {
+      var transition = $.support.transition && that.$element.hasClass('fade')
+
+      if (!that.$element.parent().length) {
+        that.$element.appendTo(that.$body) // don't move modals dom position
+      }
+
+      that.$element
+        .show()
+        .scrollTop(0)
+
+      that.adjustDialog()
+
+      if (transition) {
+        that.$element[0].offsetWidth // force reflow
+      }
+
+      that.$element.addClass('in')
+
+      that.enforceFocus()
+
+      var e = $.Event('shown.bs.modal', { relatedTarget: _relatedTarget })
+
+      transition ?
+        that.$dialog // wait for modal to slide in
+          .one('bsTransitionEnd', function () {
+            that.$element.trigger('focus').trigger(e)
+          })
+          .emulateTransitionEnd(Modal.TRANSITION_DURATION) :
+        that.$element.trigger('focus').trigger(e)
+    })
+  }
+
+  Modal.prototype.hide = function (e) {
+    if (e) e.preventDefault()
+
+    e = $.Event('hide.bs.modal')
+
+    this.$element.trigger(e)
+
+    if (!this.isShown || e.isDefaultPrevented()) return
+
+    this.isShown = false
+
+    this.escape()
+    this.resize()
+
+    $(document).off('focusin.bs.modal')
+
+    this.$element
+      .removeClass('in')
+      .off('click.dismiss.bs.modal')
+      .off('mouseup.dismiss.bs.modal')
+
+    this.$dialog.off('mousedown.dismiss.bs.modal')
+
+    $.support.transition && this.$element.hasClass('fade') ?
+      this.$element
+        .one('bsTransitionEnd', $.proxy(this.hideModal, this))
+        .emulateTransitionEnd(Modal.TRANSITION_DURATION) :
+      this.hideModal()
+  }
+
+  Modal.prototype.enforceFocus = function () {
+    $(document)
+      .off('focusin.bs.modal') // guard against infinite focus loop
+      .on('focusin.bs.modal', $.proxy(function (e) {
+        if (document !== e.target &&
+            this.$element[0] !== e.target &&
+            !this.$element.has(e.target).length) {
+          this.$element.trigger('focus')
+        }
+      }, this))
+  }
+
+  Modal.prototype.escape = function () {
+    if (this.isShown && this.options.keyboard) {
+      this.$element.on('keydown.dismiss.bs.modal', $.proxy(function (e) {
+        e.which == 27 && this.hide()
+      }, this))
+    } else if (!this.isShown) {
+      this.$element.off('keydown.dismiss.bs.modal')
+    }
+  }
+
+  Modal.prototype.resize = function () {
+    if (this.isShown) {
+      $(window).on('resize.bs.modal', $.proxy(this.handleUpdate, this))
+    } else {
+      $(window).off('resize.bs.modal')
+    }
+  }
+
+  Modal.prototype.hideModal = function () {
+    var that = this
+    this.$element.hide()
+    this.backdrop(function () {
+      that.$body.removeClass('modal-open')
+      that.resetAdjustments()
+      that.resetScrollbar()
+      that.$element.trigger('hidden.bs.modal')
+    })
+  }
+
+  Modal.prototype.removeBackdrop = function () {
+    this.$backdrop && this.$backdrop.remove()
+    this.$backdrop = null
+  }
+
+  Modal.prototype.backdrop = function (callback) {
+    var that = this
+    var animate = this.$element.hasClass('fade') ? 'fade' : ''
+
+    if (this.isShown && this.options.backdrop) {
+      var doAnimate = $.support.transition && animate
+
+      this.$backdrop = $(document.createElement('div'))
+        .addClass('modal-backdrop ' + animate)
+        .appendTo(this.$body)
+
+      this.$element.on('click.dismiss.bs.modal', $.proxy(function (e) {
+        if (this.ignoreBackdropClick) {
+          this.ignoreBackdropClick = false
+          return
+        }
+        if (e.target !== e.currentTarget) return
+        this.options.backdrop == 'static'
+          ? this.$element[0].focus()
+          : this.hide()
+      }, this))
+
+      if (doAnimate) this.$backdrop[0].offsetWidth // force reflow
+
+      this.$backdrop.addClass('in')
+
+      if (!callback) return
+
+      doAnimate ?
+        this.$backdrop
+          .one('bsTransitionEnd', callback)
+          .emulateTransitionEnd(Modal.BACKDROP_TRANSITION_DURATION) :
+        callback()
+
+    } else if (!this.isShown && this.$backdrop) {
+      this.$backdrop.removeClass('in')
+
+      var callbackRemove = function () {
+        that.removeBackdrop()
+        callback && callback()
+      }
+      $.support.transition && this.$element.hasClass('fade') ?
+        this.$backdrop
+          .one('bsTransitionEnd', callbackRemove)
+          .emulateTransitionEnd(Modal.BACKDROP_TRANSITION_DURATION) :
+        callbackRemove()
+
+    } else if (callback) {
+      callback()
+    }
+  }
+
+  // these following methods are used to handle overflowing modals
+
+  Modal.prototype.handleUpdate = function () {
+    this.adjustDialog()
+  }
+
+  Modal.prototype.adjustDialog = function () {
+    var modalIsOverflowing = this.$element[0].scrollHeight > document.documentElement.clientHeight
+
+    this.$element.css({
+      paddingLeft:  !this.bodyIsOverflowing && modalIsOverflowing ? this.scrollbarWidth : '',
+      paddingRight: this.bodyIsOverflowing && !modalIsOverflowing ? this.scrollbarWidth : ''
+    })
+  }
+
+  Modal.prototype.resetAdjustments = function () {
+    this.$element.css({
+      paddingLeft: '',
+      paddingRight: ''
+    })
+  }
+
+  Modal.prototype.checkScrollbar = function () {
+    var fullWindowWidth = window.innerWidth
+    if (!fullWindowWidth) { // workaround for missing window.innerWidth in IE8
+      var documentElementRect = document.documentElement.getBoundingClientRect()
+      fullWindowWidth = documentElementRect.right - Math.abs(documentElementRect.left)
+    }
+    this.bodyIsOverflowing = document.body.clientWidth < fullWindowWidth
+    this.scrollbarWidth = this.measureScrollbar()
+  }
+
+  Modal.prototype.setScrollbar = function () {
+    var bodyPad = parseInt((this.$body.css('padding-right') || 0), 10)
+    this.originalBodyPad = document.body.style.paddingRight || ''
+    if (this.bodyIsOverflowing) this.$body.css('padding-right', bodyPad + this.scrollbarWidth)
+  }
+
+  Modal.prototype.resetScrollbar = function () {
+    this.$body.css('padding-right', this.originalBodyPad)
+  }
+
+  Modal.prototype.measureScrollbar = function () { // thx walsh
+    var scrollDiv = document.createElement('div')
+    scrollDiv.className = 'modal-scrollbar-measure'
+    this.$body.append(scrollDiv)
+    var scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth
+    this.$body[0].removeChild(scrollDiv)
+    return scrollbarWidth
+  }
+
+
+  // MODAL PLUGIN DEFINITION
+  // =======================
+
+  function Plugin(option, _relatedTarget) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.modal')
+      var options = $.extend({}, Modal.DEFAULTS, $this.data(), typeof option == 'object' && option)
+
+      if (!data) $this.data('bs.modal', (data = new Modal(this, options)))
+      if (typeof option == 'string') data[option](_relatedTarget)
+      else if (options.show) data.show(_relatedTarget)
+    })
+  }
+
+  var old = $.fn.modal
+
+  $.fn.modal             = Plugin
+  $.fn.modal.Constructor = Modal
+
+
+  // MODAL NO CONFLICT
+  // =================
+
+  $.fn.modal.noConflict = function () {
+    $.fn.modal = old
+    return this
+  }
+
+
+  // MODAL DATA-API
+  // ==============
+
+  $(document).on('click.bs.modal.data-api', '[data-toggle="modal"]', function (e) {
+    var $this   = $(this)
+    var href    = $this.attr('href')
+    var $target = $($this.attr('data-target') || (href && href.replace(/.*(?=#[^\s]+$)/, ''))) // strip for ie7
+    var option  = $target.data('bs.modal') ? 'toggle' : $.extend({ remote: !/#/.test(href) && href }, $target.data(), $this.data())
+
+    if ($this.is('a')) e.preventDefault()
+
+    $target.one('show.bs.modal', function (showEvent) {
+      if (showEvent.isDefaultPrevented()) return // only register focus restorer if modal will actually get shown
+      $target.one('hidden.bs.modal', function () {
+        $this.is(':visible') && $this.trigger('focus')
+      })
+    })
+    Plugin.call($target, option, this)
+  })
+
+}(jQuery);
+
+/* ========================================================================
+ * Bootstrap: tooltip.js v3.3.7
+ * http://getbootstrap.com/javascript/#tooltip
+ * Inspired by the original jQuery.tipsy by Jason Frame
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // TOOLTIP PUBLIC CLASS DEFINITION
+  // ===============================
+
+  var Tooltip = function (element, options) {
+    this.type       = null
+    this.options    = null
+    this.enabled    = null
+    this.timeout    = null
+    this.hoverState = null
+    this.$element   = null
+    this.inState    = null
+
+    this.init('tooltip', element, options)
+  }
+
+  Tooltip.VERSION  = '3.3.7'
+
+  Tooltip.TRANSITION_DURATION = 150
+
+  Tooltip.DEFAULTS = {
+    animation: true,
+    placement: 'top',
+    selector: false,
+    template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
+    trigger: 'hover focus',
+    title: '',
+    delay: 0,
+    html: false,
+    container: false,
+    viewport: {
+      selector: 'body',
+      padding: 0
+    }
+  }
+
+  Tooltip.prototype.init = function (type, element, options) {
+    this.enabled   = true
+    this.type      = type
+    this.$element  = $(element)
+    this.options   = this.getOptions(options)
+    this.$viewport = this.options.viewport && $($.isFunction(this.options.viewport) ? this.options.viewport.call(this, this.$element) : (this.options.viewport.selector || this.options.viewport))
+    this.inState   = { click: false, hover: false, focus: false }
+
+    if (this.$element[0] instanceof document.constructor && !this.options.selector) {
+      throw new Error('`selector` option must be specified when initializing ' + this.type + ' on the window.document object!')
+    }
+
+    var triggers = this.options.trigger.split(' ')
+
+    for (var i = triggers.length; i--;) {
+      var trigger = triggers[i]
+
+      if (trigger == 'click') {
+        this.$element.on('click.' + this.type, this.options.selector, $.proxy(this.toggle, this))
+      } else if (trigger != 'manual') {
+        var eventIn  = trigger == 'hover' ? 'mouseenter' : 'focusin'
+        var eventOut = trigger == 'hover' ? 'mouseleave' : 'focusout'
+
+        this.$element.on(eventIn  + '.' + this.type, this.options.selector, $.proxy(this.enter, this))
+        this.$element.on(eventOut + '.' + this.type, this.options.selector, $.proxy(this.leave, this))
+      }
+    }
+
+    this.options.selector ?
+      (this._options = $.extend({}, this.options, { trigger: 'manual', selector: '' })) :
+      this.fixTitle()
+  }
+
+  Tooltip.prototype.getDefaults = function () {
+    return Tooltip.DEFAULTS
+  }
+
+  Tooltip.prototype.getOptions = function (options) {
+    options = $.extend({}, this.getDefaults(), this.$element.data(), options)
+
+    if (options.delay && typeof options.delay == 'number') {
+      options.delay = {
+        show: options.delay,
+        hide: options.delay
+      }
+    }
+
+    return options
+  }
+
+  Tooltip.prototype.getDelegateOptions = function () {
+    var options  = {}
+    var defaults = this.getDefaults()
+
+    this._options && $.each(this._options, function (key, value) {
+      if (defaults[key] != value) options[key] = value
+    })
+
+    return options
+  }
+
+  Tooltip.prototype.enter = function (obj) {
+    var self = obj instanceof this.constructor ?
+      obj : $(obj.currentTarget).data('bs.' + this.type)
+
+    if (!self) {
+      self = new this.constructor(obj.currentTarget, this.getDelegateOptions())
+      $(obj.currentTarget).data('bs.' + this.type, self)
+    }
+
+    if (obj instanceof $.Event) {
+      self.inState[obj.type == 'focusin' ? 'focus' : 'hover'] = true
+    }
+
+    if (self.tip().hasClass('in') || self.hoverState == 'in') {
+      self.hoverState = 'in'
+      return
+    }
+
+    clearTimeout(self.timeout)
+
+    self.hoverState = 'in'
+
+    if (!self.options.delay || !self.options.delay.show) return self.show()
+
+    self.timeout = setTimeout(function () {
+      if (self.hoverState == 'in') self.show()
+    }, self.options.delay.show)
+  }
+
+  Tooltip.prototype.isInStateTrue = function () {
+    for (var key in this.inState) {
+      if (this.inState[key]) return true
+    }
+
+    return false
+  }
+
+  Tooltip.prototype.leave = function (obj) {
+    var self = obj instanceof this.constructor ?
+      obj : $(obj.currentTarget).data('bs.' + this.type)
+
+    if (!self) {
+      self = new this.constructor(obj.currentTarget, this.getDelegateOptions())
+      $(obj.currentTarget).data('bs.' + this.type, self)
+    }
+
+    if (obj instanceof $.Event) {
+      self.inState[obj.type == 'focusout' ? 'focus' : 'hover'] = false
+    }
+
+    if (self.isInStateTrue()) return
+
+    clearTimeout(self.timeout)
+
+    self.hoverState = 'out'
+
+    if (!self.options.delay || !self.options.delay.hide) return self.hide()
+
+    self.timeout = setTimeout(function () {
+      if (self.hoverState == 'out') self.hide()
+    }, self.options.delay.hide)
+  }
+
+  Tooltip.prototype.show = function () {
+    var e = $.Event('show.bs.' + this.type)
+
+    if (this.hasContent() && this.enabled) {
+      this.$element.trigger(e)
+
+      var inDom = $.contains(this.$element[0].ownerDocument.documentElement, this.$element[0])
+      if (e.isDefaultPrevented() || !inDom) return
+      var that = this
+
+      var $tip = this.tip()
+
+      var tipId = this.getUID(this.type)
+
+      this.setContent()
+      $tip.attr('id', tipId)
+      this.$element.attr('aria-describedby', tipId)
+
+      if (this.options.animation) $tip.addClass('fade')
+
+      var placement = typeof this.options.placement == 'function' ?
+        this.options.placement.call(this, $tip[0], this.$element[0]) :
+        this.options.placement
+
+      var autoToken = /\s?auto?\s?/i
+      var autoPlace = autoToken.test(placement)
+      if (autoPlace) placement = placement.replace(autoToken, '') || 'top'
+
+      $tip
+        .detach()
+        .css({ top: 0, left: 0, display: 'block' })
+        .addClass(placement)
+        .data('bs.' + this.type, this)
+
+      this.options.container ? $tip.appendTo(this.options.container) : $tip.insertAfter(this.$element)
+      this.$element.trigger('inserted.bs.' + this.type)
+
+      var pos          = this.getPosition()
+      var actualWidth  = $tip[0].offsetWidth
+      var actualHeight = $tip[0].offsetHeight
+
+      if (autoPlace) {
+        var orgPlacement = placement
+        var viewportDim = this.getPosition(this.$viewport)
+
+        placement = placement == 'bottom' && pos.bottom + actualHeight > viewportDim.bottom ? 'top'    :
+                    placement == 'top'    && pos.top    - actualHeight < viewportDim.top    ? 'bottom' :
+                    placement == 'right'  && pos.right  + actualWidth  > viewportDim.width  ? 'left'   :
+                    placement == 'left'   && pos.left   - actualWidth  < viewportDim.left   ? 'right'  :
+                    placement
+
+        $tip
+          .removeClass(orgPlacement)
+          .addClass(placement)
+      }
+
+      var calculatedOffset = this.getCalculatedOffset(placement, pos, actualWidth, actualHeight)
+
+      this.applyPlacement(calculatedOffset, placement)
+
+      var complete = function () {
+        var prevHoverState = that.hoverState
+        that.$element.trigger('shown.bs.' + that.type)
+        that.hoverState = null
+
+        if (prevHoverState == 'out') that.leave(that)
+      }
+
+      $.support.transition && this.$tip.hasClass('fade') ?
+        $tip
+          .one('bsTransitionEnd', complete)
+          .emulateTransitionEnd(Tooltip.TRANSITION_DURATION) :
+        complete()
+    }
+  }
+
+  Tooltip.prototype.applyPlacement = function (offset, placement) {
+    var $tip   = this.tip()
+    var width  = $tip[0].offsetWidth
+    var height = $tip[0].offsetHeight
+
+    // manually read margins because getBoundingClientRect includes difference
+    var marginTop = parseInt($tip.css('margin-top'), 10)
+    var marginLeft = parseInt($tip.css('margin-left'), 10)
+
+    // we must check for NaN for ie 8/9
+    if (isNaN(marginTop))  marginTop  = 0
+    if (isNaN(marginLeft)) marginLeft = 0
+
+    offset.top  += marginTop
+    offset.left += marginLeft
+
+    // $.fn.offset doesn't round pixel values
+    // so we use setOffset directly with our own function B-0
+    $.offset.setOffset($tip[0], $.extend({
+      using: function (props) {
+        $tip.css({
+          top: Math.round(props.top),
+          left: Math.round(props.left)
+        })
+      }
+    }, offset), 0)
+
+    $tip.addClass('in')
+
+    // check to see if placing tip in new offset caused the tip to resize itself
+    var actualWidth  = $tip[0].offsetWidth
+    var actualHeight = $tip[0].offsetHeight
+
+    if (placement == 'top' && actualHeight != height) {
+      offset.top = offset.top + height - actualHeight
+    }
+
+    var delta = this.getViewportAdjustedDelta(placement, offset, actualWidth, actualHeight)
+
+    if (delta.left) offset.left += delta.left
+    else offset.top += delta.top
+
+    var isVertical          = /top|bottom/.test(placement)
+    var arrowDelta          = isVertical ? delta.left * 2 - width + actualWidth : delta.top * 2 - height + actualHeight
+    var arrowOffsetPosition = isVertical ? 'offsetWidth' : 'offsetHeight'
+
+    $tip.offset(offset)
+    this.replaceArrow(arrowDelta, $tip[0][arrowOffsetPosition], isVertical)
+  }
+
+  Tooltip.prototype.replaceArrow = function (delta, dimension, isVertical) {
+    this.arrow()
+      .css(isVertical ? 'left' : 'top', 50 * (1 - delta / dimension) + '%')
+      .css(isVertical ? 'top' : 'left', '')
+  }
+
+  Tooltip.prototype.setContent = function () {
+    var $tip  = this.tip()
+    var title = this.getTitle()
+
+    $tip.find('.tooltip-inner')[this.options.html ? 'html' : 'text'](title)
+    $tip.removeClass('fade in top bottom left right')
+  }
+
+  Tooltip.prototype.hide = function (callback) {
+    var that = this
+    var $tip = $(this.$tip)
+    var e    = $.Event('hide.bs.' + this.type)
+
+    function complete() {
+      if (that.hoverState != 'in') $tip.detach()
+      if (that.$element) { // TODO: Check whether guarding this code with this `if` is really necessary.
+        that.$element
+          .removeAttr('aria-describedby')
+          .trigger('hidden.bs.' + that.type)
+      }
+      callback && callback()
+    }
+
+    this.$element.trigger(e)
+
+    if (e.isDefaultPrevented()) return
+
+    $tip.removeClass('in')
+
+    $.support.transition && $tip.hasClass('fade') ?
+      $tip
+        .one('bsTransitionEnd', complete)
+        .emulateTransitionEnd(Tooltip.TRANSITION_DURATION) :
+      complete()
+
+    this.hoverState = null
+
+    return this
+  }
+
+  Tooltip.prototype.fixTitle = function () {
+    var $e = this.$element
+    if ($e.attr('title') || typeof $e.attr('data-original-title') != 'string') {
+      $e.attr('data-original-title', $e.attr('title') || '').attr('title', '')
+    }
+  }
+
+  Tooltip.prototype.hasContent = function () {
+    return this.getTitle()
+  }
+
+  Tooltip.prototype.getPosition = function ($element) {
+    $element   = $element || this.$element
+
+    var el     = $element[0]
+    var isBody = el.tagName == 'BODY'
+
+    var elRect    = el.getBoundingClientRect()
+    if (elRect.width == null) {
+      // width and height are missing in IE8, so compute them manually; see https://github.com/twbs/bootstrap/issues/14093
+      elRect = $.extend({}, elRect, { width: elRect.right - elRect.left, height: elRect.bottom - elRect.top })
+    }
+    var isSvg = window.SVGElement && el instanceof window.SVGElement
+    // Avoid using $.offset() on SVGs since it gives incorrect results in jQuery 3.
+    // See https://github.com/twbs/bootstrap/issues/20280
+    var elOffset  = isBody ? { top: 0, left: 0 } : (isSvg ? null : $element.offset())
+    var scroll    = { scroll: isBody ? document.documentElement.scrollTop || document.body.scrollTop : $element.scrollTop() }
+    var outerDims = isBody ? { width: $(window).width(), height: $(window).height() } : null
+
+    return $.extend({}, elRect, scroll, outerDims, elOffset)
+  }
+
+  Tooltip.prototype.getCalculatedOffset = function (placement, pos, actualWidth, actualHeight) {
+    return placement == 'bottom' ? { top: pos.top + pos.height,   left: pos.left + pos.width / 2 - actualWidth / 2 } :
+           placement == 'top'    ? { top: pos.top - actualHeight, left: pos.left + pos.width / 2 - actualWidth / 2 } :
+           placement == 'left'   ? { top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left - actualWidth } :
+        /* placement == 'right' */ { top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left + pos.width }
+
+  }
+
+  Tooltip.prototype.getViewportAdjustedDelta = function (placement, pos, actualWidth, actualHeight) {
+    var delta = { top: 0, left: 0 }
+    if (!this.$viewport) return delta
+
+    var viewportPadding = this.options.viewport && this.options.viewport.padding || 0
+    var viewportDimensions = this.getPosition(this.$viewport)
+
+    if (/right|left/.test(placement)) {
+      var topEdgeOffset    = pos.top - viewportPadding - viewportDimensions.scroll
+      var bottomEdgeOffset = pos.top + viewportPadding - viewportDimensions.scroll + actualHeight
+      if (topEdgeOffset < viewportDimensions.top) { // top overflow
+        delta.top = viewportDimensions.top - topEdgeOffset
+      } else if (bottomEdgeOffset > viewportDimensions.top + viewportDimensions.height) { // bottom overflow
+        delta.top = viewportDimensions.top + viewportDimensions.height - bottomEdgeOffset
+      }
+    } else {
+      var leftEdgeOffset  = pos.left - viewportPadding
+      var rightEdgeOffset = pos.left + viewportPadding + actualWidth
+      if (leftEdgeOffset < viewportDimensions.left) { // left overflow
+        delta.left = viewportDimensions.left - leftEdgeOffset
+      } else if (rightEdgeOffset > viewportDimensions.right) { // right overflow
+        delta.left = viewportDimensions.left + viewportDimensions.width - rightEdgeOffset
+      }
+    }
+
+    return delta
+  }
+
+  Tooltip.prototype.getTitle = function () {
+    var title
+    var $e = this.$element
+    var o  = this.options
+
+    title = $e.attr('data-original-title')
+      || (typeof o.title == 'function' ? o.title.call($e[0]) :  o.title)
+
+    return title
+  }
+
+  Tooltip.prototype.getUID = function (prefix) {
+    do prefix += ~~(Math.random() * 1000000)
+    while (document.getElementById(prefix))
+    return prefix
+  }
+
+  Tooltip.prototype.tip = function () {
+    if (!this.$tip) {
+      this.$tip = $(this.options.template)
+      if (this.$tip.length != 1) {
+        throw new Error(this.type + ' `template` option must consist of exactly 1 top-level element!')
+      }
+    }
+    return this.$tip
+  }
+
+  Tooltip.prototype.arrow = function () {
+    return (this.$arrow = this.$arrow || this.tip().find('.tooltip-arrow'))
+  }
+
+  Tooltip.prototype.enable = function () {
+    this.enabled = true
+  }
+
+  Tooltip.prototype.disable = function () {
+    this.enabled = false
+  }
+
+  Tooltip.prototype.toggleEnabled = function () {
+    this.enabled = !this.enabled
+  }
+
+  Tooltip.prototype.toggle = function (e) {
+    var self = this
+    if (e) {
+      self = $(e.currentTarget).data('bs.' + this.type)
+      if (!self) {
+        self = new this.constructor(e.currentTarget, this.getDelegateOptions())
+        $(e.currentTarget).data('bs.' + this.type, self)
+      }
+    }
+
+    if (e) {
+      self.inState.click = !self.inState.click
+      if (self.isInStateTrue()) self.enter(self)
+      else self.leave(self)
+    } else {
+      self.tip().hasClass('in') ? self.leave(self) : self.enter(self)
+    }
+  }
+
+  Tooltip.prototype.destroy = function () {
+    var that = this
+    clearTimeout(this.timeout)
+    this.hide(function () {
+      that.$element.off('.' + that.type).removeData('bs.' + that.type)
+      if (that.$tip) {
+        that.$tip.detach()
+      }
+      that.$tip = null
+      that.$arrow = null
+      that.$viewport = null
+      that.$element = null
+    })
+  }
+
+
+  // TOOLTIP PLUGIN DEFINITION
+  // =========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.tooltip')
+      var options = typeof option == 'object' && option
+
+      if (!data && /destroy|hide/.test(option)) return
+      if (!data) $this.data('bs.tooltip', (data = new Tooltip(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.tooltip
+
+  $.fn.tooltip             = Plugin
+  $.fn.tooltip.Constructor = Tooltip
+
+
+  // TOOLTIP NO CONFLICT
+  // ===================
+
+  $.fn.tooltip.noConflict = function () {
+    $.fn.tooltip = old
+    return this
+  }
+
+}(jQuery);
+
+/* ========================================================================
+ * Bootstrap: popover.js v3.3.7
+ * http://getbootstrap.com/javascript/#popovers
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // POPOVER PUBLIC CLASS DEFINITION
+  // ===============================
+
+  var Popover = function (element, options) {
+    this.init('popover', element, options)
+  }
+
+  if (!$.fn.tooltip) throw new Error('Popover requires tooltip.js')
+
+  Popover.VERSION  = '3.3.7'
+
+  Popover.DEFAULTS = $.extend({}, $.fn.tooltip.Constructor.DEFAULTS, {
+    placement: 'right',
+    trigger: 'click',
+    content: '',
+    template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+  })
+
+
+  // NOTE: POPOVER EXTENDS tooltip.js
+  // ================================
+
+  Popover.prototype = $.extend({}, $.fn.tooltip.Constructor.prototype)
+
+  Popover.prototype.constructor = Popover
+
+  Popover.prototype.getDefaults = function () {
+    return Popover.DEFAULTS
+  }
+
+  Popover.prototype.setContent = function () {
+    var $tip    = this.tip()
+    var title   = this.getTitle()
+    var content = this.getContent()
+
+    $tip.find('.popover-title')[this.options.html ? 'html' : 'text'](title)
+    $tip.find('.popover-content').children().detach().end()[ // we use append for html objects to maintain js events
+      this.options.html ? (typeof content == 'string' ? 'html' : 'append') : 'text'
+    ](content)
+
+    $tip.removeClass('fade top bottom left right in')
+
+    // IE8 doesn't accept hiding via the `:empty` pseudo selector, we have to do
+    // this manually by checking the contents.
+    if (!$tip.find('.popover-title').html()) $tip.find('.popover-title').hide()
+  }
+
+  Popover.prototype.hasContent = function () {
+    return this.getTitle() || this.getContent()
+  }
+
+  Popover.prototype.getContent = function () {
+    var $e = this.$element
+    var o  = this.options
+
+    return $e.attr('data-content')
+      || (typeof o.content == 'function' ?
+            o.content.call($e[0]) :
+            o.content)
+  }
+
+  Popover.prototype.arrow = function () {
+    return (this.$arrow = this.$arrow || this.tip().find('.arrow'))
+  }
+
+
+  // POPOVER PLUGIN DEFINITION
+  // =========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.popover')
+      var options = typeof option == 'object' && option
+
+      if (!data && /destroy|hide/.test(option)) return
+      if (!data) $this.data('bs.popover', (data = new Popover(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.popover
+
+  $.fn.popover             = Plugin
+  $.fn.popover.Constructor = Popover
+
+
+  // POPOVER NO CONFLICT
+  // ===================
+
+  $.fn.popover.noConflict = function () {
+    $.fn.popover = old
+    return this
+  }
+
+}(jQuery);
+
+/* ========================================================================
+ * Bootstrap: scrollspy.js v3.3.7
+ * http://getbootstrap.com/javascript/#scrollspy
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // SCROLLSPY CLASS DEFINITION
+  // ==========================
+
+  function ScrollSpy(element, options) {
+    this.$body          = $(document.body)
+    this.$scrollElement = $(element).is(document.body) ? $(window) : $(element)
+    this.options        = $.extend({}, ScrollSpy.DEFAULTS, options)
+    this.selector       = (this.options.target || '') + ' .nav li > a'
+    this.offsets        = []
+    this.targets        = []
+    this.activeTarget   = null
+    this.scrollHeight   = 0
+
+    this.$scrollElement.on('scroll.bs.scrollspy', $.proxy(this.process, this))
+    this.refresh()
+    this.process()
+  }
+
+  ScrollSpy.VERSION  = '3.3.7'
+
+  ScrollSpy.DEFAULTS = {
+    offset: 10
+  }
+
+  ScrollSpy.prototype.getScrollHeight = function () {
+    return this.$scrollElement[0].scrollHeight || Math.max(this.$body[0].scrollHeight, document.documentElement.scrollHeight)
+  }
+
+  ScrollSpy.prototype.refresh = function () {
+    var that          = this
+    var offsetMethod  = 'offset'
+    var offsetBase    = 0
+
+    this.offsets      = []
+    this.targets      = []
+    this.scrollHeight = this.getScrollHeight()
+
+    if (!$.isWindow(this.$scrollElement[0])) {
+      offsetMethod = 'position'
+      offsetBase   = this.$scrollElement.scrollTop()
+    }
+
+    this.$body
+      .find(this.selector)
+      .map(function () {
+        var $el   = $(this)
+        var href  = $el.data('target') || $el.attr('href')
+        var $href = /^#./.test(href) && $(href)
+
+        return ($href
+          && $href.length
+          && $href.is(':visible')
+          && [[$href[offsetMethod]().top + offsetBase, href]]) || null
+      })
+      .sort(function (a, b) { return a[0] - b[0] })
+      .each(function () {
+        that.offsets.push(this[0])
+        that.targets.push(this[1])
+      })
+  }
+
+  ScrollSpy.prototype.process = function () {
+    var scrollTop    = this.$scrollElement.scrollTop() + this.options.offset
+    var scrollHeight = this.getScrollHeight()
+    var maxScroll    = this.options.offset + scrollHeight - this.$scrollElement.height()
+    var offsets      = this.offsets
+    var targets      = this.targets
+    var activeTarget = this.activeTarget
+    var i
+
+    if (this.scrollHeight != scrollHeight) {
+      this.refresh()
+    }
+
+    if (scrollTop >= maxScroll) {
+      return activeTarget != (i = targets[targets.length - 1]) && this.activate(i)
+    }
+
+    if (activeTarget && scrollTop < offsets[0]) {
+      this.activeTarget = null
+      return this.clear()
+    }
+
+    for (i = offsets.length; i--;) {
+      activeTarget != targets[i]
+        && scrollTop >= offsets[i]
+        && (offsets[i + 1] === undefined || scrollTop < offsets[i + 1])
+        && this.activate(targets[i])
+    }
+  }
+
+  ScrollSpy.prototype.activate = function (target) {
+    this.activeTarget = target
+
+    this.clear()
+
+    var selector = this.selector +
+      '[data-target="' + target + '"],' +
+      this.selector + '[href="' + target + '"]'
+
+    var active = $(selector)
+      .parents('li')
+      .addClass('active')
+
+    if (active.parent('.dropdown-menu').length) {
+      active = active
+        .closest('li.dropdown')
+        .addClass('active')
+    }
+
+    active.trigger('activate.bs.scrollspy')
+  }
+
+  ScrollSpy.prototype.clear = function () {
+    $(this.selector)
+      .parentsUntil(this.options.target, '.active')
+      .removeClass('active')
+  }
+
+
+  // SCROLLSPY PLUGIN DEFINITION
+  // ===========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.scrollspy')
+      var options = typeof option == 'object' && option
+
+      if (!data) $this.data('bs.scrollspy', (data = new ScrollSpy(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.scrollspy
+
+  $.fn.scrollspy             = Plugin
+  $.fn.scrollspy.Constructor = ScrollSpy
+
+
+  // SCROLLSPY NO CONFLICT
+  // =====================
+
+  $.fn.scrollspy.noConflict = function () {
+    $.fn.scrollspy = old
+    return this
+  }
+
+
+  // SCROLLSPY DATA-API
+  // ==================
+
+  $(window).on('load.bs.scrollspy.data-api', function () {
+    $('[data-spy="scroll"]').each(function () {
+      var $spy = $(this)
+      Plugin.call($spy, $spy.data())
+    })
+  })
+
+}(jQuery);
+
+/* ========================================================================
+ * Bootstrap: tab.js v3.3.7
+ * http://getbootstrap.com/javascript/#tabs
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // TAB CLASS DEFINITION
+  // ====================
+
+  var Tab = function (element) {
+    // jscs:disable requireDollarBeforejQueryAssignment
+    this.element = $(element)
+    // jscs:enable requireDollarBeforejQueryAssignment
+  }
+
+  Tab.VERSION = '3.3.7'
+
+  Tab.TRANSITION_DURATION = 150
+
+  Tab.prototype.show = function () {
+    var $this    = this.element
+    var $ul      = $this.closest('ul:not(.dropdown-menu)')
+    var selector = $this.data('target')
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+    }
+
+    if ($this.parent('li').hasClass('active')) return
+
+    var $previous = $ul.find('.active:last a')
+    var hideEvent = $.Event('hide.bs.tab', {
+      relatedTarget: $this[0]
+    })
+    var showEvent = $.Event('show.bs.tab', {
+      relatedTarget: $previous[0]
+    })
+
+    $previous.trigger(hideEvent)
+    $this.trigger(showEvent)
+
+    if (showEvent.isDefaultPrevented() || hideEvent.isDefaultPrevented()) return
+
+    var $target = $(selector)
+
+    this.activate($this.closest('li'), $ul)
+    this.activate($target, $target.parent(), function () {
+      $previous.trigger({
+        type: 'hidden.bs.tab',
+        relatedTarget: $this[0]
+      })
+      $this.trigger({
+        type: 'shown.bs.tab',
+        relatedTarget: $previous[0]
+      })
+    })
+  }
+
+  Tab.prototype.activate = function (element, container, callback) {
+    var $active    = container.find('> .active')
+    var transition = callback
+      && $.support.transition
+      && ($active.length && $active.hasClass('fade') || !!container.find('> .fade').length)
+
+    function next() {
+      $active
+        .removeClass('active')
+        .find('> .dropdown-menu > .active')
+          .removeClass('active')
+        .end()
+        .find('[data-toggle="tab"]')
+          .attr('aria-expanded', false)
+
+      element
+        .addClass('active')
+        .find('[data-toggle="tab"]')
+          .attr('aria-expanded', true)
+
+      if (transition) {
+        element[0].offsetWidth // reflow for transition
+        element.addClass('in')
+      } else {
+        element.removeClass('fade')
+      }
+
+      if (element.parent('.dropdown-menu').length) {
+        element
+          .closest('li.dropdown')
+            .addClass('active')
+          .end()
+          .find('[data-toggle="tab"]')
+            .attr('aria-expanded', true)
+      }
+
+      callback && callback()
+    }
+
+    $active.length && transition ?
+      $active
+        .one('bsTransitionEnd', next)
+        .emulateTransitionEnd(Tab.TRANSITION_DURATION) :
+      next()
+
+    $active.removeClass('in')
+  }
+
+
+  // TAB PLUGIN DEFINITION
+  // =====================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this = $(this)
+      var data  = $this.data('bs.tab')
+
+      if (!data) $this.data('bs.tab', (data = new Tab(this)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.tab
+
+  $.fn.tab             = Plugin
+  $.fn.tab.Constructor = Tab
+
+
+  // TAB NO CONFLICT
+  // ===============
+
+  $.fn.tab.noConflict = function () {
+    $.fn.tab = old
+    return this
+  }
+
+
+  // TAB DATA-API
+  // ============
+
+  var clickHandler = function (e) {
+    e.preventDefault()
+    Plugin.call($(this), 'show')
+  }
+
+  $(document)
+    .on('click.bs.tab.data-api', '[data-toggle="tab"]', clickHandler)
+    .on('click.bs.tab.data-api', '[data-toggle="pill"]', clickHandler)
+
+}(jQuery);
+
+/* ========================================================================
+ * Bootstrap: affix.js v3.3.7
+ * http://getbootstrap.com/javascript/#affix
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // AFFIX CLASS DEFINITION
+  // ======================
+
+  var Affix = function (element, options) {
+    this.options = $.extend({}, Affix.DEFAULTS, options)
+
+    this.$target = $(this.options.target)
+      .on('scroll.bs.affix.data-api', $.proxy(this.checkPosition, this))
+      .on('click.bs.affix.data-api',  $.proxy(this.checkPositionWithEventLoop, this))
+
+    this.$element     = $(element)
+    this.affixed      = null
+    this.unpin        = null
+    this.pinnedOffset = null
+
+    this.checkPosition()
+  }
+
+  Affix.VERSION  = '3.3.7'
+
+  Affix.RESET    = 'affix affix-top affix-bottom'
+
+  Affix.DEFAULTS = {
+    offset: 0,
+    target: window
+  }
+
+  Affix.prototype.getState = function (scrollHeight, height, offsetTop, offsetBottom) {
+    var scrollTop    = this.$target.scrollTop()
+    var position     = this.$element.offset()
+    var targetHeight = this.$target.height()
+
+    if (offsetTop != null && this.affixed == 'top') return scrollTop < offsetTop ? 'top' : false
+
+    if (this.affixed == 'bottom') {
+      if (offsetTop != null) return (scrollTop + this.unpin <= position.top) ? false : 'bottom'
+      return (scrollTop + targetHeight <= scrollHeight - offsetBottom) ? false : 'bottom'
+    }
+
+    var initializing   = this.affixed == null
+    var colliderTop    = initializing ? scrollTop : position.top
+    var colliderHeight = initializing ? targetHeight : height
+
+    if (offsetTop != null && scrollTop <= offsetTop) return 'top'
+    if (offsetBottom != null && (colliderTop + colliderHeight >= scrollHeight - offsetBottom)) return 'bottom'
+
+    return false
+  }
+
+  Affix.prototype.getPinnedOffset = function () {
+    if (this.pinnedOffset) return this.pinnedOffset
+    this.$element.removeClass(Affix.RESET).addClass('affix')
+    var scrollTop = this.$target.scrollTop()
+    var position  = this.$element.offset()
+    return (this.pinnedOffset = position.top - scrollTop)
+  }
+
+  Affix.prototype.checkPositionWithEventLoop = function () {
+    setTimeout($.proxy(this.checkPosition, this), 1)
+  }
+
+  Affix.prototype.checkPosition = function () {
+    if (!this.$element.is(':visible')) return
+
+    var height       = this.$element.height()
+    var offset       = this.options.offset
+    var offsetTop    = offset.top
+    var offsetBottom = offset.bottom
+    var scrollHeight = Math.max($(document).height(), $(document.body).height())
+
+    if (typeof offset != 'object')         offsetBottom = offsetTop = offset
+    if (typeof offsetTop == 'function')    offsetTop    = offset.top(this.$element)
+    if (typeof offsetBottom == 'function') offsetBottom = offset.bottom(this.$element)
+
+    var affix = this.getState(scrollHeight, height, offsetTop, offsetBottom)
+
+    if (this.affixed != affix) {
+      if (this.unpin != null) this.$element.css('top', '')
+
+      var affixType = 'affix' + (affix ? '-' + affix : '')
+      var e         = $.Event(affixType + '.bs.affix')
+
+      this.$element.trigger(e)
+
+      if (e.isDefaultPrevented()) return
+
+      this.affixed = affix
+      this.unpin = affix == 'bottom' ? this.getPinnedOffset() : null
+
+      this.$element
+        .removeClass(Affix.RESET)
+        .addClass(affixType)
+        .trigger(affixType.replace('affix', 'affixed') + '.bs.affix')
+    }
+
+    if (affix == 'bottom') {
+      this.$element.offset({
+        top: scrollHeight - height - offsetBottom
+      })
+    }
+  }
+
+
+  // AFFIX PLUGIN DEFINITION
+  // =======================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.affix')
+      var options = typeof option == 'object' && option
+
+      if (!data) $this.data('bs.affix', (data = new Affix(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.affix
+
+  $.fn.affix             = Plugin
+  $.fn.affix.Constructor = Affix
+
+
+  // AFFIX NO CONFLICT
+  // =================
+
+  $.fn.affix.noConflict = function () {
+    $.fn.affix = old
+    return this
+  }
+
+
+  // AFFIX DATA-API
+  // ==============
+
+  $(window).on('load', function () {
+    $('[data-spy="affix"]').each(function () {
+      var $spy = $(this)
+      var data = $spy.data()
+
+      data.offset = data.offset || {}
+
+      if (data.offsetBottom != null) data.offset.bottom = data.offsetBottom
+      if (data.offsetTop    != null) data.offset.top    = data.offsetTop
+
+      Plugin.call($spy, data)
+    })
+  })
+
+}(jQuery);
+
 ;define('ember-ajax/-private/promise', ['exports', 'ember'], function (exports, _ember) {
   'use strict';
 
@@ -70908,6 +73266,7472 @@ createDeprecatedModule('resolver');
   var $ = _ember.default.$;
   exports.default = _isFastboot.default ? najax : $.ajax;
 });
+;define('ember-bootstrap/components/base/bs-accordion', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-accordion', 'ember-bootstrap/utils/listen-to-cp'], function (exports, _ember, _bsAccordion, _listenToCp) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Component.extend({
+    layout: _bsAccordion.default,
+    ariaRole: 'tablist',
+
+    /**
+     * The value of the currently selected accordion item. Set this to change selection programmatically.
+     *
+     * When the selection is changed by user interaction this property will not update by using two-way bindings in order
+     * to follow DDAU best practices. If you want to react to such changes, subscribe to the `onChange` action
+     *
+     * @property selected
+     * @public
+     */
+    selected: null,
+
+    /**
+     * The value of the currently selected accordion item
+     *
+     * @property isSelected
+     * @private
+     */
+    isSelected: (0, _listenToCp.default)('selected'),
+
+    /**
+     * Action when the selected accordion item is about to be changed.
+     *
+     * You can return false to prevent changing the active item, and do that in your action by
+     * setting the `selected` accordingly.
+     *
+     * @event onChange
+     * @param newValue
+     * @param oldValue
+     * @public
+     */
+    onChange: function onChange(newValue, oldValue) {},
+    // eslint-disable-line no-unused-vars
+
+    actions: {
+      change: function change(newValue) {
+        var oldValue = this.get('isSelected');
+        if (oldValue === newValue) {
+          newValue = null;
+        }
+        if (this.get('onChange')(newValue, oldValue) !== false) {
+          this.set('isSelected', newValue);
+        }
+      }
+    }
+
+  });
+});
+;define('ember-bootstrap/components/base/bs-accordion/item', ['exports', 'ember', 'ember-bootstrap/mixins/type-class', 'ember-bootstrap/mixins/component-child', 'ember-bootstrap/templates/components/bs-accordion/item'], function (exports, _ember, _typeClass, _componentChild, _item) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed;
+  exports.default = _ember.default.Component.extend(_componentChild.default, _typeClass.default, {
+    layout: _item.default,
+
+    /**
+     * The title of the accordion item, displayed as a .panel-title element
+     *
+     * @property title
+     * @type string
+     * @public
+     */
+    title: null,
+
+    /**
+     * The value of the accordion item, which is used as the value of the `selected` property of the parent [Components.Accordion](Components.Accordion.html) component
+     *
+     * @property value
+     * @public
+     */
+    value: computed.oneWay('elementId'),
+
+    /**
+     * @property selected
+     * @private
+     */
+    selected: null,
+
+    /**
+     * @property collapsed
+     * @type boolean
+     * @readonly
+     * @private
+     */
+    collapsed: computed('value', 'selected', function () {
+      return this.get('value') !== this.get('selected');
+    }).readOnly(),
+
+    /**
+     * @property active
+     * @type boolean
+     * @readonly
+     * @private
+     */
+    active: computed.not('collapsed'),
+
+    /**
+     * Reference to the parent `Components.Accordion` class.
+     *
+     * @property accordion
+     * @private
+     */
+    accordion: null,
+
+    /**
+     * @event onClick
+     * @public
+     */
+    onClick: function onClick() {}
+  });
+});
+;define('ember-bootstrap/components/base/bs-accordion/item/body', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-accordion/body'], function (exports, _ember, _body) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Component.extend({
+    layout: _body.default,
+    tagName: '',
+
+    /**
+     * @property collapsed
+     * @type boolean
+     * @public
+     */
+    collapsed: null
+
+  });
+});
+;define('ember-bootstrap/components/base/bs-accordion/item/title', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-accordion/title'], function (exports, _ember, _title) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Component.extend({
+    layout: _title.default,
+    ariaRole: 'tab',
+    classNameBindings: ['collapsed:collapsed:expanded'],
+
+    /**
+     * @property collapsed
+     * @type boolean
+     * @public
+     */
+    collapsed: null,
+
+    /**
+     * @event onClick
+     * @public
+     */
+    onClick: function onClick() {},
+    click: function click(e) {
+      e.preventDefault();
+      this.get('onClick')();
+    }
+  });
+});
+;define('ember-bootstrap/components/base/bs-alert', ['exports', 'ember', 'ember-bootstrap/mixins/transition-support', 'ember-bootstrap/templates/components/bs-alert', 'ember-bootstrap/mixins/type-class', 'ember-bootstrap/utils/listen-to-cp'], function (exports, _ember, _transitionSupport, _bsAlert, _typeClass, _listenToCp) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed,
+      observer = _ember.default.observer,
+      later = _ember.default.run.later;
+  exports.default = _ember.default.Component.extend(_typeClass.default, _transitionSupport.default, {
+    layout: _bsAlert.default,
+    classNameBindings: ['alert', 'fade', 'dismissible:alert-dismissible'],
+
+    /**
+     * A dismissible alert will have a close button in the upper right corner, that the user can click to dismiss
+     * the alert.
+     *
+     * @property dismissible
+     * @type boolean
+     * @default true
+     * @public
+     */
+    dismissible: true,
+
+    /**
+     * If true the alert is completely hidden. Will be set when the fade animation has finished.
+     *
+     * @property hidden
+     * @type boolean
+     * @default false
+     * @readonly
+     * @private
+     */
+    hidden: false,
+
+    /**
+     * This property controls if the alert should be visible. If false it might still be in the DOM until the fade animation
+     * has completed.
+     *
+     * When the alert is dismissed by user interaction this property will not update by using two-way bindings in order
+     * to follow DDAU best practices. If you want to react to such changes, subscribe to the `onHide` action
+     *
+     * @property visible
+     * @type boolean
+     * @default true
+     * @public
+     */
+    visible: true,
+
+    /**
+     * @property _visible
+     * @private
+     */
+    _visible: (0, _listenToCp.default)('visible'),
+
+    /**
+     * @property notVisible
+     * @private
+     */
+    notVisible: computed.not('_visible'),
+
+    /**
+     * Set to false to disable the fade out animation when hiding the alert.
+     *
+     * @property fade
+     * @type boolean
+     * @default true
+     * @public
+     */
+    fade: true,
+
+    /**
+     * Computed property to set the alert class to the component div. Will be false when dismissed to have the component
+     * div (which cannot be removed form DOM by the component itself) without any markup.
+     *
+     * @property alert
+     * @type boolean
+     * @private
+     */
+    alert: computed.not('hidden'),
+    showAlert: computed.and('_visible', 'fade'),
+
+    /**
+     * @property classTypePrefix
+     * @type String
+     * @default 'alert'
+     * @private
+     */
+    classTypePrefix: 'alert',
+
+    /**
+     * The duration of the fade out animation
+     *
+     * @property fadeDuration
+     * @type number
+     * @default 150
+     * @public
+     */
+    fadeDuration: 150,
+
+    /**
+     * The action to be sent after the alert has been dismissed (including the CSS transition).
+     *
+     * @event onDismissed
+     * @public
+     */
+    onDismissed: function onDismissed() {},
+
+
+    /**
+     * The action is called when the close button is clicked.
+     *
+     * You can return false to prevent closing the alert automatically, and do that in your action by
+     * setting `visible` to false.
+     *
+     * @event onDismiss
+     * @public
+     */
+    onDismiss: function onDismiss() {},
+
+
+    actions: {
+      dismiss: function dismiss() {
+        if (this.get('onDismiss')() !== false) {
+          this.set('_visible', false);
+        }
+      }
+    },
+
+    /**
+     * Call to make the alert visible again after it has been hidden
+     *
+     * @method show
+     * @private
+     */
+    show: function show() {
+      this.set('hidden', false);
+    },
+
+
+    /**
+     * Call to hide the alert. If the `fade` property is true, this will fade out the alert before being finally
+     * dismissed.
+     *
+     * @method hide
+     * @private
+     */
+    hide: function hide() {
+      if (this.get('usesTransition')) {
+        later(this, function () {
+          if (!this.get('isDestroyed')) {
+            this.set('hidden', true);
+            this.get('onDismissed')();
+          }
+        }, this.get('fadeDuration'));
+      } else {
+        this.set('hidden', true);
+        this.get('onDismissed')();
+      }
+    },
+    init: function init() {
+      this._super.apply(this, arguments);
+      this.set('hidden', !this.get('_visible'));
+    },
+
+
+    _observeIsVisible: observer('_visible', function () {
+      if (this.get('_visible')) {
+        this.show();
+      } else {
+        this.hide();
+      }
+    })
+  });
+});
+;define('ember-bootstrap/components/base/bs-button-group', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-button-group', 'ember-bootstrap/mixins/size-class'], function (exports, _ember, _bsButtonGroup, _sizeClass) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var A = _ember.default.A,
+      copy = _ember.default.copy,
+      computed = _ember.default.computed,
+      isArray = _ember.default.isArray;
+  exports.default = _ember.default.Component.extend(_sizeClass.default, {
+    layout: _bsButtonGroup.default,
+    ariaRole: 'group',
+    classNameBindings: ['vertical:btn-group-vertical:btn-group', 'justified:btn-group-justified'],
+
+    /**
+     * @property classTypePrefix
+     * @type String
+     * @default 'btn-group'
+     * @protected
+     */
+    classTypePrefix: 'btn-group',
+
+    /**
+     * Set to true for a vertically stacked button group, see http://getbootstrap.com/components/#btn-groups-vertical
+     *
+     * @property vertical
+     * @type boolean
+     * @default false
+     * @public
+     */
+    vertical: false,
+
+    /**
+     * Set to true for the buttons to stretch at equal sizes to span the entire width of its parent.
+     *
+     * *Important*: You have to wrap every button component in a `div class="btn-group">`:
+     *
+     * ```handlebars
+     * <div class="btn-group" role="group">
+     * {{#bs-button}}My Button{{/bs-button}}
+     * </div>
+     * ```
+     *
+     * See http://getbootstrap.com/components/#btn-groups-justified
+     *
+     * @property justified
+     * @type boolean
+     * @default false
+     * @public
+     */
+    justified: false,
+
+    /**
+     * The type of the button group specifies how child buttons behave and how the `value` property will be computed:
+     *
+     * ### null
+     * If `type` is not set (null), the button group will add no functionality besides Bootstrap styling
+     *
+     * ### radio
+     * if `type` is set to "radio", the buttons will behave like radio buttons:
+     * * the `value` property of the button group will reflect the `value` property of the active button
+     * * thus only one button may be active
+     *
+     * ### checkbox
+     * if `type` is set to "checkbox", the buttons will behave like checkboxes:
+     * * any number of buttons may be active
+     * * the `value` property of the button group will be an array containing the `value` properties of all active buttons
+     *
+     * @property type
+     * @type string
+     * @default null
+     * @public
+     */
+    type: null,
+
+    /**
+     * The value of the button group, computed by its child buttons.
+     * See the `type` property for how the value property is constructed.
+     *
+     * When you set the value, the corresponding buttons will be activated:
+     * * use a single value for a radio button group to activate the button with the same value
+     * * use an array of values for a checkbox button group to activate all the buttons with values contained in the array
+     *
+     * @property value
+     * @type array
+     * @public
+     */
+    value: undefined,
+
+    /**
+     * @property isRadio
+     * @type boolean
+     * @private
+     */
+    isRadio: computed.equal('type', 'radio').readOnly(),
+
+    /**
+     * This action is called whenever the button group's value should be changed because the user clicked a button.
+     * You will receive the new value of the button group (based on the `type` property), which you should use to update the
+     * `value` property.
+     *
+     * @event onChange
+     * @param {*} value
+     * @public
+     */
+    onChange: function onChange() {},
+
+
+    actions: {
+      buttonPressed: function buttonPressed(pressedValue) {
+        var newValue = copy(this.get('value'));
+
+        if (this.get('isRadio')) {
+          if (newValue !== pressedValue) {
+            newValue = pressedValue;
+          }
+        } else {
+          if (!isArray(newValue)) {
+            newValue = A([pressedValue]);
+          } else {
+            newValue = A(newValue);
+            if (newValue.includes(pressedValue)) {
+              newValue.removeObject(pressedValue);
+            } else {
+              newValue.pushObject(pressedValue);
+            }
+          }
+        }
+
+        this.get('onChange')(newValue);
+      }
+    }
+  });
+});
+;define('ember-bootstrap/components/base/bs-button-group/button', ['exports', 'ember', 'ember-bootstrap/components/bs-button'], function (exports, _ember, _bsButton) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed,
+      isArray = _ember.default.isArray;
+  exports.default = _bsButton.default.extend({
+
+    /**
+     * @property groupValue
+     * @private
+     */
+    groupValue: null,
+
+    /**
+     * @property buttonGroupType
+     * @type string
+     * @private
+     */
+    buttonGroupType: false,
+
+    /**
+     * @property active
+     * @type boolean
+     * @readonly
+     * @private
+     */
+    active: computed('buttonGroupType', 'groupValue.[]', 'value', function () {
+      var _getProperties = this.getProperties('value', 'groupValue'),
+          value = _getProperties.value,
+          groupValue = _getProperties.groupValue;
+
+      if (this.get('buttonGroupType') === 'radio') {
+        return value === groupValue;
+      } else {
+        if (isArray(groupValue)) {
+          return groupValue.indexOf(value) !== -1;
+        }
+      }
+      return false;
+    }).readOnly()
+
+  });
+});
+;define('ember-bootstrap/components/base/bs-button', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-button', 'ember-bootstrap/mixins/type-class', 'ember-bootstrap/mixins/size-class'], function (exports, _ember, _bsButton, _typeClass, _sizeClass) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed,
+      observer = _ember.default.observer;
+  exports.default = _ember.default.Component.extend(_typeClass.default, _sizeClass.default, {
+    layout: _bsButton.default,
+    tagName: 'button',
+    classNames: ['btn'],
+    classNameBindings: ['active', 'block:btn-block'],
+
+    /**
+     * @property classTypePrefix
+     * @type String
+     * @default 'btn'
+     * @private
+     */
+    classTypePrefix: 'btn',
+
+    attributeBindings: ['disabled', 'buttonType:type', 'title'],
+
+    /**
+     * Default label of the button. Not need if used as a block component
+     *
+     * @property defaultText
+     * @type string
+     * @public
+     */
+    defaultText: null,
+
+    /**
+     * Property to disable the button
+     *
+     * @property disabled
+     * @type boolean
+     * @default false
+     * @public
+     */
+    disabled: false,
+
+    /**
+     * Set the type of the button, either 'button' or 'submit'
+     *
+     * @property buttonType
+     * @type String
+     * @default 'button'
+     * @public
+     */
+    buttonType: 'button',
+
+    /**
+     * Set the 'active' class to apply active/pressed CSS styling
+     *
+     * @property active
+     * @type boolean
+     * @default false
+     * @public
+     */
+    active: false,
+
+    /**
+     * Property for block level buttons
+     *
+     * See the [Bootstrap docs](http://getbootstrap.com/css/#buttons-sizes)
+     * @property block
+     * @type boolean
+     * @default false
+     * @public
+     */
+    block: false,
+
+    /**
+     * A click event on a button will not bubble up the DOM tree if it has an `onClick` action handler. Set to true to
+     * enable the event to bubble
+     *
+     * @property bubble
+     * @type boolean
+     * @default false
+     * @public
+     */
+    bubble: false,
+
+    /**
+     * If button is active and this is set, the icon property will match this property
+     *
+     * @property iconActive
+     * @type String
+     * @public
+     */
+    iconActive: null,
+
+    /**
+     * If button is inactive and this is set, the icon property will match this property
+     *
+     * @property iconInactive
+     * @type String
+     * @public
+     */
+    iconInactive: null,
+
+    /**
+     * Class(es) (e.g. glyphicons or font awesome) to use as a button icon
+     * This will render a <i class="{{icon}}"></i> element in front of the button's label
+     *
+     * @property icon
+     * @type String
+     * @readonly
+     * @protected
+     */
+    icon: computed('active', function () {
+      if (this.get('active')) {
+        return this.get('iconActive');
+      } else {
+        return this.get('iconInactive');
+      }
+    }),
+
+    /**
+     * Supply a value that will be associated with this button. This will be send
+     * as a parameter of the default action triggered when clicking the button
+     *
+     * @property value
+     * @type any
+     * @public
+     */
+    value: null,
+
+    /**
+     * State of the button. The button's label (if not used as a block component) will be set to the
+     * `<state>Text` property.
+     * This property will automatically be set when using a click action that supplies the callback with an promise
+     *
+     * @property textState
+     * @type String
+     * @default 'default'
+     * @protected
+     */
+    textState: 'default',
+
+    /**
+     * Set this to true to reset the state. A typical use case is to bind this attribute with ember-data isDirty flag.
+     *
+     * @property reset
+     * @type boolean
+     * @public
+     */
+    reset: null,
+
+    /**
+     * The HTML title attribute
+     *
+     * @property title
+     * @type string
+     * @public
+     */
+    title: null,
+
+    /**
+     * When clicking the button this action is called with the value of the button (that is the value of the "value" property).
+     * Return a promise object, and the buttons state will automatically set to "pending", "resolved" and/or "rejected".
+     *
+     * The click event will not bubble up, unless you set `bubble` to true.
+     *
+     * @event onClick
+     * @param {*} value
+     * @public
+     */
+    onClick: null,
+
+    /**
+     * This will reset the state property to 'default', and with that the button's label to defaultText
+     *
+     * @method resetState
+     * @protected
+     */
+    resetState: function resetState() {
+      this.set('textState', 'default');
+    },
+
+
+    resetObserver: observer('reset', function () {
+      if (this.get('reset')) {
+        _ember.default.run.scheduleOnce('actions', this, function () {
+          this.set('textState', 'default');
+        });
+      }
+    }),
+
+    text: computed('textState', 'defaultText', 'pendingText', 'resolvedText', 'rejectedText', function () {
+      return this.getWithDefault(this.get('textState') + 'Text', this.get('defaultText'));
+    }),
+
+    /**
+     * @method click
+     * @private
+     */
+    click: function click() {
+      var _this = this;
+
+      var action = this.get('onClick');
+      if (action !== null) {
+        var promise = action(this.get('value'));
+        if (promise && typeof promise.then === 'function' && !this.get('isDestroyed')) {
+          this.set('textState', 'pending');
+          promise.then(function () {
+            if (!_this.get('isDestroyed')) {
+              _this.set('textState', 'resolved');
+            }
+          }, function () {
+            if (!_this.get('isDestroyed')) {
+              _this.set('textState', 'rejected');
+            }
+          });
+        }
+        return this.get('bubble');
+      }
+    },
+    init: function init() {
+      this._super.apply(this, arguments);
+      this.get('reset');
+    }
+  });
+});
+;define('ember-bootstrap/components/base/bs-collapse', ['exports', 'ember', 'ember-bootstrap/utils/transition-end'], function (exports, _ember, _transitionEnd) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed,
+      isEmpty = _ember.default.isEmpty,
+      isPresent = _ember.default.isPresent,
+      observer = _ember.default.observer,
+      next = _ember.default.run.next,
+      _Ember$String = _ember.default.String,
+      camelize = _Ember$String.camelize,
+      htmlSafe = _Ember$String.htmlSafe;
+  exports.default = _ember.default.Component.extend({
+
+    classNameBindings: ['collapse', 'collapsing'],
+    attributeBindings: ['style'],
+
+    /**
+     * Collapsed/expanded state
+     *
+     * @property collapsed
+     * @type boolean
+     * @default true
+     * @public
+     */
+    collapsed: true,
+
+    /**
+     * True if this item is expanded
+     *
+     * @property active
+     * @private
+     */
+    active: false,
+
+    collapse: computed.not('transitioning'),
+    collapsing: computed.alias('transitioning'),
+    showContent: computed.and('collapse', 'active'),
+
+    /**
+     * true if the component is currently transitioning
+     *
+     * @property transitioning
+     * @type boolean
+     * @private
+     */
+    transitioning: false,
+
+    /**
+     * @property collapseSize
+     * @type number
+     * @private
+     */
+    collapseSize: null,
+
+    /**
+     * The size of the element when collapsed. Defaults to 0.
+     *
+     * @property collapsedSize
+     * @type number
+     * @default 0
+     * @public
+     */
+    collapsedSize: 0,
+
+    /**
+     * The size of the element when expanded. When null the value is calculated automatically to fit the containing elements.
+     *
+     * @property expandedSize
+     * @type number
+     * @default null
+     * @public
+     */
+    expandedSize: null,
+
+    /**
+     * Usually the size (height) of the element is only set while transitioning, and reseted afterwards. Set to true to always set a size.
+     *
+     * @property resetSizeWhenNotCollapsing
+     * @type boolean
+     * @default true
+     * @private
+     */
+    resetSizeWhenNotCollapsing: true,
+
+    /**
+     * The direction (height/width) of the collapse animation.
+     * When setting this to 'width' you should also define custom CSS transitions for the width property, as the Bootstrap
+     * CSS does only support collapsible elements for the height direction.
+     *
+     * @property collapseDimension
+     * @type string
+     * @default 'height'
+     * @public
+     */
+    collapseDimension: 'height',
+
+    /**
+     * The duration of the fade transition
+     *
+     * @property transitionDuration
+     * @type number
+     * @default 350
+     * @public
+     */
+    transitionDuration: 350,
+
+    style: computed('collapseSize', function () {
+      var size = this.get('collapseSize');
+      var dimension = this.get('collapseDimension');
+      if (isEmpty(size)) {
+        return htmlSafe('');
+      }
+      return htmlSafe(dimension + ': ' + size + 'px');
+    }),
+
+    /**
+     * The action to be sent when the element is about to be hidden.
+     *
+     * @event onHide
+     * @public
+     */
+    onHide: function onHide() {},
+
+
+    /**
+     * The action to be sent after the element has been completely hidden (including the CSS transition).
+     *
+     * @event onHidden
+     * @public
+     */
+    onHidden: function onHidden() {},
+
+
+    /**
+     * The action to be sent when the element is about to be shown.
+     *
+     * @event onShow
+     * @public
+     */
+    onShow: function onShow() {},
+
+
+    /**
+     * The action to be sent after the element has been completely shown (including the CSS transition).
+     *
+     * @event onShown
+     * @public
+     */
+    onShown: function onShown() {},
+
+
+    /**
+     * Triggers the show transition
+     *
+     * @method show
+     * @protected
+     */
+    show: function show() {
+      var complete = function complete() {
+        if (this.get('isDestroyed')) {
+          return;
+        }
+        this.set('transitioning', false);
+        if (this.get('resetSizeWhenNotCollapsing')) {
+          this.set('collapseSize', null);
+        }
+        this.get('onShown')();
+      };
+
+      this.get('onShow')();
+
+      this.setProperties({
+        transitioning: true,
+        collapseSize: this.get('collapsedSize'),
+        active: true
+      });
+
+      (0, _transitionEnd.default)(this.get('element'), complete, this, this.get('transitionDuration'));
+
+      next(this, function () {
+        if (!this.get('isDestroyed')) {
+          this.set('collapseSize', this.getExpandedSize('show'));
+        }
+      });
+    },
+
+
+    /**
+     * Get the size of the element when expanded
+     *
+     * @method getExpandedSize
+     * @param action
+     * @return {Number}
+     * @private
+     */
+    getExpandedSize: function getExpandedSize(action) {
+      var expandedSize = this.get('expandedSize');
+      if (isPresent(expandedSize)) {
+        return expandedSize;
+      }
+
+      var collapseElement = this.get('element');
+      var prefix = action === 'show' ? 'scroll' : 'offset';
+      var measureProperty = camelize(prefix + '-' + this.get('collapseDimension'));
+      return collapseElement[measureProperty];
+    },
+
+
+    /**
+     * Triggers the hide transition
+     *
+     * @method hide
+     * @protected
+     */
+    hide: function hide() {
+
+      var complete = function complete() {
+        if (this.get('isDestroyed')) {
+          return;
+        }
+        this.set('transitioning', false);
+        if (this.get('resetSizeWhenNotCollapsing')) {
+          this.set('collapseSize', null);
+        }
+        this.get('onHidden')();
+      };
+
+      this.get('onHide')();
+
+      this.setProperties({
+        transitioning: true,
+        collapseSize: this.getExpandedSize('hide'),
+        active: false
+      });
+
+      (0, _transitionEnd.default)(this.get('element'), complete, this, this.get('transitionDuration'));
+
+      next(this, function () {
+        if (!this.get('isDestroyed')) {
+          this.set('collapseSize', this.get('collapsedSize'));
+        }
+      });
+    },
+
+
+    _onCollapsedChange: observer('collapsed', function () {
+      var collapsed = this.get('collapsed');
+      var active = this.get('active');
+      if (collapsed !== active) {
+        return;
+      }
+      if (collapsed === false) {
+        this.show();
+      } else {
+        this.hide();
+      }
+    }),
+
+    init: function init() {
+      this._super.apply(this, arguments);
+      this.set('active', !this.get('collapsed'));
+    },
+
+
+    _updateCollapsedSize: observer('collapsedSize', function () {
+      if (!this.get('resetSizeWhenNotCollapsing') && this.get('collapsed') && !this.get('collapsing')) {
+        this.set('collapseSize', this.get('collapsedSize'));
+      }
+    }),
+
+    _updateExpandedSize: observer('expandedSize', function () {
+      if (!this.get('resetSizeWhenNotCollapsing') && !this.get('collapsed') && !this.get('collapsing')) {
+        this.set('collapseSize', this.get('expandedSize'));
+      }
+    })
+  });
+});
+;define('ember-bootstrap/components/base/bs-contextual-help', ['exports', 'ember', 'ember-bootstrap/mixins/transition-support', 'ember-bootstrap/utils/get-position', 'ember-bootstrap/utils/get-calculated-offset', 'ember-bootstrap/utils/get-parent', 'ember-bootstrap/utils/set-offset', 'ember-bootstrap/utils/transition-end'], function (exports, _ember, _transitionSupport, _getPosition, _getCalculatedOffset, _getParent, _setOffset, _transitionEnd) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var _slicedToArray = function () {
+    function sliceIterator(arr, i) {
+      var _arr = [];
+      var _n = true;
+      var _d = false;
+      var _e = undefined;
+
+      try {
+        for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+          _arr.push(_s.value);
+
+          if (i && _arr.length === i) break;
+        }
+      } catch (err) {
+        _d = true;
+        _e = err;
+      } finally {
+        try {
+          if (!_n && _i["return"]) _i["return"]();
+        } finally {
+          if (_d) throw _e;
+        }
+      }
+
+      return _arr;
+    }
+
+    return function (arr, i) {
+      if (Array.isArray(arr)) {
+        return arr;
+      } else if (Symbol.iterator in Object(arr)) {
+        return sliceIterator(arr, i);
+      } else {
+        throw new TypeError("Invalid attempt to destructure non-iterable instance");
+      }
+    };
+  }();
+
+  var assert = _ember.default.assert,
+      Component = _ember.default.Component,
+      computed = _ember.default.computed,
+      guidFor = _ember.default.guidFor,
+      isArray = _ember.default.isArray,
+      isBlank = _ember.default.isBlank,
+      observer = _ember.default.observer,
+      run = _ember.default.run,
+      _Ember$run = _ember.default.run,
+      later = _Ember$run.later,
+      cancel = _Ember$run.cancel,
+      schedule = _Ember$run.schedule,
+      next = _Ember$run.next;
+
+
+  var InState = _ember.default.Object.extend({
+    hover: false,
+    focus: false,
+    click: false,
+    showHelp: computed.or('hover', 'focus', 'click')
+  });
+
+  /**
+  
+   @class Components.ContextualHelp
+   @namespace Components
+   @extends Ember.Component
+   @uses Mixins.TransitionSupport
+   @private
+   */
+  exports.default = Component.extend(_transitionSupport.default, {
+    tagName: '',
+
+    /**
+     * @property title
+     * @type string
+     * @public
+     */
+    title: null,
+
+    /**
+     * How to position the tooltip/popover - top | bottom | left | right
+     *
+     * @property title
+     * @type string
+     * @default 'top'
+     * @public
+     */
+    placement: 'top',
+
+    _placement: computed.reads('placement'),
+
+    /**
+     * When `true` it will dynamically reorient the tooltip/popover. For example, if `placement` is "left", the
+     * tooltip/popover will display to the left when possible, otherwise it will display right.
+     *
+     * @property autoPlacement
+     * @type boolean
+     * @default false
+     * @public
+     */
+    autoPlacement: false,
+
+    /**
+     * You can programmatically show the tooltip/popover by setting this to `true`
+     *
+     * @property visible
+     * @type boolean
+     * @default false
+     * @public
+     */
+    visible: false,
+
+    /**
+     * @property inDom
+     * @type boolean
+     * @private
+     */
+    inDom: computed.reads('visible'),
+
+    /**
+     * Set to false to disable fade animations.
+     *
+     * @property fade
+     * @type boolean
+     * @default true
+     * @public
+     */
+    fade: true,
+
+    /**
+     * Used to apply Bootstrap's visibility class
+     *
+     * @property showHelp
+     * @type boolean
+     * @default false
+     * @private
+     */
+    showHelp: computed.reads('visible'),
+
+    /**
+     * Delay showing and hiding the tooltip/popover (ms). Individual delays for showing and hiding can be specified by using the
+     * `delayShow` and `delayHide` properties.
+     *
+     * @property delay
+     * @type number
+     * @default 0
+     * @public
+     */
+    delay: 0,
+
+    /**
+     * Delay showing the tooltip/popover. This property overrides the general delay set with the `delay` property.
+     *
+     * @property delayShow
+     * @type number
+     * @default 0
+     * @public
+     */
+    delayShow: computed.reads('delay'),
+
+    /**
+     * Delay hiding the tooltip/popover. This property overrides the general delay set with the `delay` property.
+     *
+     * @property delayHide
+     * @type number
+     * @default 0
+     * @public
+     */
+    delayHide: computed.reads('delay'),
+
+    hasDelayShow: computed.gt('delayShow', 0),
+    hasDelayHide: computed.gt('delayHide', 0),
+
+    /**
+     * The duration of the fade transition
+     *
+     * @property transitionDuration
+     * @type number
+     * @default 150
+     * @public
+     */
+    transitionDuration: 150,
+
+    /**
+     * Keeps the tooltip/popover within the bounds of this element when `autoPlacement` is true. Can be any valid CSS selector.
+     *
+     * @property viewportSelector
+     * @type string
+     * @default 'body'
+     * @see viewportPadding
+     * @see autoPlacement
+     * @public
+     */
+    viewportSelector: 'body',
+
+    /**
+     * Take a padding into account for keeping the tooltip/popover within the bounds of the element given by `viewportSelector`.
+     *
+     * @property viewportPadding
+     * @type number
+     * @default 0
+     * @see viewportSelector
+     * @see autoPlacement
+     * @public
+     */
+    viewportPadding: 0,
+
+    /**
+     * The id of the overlay element.
+     *
+     * @property overlayId
+     * @type string
+     * @readonly
+     * @private
+     */
+    overlayId: computed(function () {
+      return 'overlay-' + guidFor(this);
+    }),
+
+    /**
+     * The DOM element of the overlay element.
+     *
+     * @property overlayElement
+     * @type object
+     * @readonly
+     * @private
+     */
+    overlayElement: computed('overlayId', function () {
+      return document.getElementById(this.get('overlayId'));
+    }).volatile(),
+
+    /**
+     * The DOM element of the arrow element.
+     *
+     * @property arrowElement
+     * @type object
+     * @readonly
+     * @private
+     */
+    arrowElement: null,
+
+    /**
+     * The DOM element of the viewport element.
+     *
+     * @property viewportElement
+     * @type object
+     * @readonly
+     * @private
+     */
+    viewportElement: computed('viewportSelector', function () {
+      return document.querySelector(this.get('viewportSelector'));
+    }),
+
+    /**
+     * The DOM element that triggers the tooltip/popover. By default it is the parent element of this component.
+     * You can set this to any CSS selector to have any other element trigger the tooltip/popover.
+     * With the special value of "parentView" you can attach the tooltip/popover to the parent component's element.
+     *
+     * @property triggerElement
+     * @type string
+     * @public
+     */
+    triggerElement: null,
+
+    /**
+     * @property triggerTargetElement
+     * @type {object}
+     * @private
+     */
+    triggerTargetElement: computed('triggerElement', function () {
+      var triggerElement = this.get('triggerElement');
+      var el = void 0;
+
+      if (isBlank(triggerElement)) {
+        el = (0, _getParent.default)(this);
+      } else if (triggerElement === 'parentView') {
+        el = this.get('parentView.element');
+      } else {
+        el = document.querySelector(triggerElement);
+      }
+      assert('Trigger element for tooltip/popover must be present', el);
+      return el;
+    }),
+
+    /**
+     * The event(s) that should trigger the tooltip/popover - click | hover | focus.
+     * You can set this to a single event or multiple events, given as an array or a string separated by spaces.
+     *
+     * @property triggerEvents
+     * @type array|string
+     * @default 'hover focus'
+     * @public
+     */
+    triggerEvents: 'hover focus',
+
+    _triggerEvents: computed('triggerEvents', function () {
+      var events = this.get('triggerEvents');
+      if (!isArray(events)) {
+        events = events.split(' ');
+      }
+
+      return events.map(function (event) {
+        switch (event) {
+          case 'hover':
+            return ['mouseenter', 'mouseleave'];
+          case 'focus':
+            return ['focusin', 'focusout'];
+          default:
+            return event;
+        }
+      });
+    }),
+
+    /**
+     * If true component will render in place, rather than be wormholed.
+     *
+     * @property renderInPlace
+     * @type boolean
+     * @default false
+     * @public
+     */
+    renderInPlace: false,
+
+    /**
+     * @property _renderInPlace
+     * @type boolean
+     * @private
+     */
+    _renderInPlace: computed('renderInPlace', function () {
+      return this.get('renderInPlace') || typeof document === 'undefined' || !document.getElementById('ember-bootstrap-wormhole');
+    }),
+
+    /**
+     * Current hover state, 'in', 'out' or null
+     *
+     * @property hoverState
+     * @type string
+     * @private
+     */
+    hoverState: null,
+
+    /**
+     * Current state for events
+     *
+     * @property inState
+     * @type {InState}
+     * @private
+     */
+    inState: computed(function () {
+      return InState.create();
+    }),
+
+    /**
+     * Ember.run timer
+     *
+     * @property timer
+     * @private
+     */
+    timer: null,
+
+    /**
+     * This action is called immediately when the tooltip/popover is about to be shown.
+     *
+     * @event onShow
+     * @public
+     */
+    onShow: function onShow() {},
+
+
+    /**
+     * This action will be called when the tooltip/popover has been made visible to the user (will wait for CSS transitions to complete).
+     *
+     * @event onShown
+     * @public
+     */
+    onShown: function onShown() {},
+
+
+    /**
+     * This action is called immediately when the tooltip/popover is about to be hidden.
+     *
+     * @event onHide
+     * @public
+     */
+    onHide: function onHide() {},
+
+
+    /**
+     * This action is called when the tooltip/popover has finished being hidden from the user (will wait for CSS transitions to complete).
+     *
+     * @event onHidden
+     * @public
+     */
+    onHidden: function onHidden() {},
+
+
+    /**
+     * Called when a show event has been received
+     *
+     * @method enter
+     * @param e
+     * @private
+     */
+    enter: function enter(e) {
+      if (e) {
+        var eventType = e.type === 'focusin' ? 'focus' : 'hover';
+        this.get('inState').set(eventType, true);
+      }
+
+      if (this.get('showHelp') || this.get('hoverState') === 'in') {
+        this.set('hoverState', 'in');
+        return;
+      }
+
+      cancel(this.timer);
+
+      this.set('hoverState', 'in');
+
+      if (!this.get('hasDelayShow')) {
+        return this.show();
+      }
+
+      this.timer = later(this, function () {
+        if (this.get('hoverState') === 'in') {
+          this.show();
+        }
+      }, this.get('delayShow'));
+    },
+
+
+    /**
+     * Called when a hide event has been received
+     *
+     * @method leave
+     * @param e
+     * @private
+     */
+    leave: function leave(e) {
+      if (e) {
+        var eventType = e.type === 'focusout' ? 'focus' : 'hover';
+        this.get('inState').set(eventType, false);
+      }
+
+      if (this.get('inState.showHelp')) {
+        return;
+      }
+
+      cancel(this.timer);
+
+      this.set('hoverState', 'out');
+
+      if (!this.get('hasDelayHide')) {
+        return this.hide();
+      }
+
+      this.timer = later(this, function () {
+        if (this.get('hoverState') === 'out') {
+          this.hide();
+        }
+      }, this.get('delayHide'));
+    },
+
+
+    /**
+     * Called for a click event
+     *
+     * @method toggle
+     * @param e
+     * @private
+     */
+    toggle: function toggle(e) {
+      if (e) {
+        this.get('inState').toggleProperty('click');
+        if (this.get('inState.showHelp')) {
+          this.enter();
+        } else {
+          this.leave();
+        }
+      } else {
+        if (this.get('showHelp')) {
+          this.leave();
+        } else {
+          this.enter();
+        }
+      }
+    },
+
+
+    /**
+     * Show the tooltip/popover
+     *
+     * @method show
+     * @private
+     */
+    show: function show() {
+      if (this.get('isDestroyed')) {
+        return;
+      }
+
+      if (false === this.get('onShow')(this)) {
+        return;
+      }
+
+      // this waits for the tooltip/popover element to be created. when animating a wormholed tooltip/popover we need to wait until
+      // ember-wormhole has moved things in the DOM for the animation to be correct, so use Ember.run.next in this case
+      var delayFn = !this.get('_renderInPlace') && this.get('fade') ? next : function (target, fn) {
+        schedule('afterRender', target, fn);
+      };
+
+      this.set('inDom', true);
+      delayFn(this, this._show);
+    },
+    _show: function _show() {
+      var skipTransition = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+      var element = this.get('triggerTargetElement');
+      var placement = this.get('placement');
+
+      // this.$element.attr('aria-describedby', tipId) @todo ?
+
+      var tip = this.get('overlayElement');
+      tip.style.top = 0;
+      tip.style.left = 0;
+      tip.style.display = 'block';
+
+      var pos = (0, _getPosition.default)(element);
+      var actualWidth = tip.offsetWidth;
+      var actualHeight = tip.offsetHeight;
+
+      if (this.get('autoPlacement')) {
+        var viewportDim = (0, _getPosition.default)(this.get('viewportElement'));
+
+        placement = placement === 'bottom' && pos.bottom + actualHeight > viewportDim.bottom ? 'top' : placement === 'top' && pos.top - actualHeight < viewportDim.top ? 'bottom' : placement === 'right' && pos.right + actualWidth > viewportDim.width ? 'left' : placement === 'left' && pos.left - actualWidth < viewportDim.left ? 'right' : placement;
+      }
+
+      this.set('_placement', placement);
+
+      var calculatedOffset = (0, _getCalculatedOffset.default)(placement, pos, actualWidth, actualHeight);
+      this.applyPlacement(calculatedOffset, placement);
+
+      function tooltipShowComplete() {
+        if (this.get('isDestroyed')) {
+          return;
+        }
+        var prevHoverState = this.get('hoverState');
+
+        this.get('onShown')(this);
+        this.set('hoverState', null);
+
+        if (prevHoverState === 'out') {
+          this.leave();
+        }
+      }
+
+      if (skipTransition === false && this.get('usesTransition')) {
+        (0, _transitionEnd.default)(this.get('overlayElement'), tooltipShowComplete, this, this.get('transitionDuration'));
+      } else {
+        tooltipShowComplete.call(this);
+      }
+    },
+
+
+    /**
+     * Position the tooltip/popover
+     *
+     * @method applyPlacement
+     * @param offset
+     * @param placement
+     * @private
+     */
+    applyPlacement: function applyPlacement(offset, placement) {
+      var _this = this;
+
+      var tip = this.get('overlayElement');
+      var width = tip.offsetWidth;
+      var height = tip.offsetHeight;
+
+      // manually read margins because getBoundingClientRect includes difference
+      var marginTop = parseInt(window.getComputedStyle(tip).marginTop, 10);
+      var marginLeft = parseInt(window.getComputedStyle(tip).marginLeft, 10);
+
+      // we must check for NaN for ie 8/9
+      if (isNaN(marginTop)) {
+        marginTop = 0;
+      }
+      if (isNaN(marginLeft)) {
+        marginLeft = 0;
+      }
+
+      offset.top += marginTop;
+      offset.left += marginLeft;
+
+      (0, _setOffset.default)(tip, offset);
+
+      this.set('showHelp', true);
+
+      schedule('afterRender', function () {
+        // check to see if placing tip in new offset caused the tip to resize itself
+        var actualWidth = tip.offsetWidth;
+        var actualHeight = tip.offsetHeight;
+
+        if (placement === 'top' && actualHeight !== height) {
+          offset.top = offset.top + height - actualHeight;
+        }
+
+        var delta = _this.getViewportAdjustedDelta(placement, offset, actualWidth, actualHeight);
+
+        if (delta.left) {
+          offset.left += delta.left;
+        } else {
+          offset.top += delta.top;
+        }
+
+        var isVertical = /top|bottom/.test(placement);
+        var arrowDelta = isVertical ? delta.left * 2 - width + actualWidth : delta.top * 2 - height + actualHeight;
+        var arrowOffsetPosition = isVertical ? 'offsetWidth' : 'offsetHeight';
+
+        (0, _setOffset.default)(tip, offset);
+        _this.replaceArrow(arrowDelta, tip[arrowOffsetPosition], isVertical);
+      });
+    },
+
+
+    /**
+     * @method getViewportAdjustedDelta
+     * @param placement
+     * @param pos
+     * @param actualWidth
+     * @param actualHeight
+     * @return {{top: number, left: number}}
+     * @private
+     */
+    getViewportAdjustedDelta: function getViewportAdjustedDelta(placement, pos, actualWidth, actualHeight) {
+      var delta = { top: 0, left: 0 };
+      var viewport = this.get('viewportElement');
+      if (!viewport) {
+        return delta;
+      }
+
+      var viewportPadding = this.get('viewportPadding');
+      var viewportDimensions = (0, _getPosition.default)(viewport);
+
+      if (/right|left/.test(placement)) {
+        var topEdgeOffset = pos.top - viewportPadding - viewportDimensions.scroll;
+        var bottomEdgeOffset = pos.top + viewportPadding - viewportDimensions.scroll + actualHeight;
+        if (topEdgeOffset < viewportDimensions.top) {
+          // top overflow
+          delta.top = viewportDimensions.top - topEdgeOffset;
+        } else if (bottomEdgeOffset > viewportDimensions.top + viewportDimensions.height) {
+          // bottom overflow
+          delta.top = viewportDimensions.top + viewportDimensions.height - bottomEdgeOffset;
+        }
+      } else {
+        var leftEdgeOffset = pos.left - viewportPadding;
+        var rightEdgeOffset = pos.left + viewportPadding + actualWidth;
+        if (leftEdgeOffset < viewportDimensions.left) {
+          // left overflow
+          delta.left = viewportDimensions.left - leftEdgeOffset;
+        } else if (rightEdgeOffset > viewportDimensions.right) {
+          // right overflow
+          delta.left = viewportDimensions.left + viewportDimensions.width - rightEdgeOffset;
+        }
+      }
+
+      return delta;
+    },
+
+
+    /**
+     * Position the tooltip/popover's arrow
+     *
+     * @method replaceArrow
+     * @param delta
+     * @param dimension
+     * @param isVertical
+     * @private
+     */
+    replaceArrow: function replaceArrow(delta, dimension, isVertical) {
+      var el = this.get('arrowElement');
+      el.style[isVertical ? 'left' : 'top'] = 50 * (1 - delta / dimension) + '%';
+      el.style[isVertical ? 'top' : 'left'] = null;
+    },
+
+
+    /**
+     * Hide the tooltip/popover
+     *
+     * @method hide
+     * @private
+     */
+    hide: function hide() {
+      if (this.get('isDestroyed')) {
+        return;
+      }
+
+      if (false === this.get('onHide')(this)) {
+        return;
+      }
+
+      function tooltipHideComplete() {
+        if (this.get('isDestroyed')) {
+          return;
+        }
+        if (this.get('hoverState') !== 'in') {
+          this.set('inDom', false);
+        }
+        this.get('onHidden')(this);
+      }
+
+      this.set('showHelp', false);
+
+      if (this.get('usesTransition')) {
+        (0, _transitionEnd.default)(this.get('overlayElement'), tooltipHideComplete, this, this.get('transitionDuration'));
+      } else {
+        tooltipHideComplete.call(this);
+      }
+
+      this.set('hoverState', null);
+    },
+
+
+    /**
+     * @method addListeners
+     * @private
+     */
+    addListeners: function addListeners() {
+      var _this2 = this;
+
+      var target = this.get('triggerTargetElement');
+
+      this.get('_triggerEvents').forEach(function (event) {
+        if (isArray(event)) {
+          var _event = _slicedToArray(event, 2),
+              inEvent = _event[0],
+              outEvent = _event[1];
+
+          target.addEventListener(inEvent, _this2._handleEnter);
+          target.addEventListener(outEvent, _this2._handleLeave);
+        } else {
+          target.addEventListener(event, _this2._handleToggle);
+        }
+      });
+    },
+
+
+    /**
+     * @method removeListeners
+     * @private
+     */
+    removeListeners: function removeListeners() {
+      var _this3 = this;
+
+      var target = this.get('triggerTargetElement');
+      this.get('_triggerEvents').forEach(function (event) {
+        if (isArray(event)) {
+          var _event2 = _slicedToArray(event, 2),
+              inEvent = _event2[0],
+              outEvent = _event2[1];
+
+          target.removeEventListener(inEvent, _this3._handleEnter);
+          target.removeEventListener(outEvent, _this3._handleLeave);
+        } else {
+          target.removeEventListener(event, _this3._handleToggle);
+        }
+      });
+    },
+    init: function init() {
+      this._super.apply(this, arguments);
+      this._handleEnter = run.bind(this, this.enter);
+      this._handleLeave = run.bind(this, this.leave);
+      this._handleToggle = run.bind(this, this.toggle);
+    },
+    didInsertElement: function didInsertElement() {
+      this._super.apply(this, arguments);
+      this.addListeners();
+      if (this.get('visible')) {
+        next(this, this._show, true);
+      }
+    },
+    willDestroyElement: function willDestroyElement() {
+      this._super.apply(this, arguments);
+      this.removeListeners();
+    },
+
+
+    _watchVisible: observer('visible', function () {
+      if (this.get('visible')) {
+        this.show();
+      } else {
+        this.hide();
+      }
+    })
+
+  });
+});
+;define('ember-bootstrap/components/base/bs-dropdown', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-dropdown'], function (exports, _ember, _bsDropdown) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed,
+      bind = _ember.default.run.bind;
+  exports.default = _ember.default.Component.extend({
+    layout: _bsDropdown.default,
+    classNameBindings: ['containerClass'],
+
+    /**
+     * This property reflects the state of the dropdown, whether it is open or closed.
+     *
+     * @property isOpen
+     * @default false
+     * @type boolean
+     * @private
+     */
+    isOpen: false,
+
+    /**
+     * By default clicking on an open dropdown menu will close it. Set this property to false for the menu to stay open.
+     *
+     * @property closeOnMenuClick
+     * @default true
+     * @type boolean
+     * @public
+     */
+    closeOnMenuClick: true,
+
+    /**
+     * By default the dropdown menu will expand downwards. Set to 'up' to expand upwards.
+     *
+     * @property direction
+     * @type string
+     * @default 'down'
+     * @public
+     */
+    direction: 'down',
+
+    /**
+     * Indicates the dropdown is being used as a navigation item dropdown.
+     *
+     * @property inNav
+     * @type boolean
+     * @default false
+     * @private
+     */
+    inNav: false,
+
+    /**
+     * A computed property to generate the suiting class for the dropdown container, either "dropdown", "dropup" or "btn-group".
+     *
+     * @property containerClass
+     * @type string
+     * @readonly
+     * @private
+     */
+    containerClass: computed('toggle.tagName', 'direction', function () {
+      if (this.get('toggle.tagName') === 'button' && !this.get('toggle.block')) {
+        return this.get('direction') === 'up' ? 'btn-group dropup' : 'btn-group';
+      } else {
+        return this.get('direction') === 'up' ? 'dropup' : 'dropdown';
+      }
+    }),
+
+    /**
+     * @property menuElement
+     * @private
+     */
+    menuElement: computed(function () {
+      return this.get('element').querySelector('.dropdown-menu');
+    }).volatile(),
+
+    /**
+     * @property toggleElement
+     * @private
+     */
+    toggleElement: computed.readOnly('toggle.element'),
+
+    /**
+     * Reference to the child toggle (Toggle or Button)
+     *
+     * @property toggle
+     * @private
+     */
+    toggle: null,
+
+    /**
+     * Action is called when dropdown is about to be shown
+     *
+     * @event onShow
+     * @param {*} value
+     * @public
+     */
+    onShow: function onShow(value) {},
+    // eslint-disable-line no-unused-vars
+
+    /**
+     * Action is called when dropdown is about to be hidden
+     *
+     * @event onHide
+     * @param {*} value
+     * @public
+     */
+    onHide: function onHide(value) {},
+    // eslint-disable-line no-unused-vars
+
+    actions: {
+      toggleDropdown: function toggleDropdown() {
+        if (this.get('isOpen')) {
+          this.send('closeDropdown');
+        } else {
+          this.send('openDropdown');
+        }
+      },
+      openDropdown: function openDropdown() {
+        this.set('isOpen', true);
+        this.addClickListener();
+        this.get('onShow')();
+      },
+      closeDropdown: function closeDropdown() {
+        this.set('isOpen', false);
+        this.removeClickListener();
+        this.get('onHide')();
+      }
+    },
+
+    addClickListener: function addClickListener() {
+      if (!this.clickListener) {
+        this.clickListener = bind(this, this.closeOnClickHandler);
+        document.addEventListener('click', this.clickListener);
+      }
+    },
+    removeClickListener: function removeClickListener() {
+      if (this.clickListener) {
+        document.removeEventListener('click', this.clickListener);
+        this.clickListener = null;
+      }
+    },
+    willDestroyElement: function willDestroyElement() {
+      this._super.apply(this, arguments);
+      this.removeClickListener();
+    },
+
+
+    /**
+     * Handler for click events to close the dropdown
+     *
+     * @method closeOnClickHandler
+     * @param e
+     * @protected
+     */
+    closeOnClickHandler: function closeOnClickHandler(e) {
+      var target = e.target;
+
+      var _getProperties = this.getProperties('toggleElement', 'menuElement'),
+          toggleElement = _getProperties.toggleElement,
+          menuElement = _getProperties.menuElement;
+
+      if (!this.get('isDestroyed') && toggleElement && !toggleElement.contains(target) && (menuElement && !menuElement.contains(target) || this.get('closeOnMenuClick'))) {
+        this.send('closeDropdown');
+      }
+    }
+  });
+});
+;define('ember-bootstrap/components/base/bs-dropdown/button', ['exports', 'ember-bootstrap/components/bs-button', 'ember-bootstrap/mixins/dropdown-toggle'], function (exports, _bsButton, _dropdownToggle) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _bsButton.default.extend(_dropdownToggle.default);
+});
+;define('ember-bootstrap/components/base/bs-dropdown/menu', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-dropdown/menu'], function (exports, _ember, _menu) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed;
+  exports.default = _ember.default.Component.extend({
+    layout: _menu.default,
+
+    /**
+     * Defaults to a `<ul>` tag in BS3 and a '<div>' tag in BS4. Change for other types of dropdown menus.
+     *
+     * @property tagName
+     * @type string
+     * @default ul
+     * @public
+     */
+
+    classNames: ['dropdown-menu'],
+    classNameBindings: ['alignClass'],
+
+    /**
+     * @property ariaRole
+     * @default menu
+     * @type string
+     * @protected
+     */
+    ariaRole: 'menu',
+
+    /**
+     * Alignment of the menu, either "left" or "right"
+     *
+     * @property align
+     * @type string
+     * @default left
+     * @public
+     */
+    align: 'left',
+
+    alignClass: computed('align', function () {
+      if (this.get('align') !== 'left') {
+        return 'dropdown-menu-' + this.get('align');
+      }
+    })
+  });
+});
+;define('ember-bootstrap/components/base/bs-dropdown/menu/divider', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Component.extend({});
+});
+;define('ember-bootstrap/components/base/bs-dropdown/menu/item', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Component.extend({});
+});
+;define('ember-bootstrap/components/base/bs-dropdown/menu/link-to', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.LinkComponent.extend({});
+});
+;define('ember-bootstrap/components/base/bs-dropdown/toggle', ['exports', 'ember', 'ember-bootstrap/mixins/dropdown-toggle'], function (exports, _ember, _dropdownToggle) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed;
+  exports.default = _ember.default.Component.extend(_dropdownToggle.default, {
+    /**
+     * Defaults to a `<a>` tag. Change for other types of dropdown toggles.
+     *
+     * @property tagName
+     * @type string
+     * @default a
+     * @public
+     */
+    tagName: 'a',
+
+    attributeBindings: ['href'],
+
+    /**
+     * Computed property to generate a `href="#"` attribute when `tagName` is "a".
+     *
+     * @property href
+     * @type string
+     * @readonly
+     * @private
+     */
+    href: computed('tagName', function () {
+      if (this.get('tagName').toUpperCase() === 'A') {
+        return '#';
+      }
+    }),
+
+    /**
+     * When clicking the toggle this action is called.
+     *
+     * @event onClick
+     * @param {*} value
+     * @public
+     */
+    onClick: function onClick() {},
+    click: function click(e) {
+      e.preventDefault();
+      this.get('onClick')();
+    }
+  });
+});
+;define('ember-bootstrap/components/base/bs-form', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-form'], function (exports, _ember, _bsForm) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed,
+      RSVP = _ember.default.RSVP,
+      set = _ember.default.set,
+      assert = _ember.default.assert,
+      isPresent = _ember.default.isPresent;
+  exports.default = _ember.default.Component.extend({
+    layout: _bsForm.default,
+    tagName: 'form',
+    classNameBindings: ['layoutClass'],
+    attributeBindings: ['_novalidate:novalidate'],
+    ariaRole: 'form',
+
+    /**
+     * Bootstrap form class name (computed)
+     *
+     * @property layoutClass
+     * @type string
+     * @readonly
+     * @protected
+     *
+     */
+
+    /**
+     * Set a model that this form should represent. This serves several purposes:
+     *
+     * * child `Components.FormElement`s can access and bind to this model by their `property`
+     * * when the model supports validation by using the [ember-validations](https://github.com/dockyard/ember-validations) mixin,
+     * child `Components.FormElement`s will look at the validation information of their `property` and render their form group accordingly.
+     * Moreover the form's `submit` event handler will validate the model and deny submitting if the model is not validated successfully.
+     *
+     * @property model
+     * @type Ember.Object
+     * @public
+     */
+    model: null,
+
+    /**
+     * Set the layout of the form to either "vertical", "horizontal" or "inline". See http://getbootstrap.com/css/#forms-inline and http://getbootstrap.com/css/#forms-horizontal
+     *
+     * @property formLayout
+     * @type string
+     * @public
+     */
+    formLayout: 'vertical',
+
+    /**
+     * Check if validating the model is supported. This needs to be implemented by another addon.
+     *
+     * @property hasValidator
+     * @type boolean
+     * @readonly
+     * @protected
+     */
+    hasValidator: false,
+
+    /**
+     * The Bootstrap grid class for form labels. This is used by the `Components.FormElement` class as a default for the
+     * whole form.
+     *
+     * @property horizontalLabelGridClass
+     * @type string
+     * @default 'col-md-4'
+     * @public
+     */
+    horizontalLabelGridClass: 'col-md-4',
+
+    /**
+     * If set to true pressing enter will submit the form, even if no submit button is present
+     *
+     * @property submitOnEnter
+     * @type boolean
+     * @default false
+     * @public
+     */
+    submitOnEnter: false,
+
+    /**
+     * If set to true novalidate attribute is present on form element
+     *
+     * @property novalidate
+     * @type boolean
+     * @default null
+     * @public
+     */
+    novalidate: false,
+
+    _novalidate: computed('novalidate', function () {
+      return this.get('novalidate') === true ? '' : undefined;
+    }),
+
+    /**
+     * Validate hook which will return a promise that will either resolve if the model is valid
+     * or reject if it's not. This should be overridden to add validation support.
+     *
+     * @method validate
+     * @param {Object} model
+     * @return {Promise}
+     * @public
+     */
+    validate: function validate(model) {},
+    // eslint-disable-line no-unused-vars
+
+    /**
+     * @property showAllValidations
+     * @type boolean
+     * @default false
+     * @private
+     */
+    showAllValidations: false,
+
+    /**
+     * Action is called before the form is validated (if possible) and submitted.
+     *
+     * @event onBefore
+     * @param { Object } model  The form's `model`
+     * @public
+     */
+    onBefore: function onBefore(model) {},
+    // eslint-disable-line no-unused-vars
+
+    /**
+     * Action is called when submit has been triggered and the model has passed all validations (if present).
+     *
+     * @event onSubmit
+     * @param { Object } model  The form's `model`
+     * @param { Object } result The returned result from the validate method, if validation is available
+     * @public
+     */
+    onSubmit: function onSubmit(model, result) {},
+    // eslint-disable-line no-unused-vars
+
+    /**
+     * Action is called when validation of the model has failed.
+     *
+     * @event onInvalid
+     * @param { Object } model  The form's `model`
+     * @param { Object } error
+     * @public
+     */
+    onInvalid: function onInvalid(model, error) {},
+    // eslint-disable-line no-unused-vars
+
+    /**
+     * Submit handler that will send the default action ("action") to the controller when submitting the form.
+     *
+     * If there is a supplied `model` that supports validation (`hasValidator`) the model will be validated before, and
+     * only if validation is successful the default action will be sent. Otherwise an "invalid" action will be sent, and
+     * all the `showValidation` property of all child `Components.FormElement`s will be set to true, so error state and
+     * messages will be shown automatically.
+     *
+     * @method submit
+     * @private
+     */
+    submit: function submit(e) {
+      var _this = this;
+
+      if (e) {
+        e.preventDefault();
+      }
+      var model = this.get('model');
+
+      this.get('onBefore')(model);
+
+      if (!this.get('hasValidator')) {
+        return this.get('onSubmit')(model);
+      } else {
+        var validationPromise = this.validate(this.get('model'));
+        if (validationPromise && validationPromise instanceof RSVP.Promise) {
+          validationPromise.then(function (r) {
+            return _this.get('onSubmit')(model, r);
+          }).catch(function (err) {
+            _this.set('showAllValidations', true);
+            return _this.get('onInvalid')(model, err);
+          });
+        }
+      }
+    },
+    keyPress: function keyPress(e) {
+      var code = e.keyCode || e.which;
+      if (code === 13 && this.get('submitOnEnter')) {
+        this.triggerSubmit();
+      }
+    },
+    triggerSubmit: function triggerSubmit() {
+      var event = document.createEvent('Event');
+      event.initEvent('submit', true, true);
+      this.get('element').dispatchEvent(event);
+    },
+
+
+    actions: {
+      change: function change(value, model, property) {
+        assert('You cannot use the form element\'s default onChange action for form elements if not using a model or setting the value directly on a form element. You must add your own onChange action to the form element in this case!', isPresent(model) && isPresent(property));
+        set(model, property, value);
+      }
+    }
+  });
+});
+;define('ember-bootstrap/components/base/bs-form/element', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-form/element', 'ember-bootstrap/components/bs-form/group'], function (exports, _ember, _element, _group) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed,
+      defineProperty = _ember.default.defineProperty,
+      isArray = _ember.default.isArray,
+      isBlank = _ember.default.isBlank,
+      observer = _ember.default.observer,
+      on = _ember.default.on,
+      scheduleOnce = _ember.default.run.scheduleOnce,
+      assert = _ember.default.assert,
+      typeOf = _ember.default.typeOf,
+      A = _ember.default.A,
+      getOwner = _ember.default.getOwner;
+
+
+  var nonDefaultLayouts = A(['checkbox']);
+
+  /**
+   Sub class of `Components.FormGroup` that adds automatic form layout markup and form validation features.
+  
+   ### Form layout
+  
+   The appropriate Bootstrap markup for the given `formLayout` and `controlType` is automatically generated to easily
+   create forms without coding the default Bootstrap form markup by hand:
+  
+   ```hbs
+   {{#bs-form formLayout="horizontal" onSubmit=(action "submit") as |form|}}
+   {{form.element controlType="email" label="Email" placeholder="Email" value=email}}
+   {{form.element controlType="password" label="Password" placeholder="Password" value=password}}
+   {{form.element controlType="checkbox" label="Remember me" value=rememberMe}}
+   {{bs-button defaultText="Submit" type="primary" buttonType="submit"}}
+   {{/bs-form}}
+   ```
+  
+   ### Form validation
+  
+   In the following example the control elements of the three form elements value will be bound to the properties
+   (given by `property`) of the form's `model`, which in this case is its controller (see `model=this`):
+  
+   ```hbs
+   {{#bs-form formLayout="horizontal" model=this onSubmit=(action "submit") as |form|}}
+   {{form.element controlType="email" label="Email" placeholder="Email" property="email"}}
+   {{form.element controlType="password" label="Password" placeholder="Password" property="password"}}
+   {{form.element controlType="checkbox" label="Remember me" property="rememberMe"}}
+   {{bs-button defaultText="Submit" type="primary" buttonType="submit"}}
+   {{/bs-form}}
+   ```
+  
+   By using this indirection in comparison to directly binding the `value` property, you get the benefit of automatic
+   form validation, given that your `model` has a supported means of validating itself.
+   See [Components.Form](Components.Form.html) for details on how to enable form validation.
+  
+   In the example above the `model` was our controller itself, so the control elements were bound to the appropriate
+   properties of our controller. A controller implementing validations on those properties could look like this:
+  
+   ```js
+   import Ember from 'ember';
+   import EmberValidations from 'ember-validations';
+  
+   export default Ember.Controller.extend(EmberValidations,{
+     email: null,
+     password: null,
+     rememberMe: false,
+     validations: {
+       email: {
+         presence: true,
+         format: {
+           with: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
+         }
+       },
+       password: {
+         presence: true,
+         length: { minimum: 6, maximum: 10}
+       },
+       comments: {
+         length: { minimum: 5, maximum: 20}
+       }
+     }
+   });
+   ```
+  
+   If the `showValidation` property is `true` (which is automatically the case if a `focusOut` event is captured from the
+   control element or the containing `Components.Form` was submitted with its `model` failing validation) and there are
+   validation errors for the `model`'s `property`, the appropriate Bootstrap validation markup (see
+   http://getbootstrap.com/css/#forms-control-validation) is applied:
+  
+   * `validation` is set to 'error', which will set the `has-error` CSS class
+   * the `errorIcon` feedback icon is displayed if `controlType` is a text field
+   * the validation messages are displayed as Bootstrap `help-block`s in BS3 and `form-control-feedback` in BS4
+  
+   The same applies for warning messages, if the used validation library supports this. (Currently only
+   [ember-cp-validations](https://github.com/offirgolan/ember-cp-validations))
+  
+   As soon as the validation is successful again...
+  
+   * `validation` is set to 'success', which will set the `has-success` CSS class
+   * the `successIcon` feedback icon is displayed if `controlType` is a text field
+   * the validation messages are removed
+  
+   In case you want to display some error or warning message that is independent of the model's validation, for
+   example to display a failure message on a login form after a failed authentication attempt (so not coming from
+   the validation library), you can use the `customError` or `customWarning` properties to do so.
+  
+   ### Custom controls
+  
+   Apart from the standard built-in browser controls (see the `controlType` property), you can use any custom control simply
+   by invoking the component with a block template. Use whatever control you might want, for example a select-2 component
+   (from the [ember-select-2 addon](https://istefo.github.io/ember-select-2)):
+  
+   ```hbs
+   {{#bs-form model=this onSubmit=(action "submit") as |form|}}
+     {{#form.element label="Select-2" property="gender" useIcons=false as |el|}}
+       {{select-2 id=el.id content=genderChoices optionLabelPath="label" value=el.value searchEnabled=false}}
+     {{/form.element}}
+   {{/bs-form}}
+   ```
+  
+   The component yields a hash with the following properties:
+   * `control`: the component that would be used for rendering the form control based on the given `controlType`
+   * `id`: id to be used for the form control, so it matches the labels `for` attribute
+   * `value`: the value of the form element
+   * `validation`: the validation state of the element, `null` if no validation is to be shown, otherwise 'success', 'error' or 'warning'
+  
+   If your custom control does not render an input element, you should set `useIcons` to `false` since bootstrap only supports
+   feedback icons with textual `<input class="form-control">` elements.
+  
+   If you just want to customize the existing control component, you can use the aforementioned yielded `control` component
+   to customize that existing component:
+  
+   ```hbs
+   {{#bs-form model=this onSubmit=(action "submit") as |form|}}
+     {{#form.element label="Email" placeholder="Email" property="email" as |el|}}
+       {{el.control class="input-lg"}}
+     {{/form.element}}
+   {{/bs-form}}
+   ```
+  
+   ### HTML attributes
+  
+   To set HTML attributes on the control element provided by this component, set them as properties of this component:
+  
+   ```hbs
+   {{#bs-form formLayout="horizontal" model=this onSubmit=(action "submit") as |form|}}
+   {{form.element controlType="email" label="Email" property="email"
+     placeholder="Email"
+     required=true
+     multiple=true
+     tabIndex=5
+   }}
+   ...
+   {{/bs-form}}
+   ```
+  
+   The following attributes are supported depending on the `controlType`:
+  
+   <table class="table table-striped">
+   <thead>
+   <tr>
+   <th></th>
+   <th>textarea</th>
+   <th>checkbox</th>
+   <th>all others</th>
+   </tr>
+   </thead>
+   <tbody>
+   <tr>
+   <td>accept</td>
+   <td></td>
+   <td></td>
+   <td>✔︎</td>
+   </tr>
+   <tr>
+   <td>autocomplete</td>
+   <td>✔︎</td>
+   <td></td>
+   <td>✔︎</td>
+   </tr>
+   <tr>
+   <td>autofocus</td>
+   <td>✔︎</td>
+   <td>✔︎</td>
+   <td>✔︎</td>
+   </tr>
+   <tr>
+   <td>autosave</td>
+   <td></td>
+   <td></td>
+   <td>✔︎</td>
+   </tr>
+   <tr>
+   <td>cols</td>
+   <td>✔︎</td>
+   <td></td>
+   <td></td>
+   </tr>
+   <tr>
+   <td>disabled</td>
+   <td></td>
+   <td>✔︎</td>
+   <td>✔︎</td>
+   </tr>
+   <tr>
+   <td>form</td>
+   <td>✔︎</td>
+   <td>✔︎</td>
+   <td>✔︎</td>
+   </tr>
+   <tr>
+   <td>inputmode</td>
+   <td></td>
+   <td></td>
+   <td>✔︎</td>
+   </tr>
+   <tr>
+   <td>max</td>
+   <td></td>
+   <td></td>
+   <td>✔︎</td>
+   </tr>
+   <tr>
+   <td>maxlength</td>
+   <td>✔︎</td>
+   <td></td>
+   <td>✔︎</td>
+   </tr>
+   <tr>
+   <td>min</td>
+   <td></td>
+   <td></td>
+   <td>✔︎</td>
+   </tr>
+   <tr>
+   <td>minlength</td>
+   <td>✔︎</td>
+   <td></td>
+   <td>✔︎</td>
+   </tr>
+   <tr>
+   <td>multiple</td>
+   <td></td>
+   <td></td>
+   <td>✔︎</td>
+   </tr>
+   <tr>
+   <td>name</td>
+   <td>✔︎</td>
+   <td>✔︎</td>
+   <td>✔︎</td>
+   </tr>
+   <tr>
+   <td>pattern</td>
+   <td></td>
+   <td></td>
+   <td>✔︎</td>
+   </tr>
+   <tr>
+   <td>placeholder</td>
+   <td>✔︎</td>
+   <td></td>
+   <td>✔︎</td>
+   </tr>
+   <tr>
+   <td>readonly</td>
+   <td>✔︎</td>
+   <td>✔︎</td>
+   <td>✔︎</td>
+   </tr>
+   <tr>
+   <td>required</td>
+   <td>✔︎</td>
+   <td>✔︎</td>
+   <td>✔︎</td>
+   </tr>
+   <tr>
+   <td>rows</td>
+   <td>✔︎</td>
+   <td></td>
+   <td></td>
+   </tr>
+   <tr>
+   <td>size</td>
+   <td></td>
+   <td></td>
+   <td>✔︎</td>
+   </tr>
+   <tr>
+   <td>spellcheck</td>
+   <td>✔︎</td>
+   <td></td>
+   <td>✔︎</td>
+   </tr>
+   <tr>
+   <td>step</td>
+   <td></td>
+   <td></td>
+   <td>✔︎</td>
+   </tr>
+   <tr>
+   <td>tabindex</td>
+   <td>✔︎</td>
+   <td>✔︎</td>
+   <td>✔︎</td>
+   </tr>
+   <tr>
+   <td>title</td>
+   <td>✔︎</td>
+   <td>✔︎</td>
+   <td>✔︎</td>
+   </tr>
+   <tr>
+   <td>wrap</td>
+   <td>✔︎</td>
+   <td></td>
+   <td></td>
+   </tr>
+   </tbody>
+   </table>
+  
+   @class FormElement
+   @namespace Components
+   @extends Components.FormGroup
+   @public
+   */
+  exports.default = _group.default.extend({
+    layout: _element.default,
+    classNameBindings: ['disabled:disabled', 'required:is-required', 'isValidating'],
+
+    /**
+     * Text to display within a `<label>` tag.
+     *
+     * You should include a label for every form input cause otherwise screen readers
+     * will have trouble with your forms. Use `invisibleLabel` property if you want
+     * to hide them.
+     *
+     * @property label
+     * @type string
+     * @public
+     */
+    label: null,
+
+    /**
+     * Controls label visibility by adding 'sr-only' class.
+     *
+     * @property invisibleLabel
+     * @type boolean
+     * @default false
+     * @public
+     */
+    invisibleLabel: false,
+
+    /**
+     * @property hasLabel
+     * @type boolean
+     * @readonly
+     * @private
+     */
+    hasLabel: computed.notEmpty('label'),
+
+    /**
+     * The type of the control widget.
+     * Supported types:
+     *
+     * * 'text'
+     * * 'checkbox'
+     * * 'textarea'
+     * * any other type will use an input tag with the `controlType` value as the type attribute (for e.g. HTML5 input
+     * types like 'email'), and the same layout as the 'text' type
+     *
+     * @property controlType
+     * @type string
+     * @default 'text'
+     * @public
+     */
+    controlType: 'text',
+
+    /**
+     * The value of the control element is bound to this property. You can bind it to some controller property to
+     * get/set the control element's value:
+     *
+     * ```hbs
+     * {{form.element controlType="email" label="Email" placeholder="Email" value=email}}
+     * ```
+     *
+     * Note: you lose the ability to validate this form element by directly binding to its value. It is recommended
+     * to use the `property` feature instead.
+     *
+     *
+     * @property value
+     * @public
+     */
+    value: null,
+
+    /**
+     The property name of the form element's `model` (by default the `model` of its parent `Components.Form`) that this
+     form element should represent. The control element's value will automatically be bound to the model property's
+     value.
+      Using this property enables form validation on this element.
+      @property property
+     @type string
+     @public
+     */
+    property: null,
+
+    /**
+     * The model used for validation. Defaults to the parent `Components.Form`'s `model`
+     *
+     * @property model
+     * @public
+     */
+    model: null,
+
+    /**
+     * Show a help text next to the control
+     *
+     * @property helpText
+     * @type {string}
+     * @public
+     */
+    helpText: null,
+
+    /**
+     * @property hasHelpText
+     * @type boolean
+     * @readonly
+     * @private
+     */
+    hasHelpText: computed.notEmpty('helpText').readOnly(),
+
+    /**
+     * The array of error messages from the `model`'s validation.
+     *
+     * @property errors
+     * @type array
+     * @protected
+     */
+    errors: null,
+
+    /**
+     * @property hasErrors
+     * @type boolean
+     * @readonly
+     * @private
+     */
+    hasErrors: computed.gt('errors.length', 0),
+
+    /**
+     * The array of warning messages from the `model`'s validation.
+     *
+     * @property errors
+     * @type array
+     * @protected
+     */
+    warnings: null,
+
+    /**
+     * @property hasWarnings
+     * @type boolean
+     * @readonly
+     * @private
+     */
+    hasWarnings: computed.gt('warnings.length', 0),
+
+    /**
+     * Show a custom error message that does not come from the model's validation. Will be immediately shown, regardless
+     * of any user interaction (i.e. no `focusOut` event required)
+     *
+     * @property customError
+     * @type string
+     * @public
+     */
+    customError: null,
+
+    /**
+     * @property hasCustomError
+     * @type boolean
+     * @readonly
+     * @private
+     */
+    hasCustomError: computed.notEmpty('customError'),
+
+    /**
+     * Show a custom warning message that does not come from the model's validation. Will be immediately shown, regardless
+     * of any user interaction (i.e. no `focusOut` event required). If the model's validation has an error then the error
+     * will be shown in place of this warning.
+     *
+     * @property customWarning
+     * @type string
+     * @public
+     */
+    customWarning: null,
+
+    /**
+     * @property hasCustomWarning
+     * @type boolean
+     * @readonly
+     * @private
+     */
+    hasCustomWarning: computed.notEmpty('customWarning'),
+
+    /**
+     * The array of validation messages (either errors or warnings) from either custom error/warnings or , if we are showing model validation messages, the model's validation
+     *
+     * @property validationMessages
+     * @type array
+     * @private
+     */
+    validationMessages: computed('hasCustomError', 'customError', 'hasErrors', 'hasCustomWarning', 'customWarning', 'hasWarnings', 'errors.[]', 'warnings.[]', 'showModelValidation', function () {
+      if (this.get('hasCustomError')) {
+        return A([this.get('customError')]);
+      }
+      if (this.get('hasErrors') && this.get('showModelValidation')) {
+        return A(this.get('errors'));
+      }
+      if (this.get('hasCustomWarning')) {
+        return A([this.get('customWarning')]);
+      }
+      if (this.get('hasWarnings') && this.get('showModelValidation')) {
+        return A(this.get('warnings'));
+      }
+      return null;
+    }),
+
+    /**
+     * @property hasValidationMessages
+     * @type boolean
+     * @readonly
+     * @private
+     */
+    hasValidationMessages: computed.gt('validationMessages.length', 0),
+
+    /**
+     * @property hasValidator
+     * @type boolean
+     * @default false
+     * @protected
+     */
+    hasValidator: false,
+
+    /**
+     * Set a validating state for async validations
+     *
+     * @property isValidating
+     * @type boolean
+     * @default false
+     * @protected
+     */
+    isValidating: false,
+
+    /**
+     * If `true` form validation markup is rendered (requires a validatable `model`).
+     *
+     * @property showValidation
+     * @type boolean
+     * @default false
+     * @private
+     */
+    showValidation: computed.or('showOwnValidation', 'showAllValidations', 'hasCustomError', 'hasCustomWarning'),
+
+    /**
+     * @property showOwnValidation
+     * @type boolean
+     * @default false
+     * @private
+     */
+    showOwnValidation: false,
+
+    /**
+     * @property showAllValidations
+     * @type boolean
+     * @default false
+     * @private
+     */
+    showAllValidations: false,
+
+    /**
+     * @property showModelValidations
+     * @type boolean
+     * @readonly
+     * @private
+     */
+    showModelValidation: computed.or('showOwnValidation', 'showAllValidations'),
+
+    /**
+     * @property showValidationMessages
+     * @type boolean
+     * @readonly
+     * @private
+     */
+    showValidationMessages: computed.and('showValidation', 'hasValidationMessages'),
+
+    /**
+     * Event or list of events which enable form validation markup rendering.
+     * Supported events: ['focusOut', 'change', 'input']
+     *
+     * @property showValidationOn
+     * @type string|array
+     * @default ['focusOut']
+     * @public
+     */
+    showValidationOn: ['focusOut'],
+
+    /**
+     * @property _showValidationOn
+     * @type array
+     * @readonly
+     * @private
+     */
+    _showValidationOn: computed('showValidationOn', function () {
+      var showValidationOn = this.get('showValidationOn');
+
+      assert('showValidationOn must be a String or an Array', isArray(showValidationOn) || typeOf(showValidationOn) === 'string');
+      if (isArray(showValidationOn)) {
+        return showValidationOn;
+      }
+
+      if (typeof showValidationOn.toString === 'function') {
+        return [showValidationOn];
+      }
+      return [];
+    }),
+
+    /**
+     * @method showValidationOnHandler
+     * @private
+     */
+    showValidationOnHandler: function showValidationOnHandler(event) {
+      if (this.get('_showValidationOn').indexOf(event) !== -1) {
+        this.set('showOwnValidation', true);
+      }
+    },
+
+
+    /**
+     * The validation ("error" (BS3)/"danger" (BS4), "warning", or "success") or null if no validation is to be shown. Automatically computed from the
+     * models validation state.
+     *
+     * @property validation
+     * @readonly
+     * @type string
+     * @private
+     */
+    validation: computed('hasCustomError', 'hasErrors', 'hasCustomWarning', 'hasWarnings', 'hasValidator', 'showValidation', 'showModelValidation', 'isValidating', 'disabled', function () {
+      if (!this.get('showValidation') || !this.get('hasValidator') || this.get('isValidating') || this.get('disabled')) {
+        return null;
+      } else if (this.get('showModelValidation')) {
+        /* The display of model validation messages has been triggered */
+        return this.get('hasErrors') || this.get('hasCustomError') ? 'error' : this.get('hasWarnings') || this.get('hasCustomWarning') ? 'warning' : 'success';
+      } else {
+        /* If there are custom errors or warnings these should always be shown */
+        return this.get('hasCustomError') ? 'error' : 'warning';
+      }
+    }),
+
+    /**
+     * True for text field `controlType`s
+     *
+     * @property useIcons
+     * @type boolean
+     * @readonly
+     * @public
+     */
+    useIcons: computed.equal('controlComponent', 'bs-form/element/control/input'),
+
+    /**
+     * The form layout used for the markup generation (see http://getbootstrap.com/css/#forms):
+     *
+     * * 'horizontal'
+     * * 'vertical'
+     * * 'inline'
+     *
+     * Defaults to the parent `form`'s `formLayout` property.
+     *
+     * @property formLayout
+     * @type string
+     * @default 'vertical'
+     * @public
+     */
+    formLayout: 'vertical',
+
+    /**
+     * The Bootstrap grid class for form labels within a horizontal layout form. Defaults to the value of the same
+     * property of the parent form. The corresponding grid class for form controls is automatically computed.
+     *
+     * @property horizontalLabelGridClass
+     * @type string
+     * @public
+     */
+    horizontalLabelGridClass: null,
+
+    /**
+     * ID for input field and the corresponding label's "for" attribute
+     *
+     * @property formElementId
+     * @type string
+     * @private
+     */
+    formElementId: computed('elementId', function () {
+      return this.get('elementId') + '-field';
+    }),
+
+    /**
+     * ID of the helpText, used for aria-describedby attribute of the control element
+     *
+     * @property ariaDescribedBy
+     * @type string
+     * @private
+     */
+    ariaDescribedBy: computed('elementId', function () {
+      return this.get('elementId') + '-help';
+    }),
+
+    /**
+     * @property layoutComponent
+     * @type {String}
+     * @private
+     */
+    layoutComponent: computed('formLayout', 'controlType', function () {
+      var formLayout = this.get('formLayout');
+      var controlType = this.get('controlType');
+
+      if (nonDefaultLayouts.includes(controlType)) {
+        return 'bs-form/element/layout/' + formLayout + '/' + controlType;
+      } else {
+        return 'bs-form/element/layout/' + formLayout;
+      }
+    }),
+
+    /**
+     * @property controlComponent
+     * @type {String}
+     * @private
+     */
+    controlComponent: computed('controlType', function () {
+      var controlType = this.get('controlType');
+      var componentName = 'bs-form/element/control/' + controlType;
+
+      if (getOwner(this).hasRegistration('component:' + componentName)) {
+        return componentName;
+      }
+
+      return 'bs-form/element/control/input';
+    }),
+
+    /**
+     * @property errorsComponent
+     * @type {String}
+     * @private
+     */
+    errorsComponent: 'bs-form/element/errors',
+
+    /**
+     * @property feedbackIconComponent
+     * @type {String}
+     * @private
+     */
+    feedbackIconComponent: 'bs-form/element/feedback-icon',
+
+    /**
+     * @property labelComponent
+     * @type {String}
+     * @private
+     */
+    labelComponent: 'bs-form/element/label',
+
+    /**
+     * @property helpTextComponent
+     * @type {String}
+     * @private
+     */
+    helpTextComponent: 'bs-form/element/help-text',
+
+    /**
+     * Setup validation properties. This method acts as a hook for external validation
+     * libraries to overwrite. In case of failed validations the `errors` property should contain an array of error messages.
+     *
+     * @method setupValidations
+     * @private
+     */
+    setupValidations: function setupValidations() {},
+
+
+    /**
+     * Listen for focusOut events from the control element to automatically set `showOwnValidation` to true to enable
+     * form validation markup rendering if `showValidationsOn` contains `focusOut`.
+     *
+     * @event focusOut
+     * @private
+     */
+    focusOut: function focusOut() {
+      this.showValidationOnHandler('focusOut');
+    },
+
+
+    /**
+     * Listen for change events from the control element to automatically set `showOwnValidation` to true to enable
+     * form validation markup rendering if `showValidationsOn` contains `change`.
+     *
+     * @event change
+     * @private
+     */
+    change: function change() {
+      this.showValidationOnHandler('change');
+    },
+
+
+    /**
+     * Listen for input events from the control element to automatically set `showOwnValidation` to true to enable
+     * form validation markup rendering if `showValidationsOn` contains `input`.
+     *
+     * @event input
+     * @private
+     */
+    input: function input() {
+      this.showValidationOnHandler('input');
+    },
+
+
+    /**
+     * The action is called whenever the input value is changed, e.g. by typing text
+     *
+     * @event onChange
+     * @param {String} value The new value of the form control
+     * @param {Object} model The form element's model
+     * @param {String} property The value of `property`
+     * @public
+     */
+    onChange: function onChange() {},
+    init: function init() {
+      this._super.apply(this, arguments);
+      if (!isBlank(this.get('property'))) {
+        defineProperty(this, 'value', computed.alias('model.' + this.get('property')));
+        this.setupValidations();
+      }
+    },
+
+
+    /*
+     * adjust feedback icon position
+     *
+     * Bootstrap documentation:
+     *  Manual positioning of feedback icons is required for [...] input groups
+     *  with an add-on on the right. [...] For input groups, adjust the right
+     *  value to an appropriate pixel value depending on the width of your addon.
+     */
+    adjustFeedbackIcons: on('didInsertElement', observer('hasFeedback', 'formLayout', function () {
+      var _this = this;
+
+      scheduleOnce('afterRender', function () {
+        var el = _this.get('element');
+        var feedbackIcon = void 0;
+        // validation state icons are only shown if form element has feedback
+        if (_this.get('hasFeedback') && !_this.get('isDestroying')
+        // and form group element has
+        // an input-group
+        && el.querySelector('.input-group')
+        // an addon or button on right side
+        && el.querySelector('.input-group input + .input-group-addon, .input-group input + .input-group-btn')
+        // an icon showing validation state
+        && (feedbackIcon = el.querySelector('.form-control-feedback'))) {
+          // clear existing adjustment
+          feedbackIcon.style.right = '';
+
+          var defaultPosition = 0;
+          var match = getComputedStyle(feedbackIcon).right.match(/^(\d+)px$/);
+          if (match) {
+            defaultPosition = parseInt(match[1]);
+          }
+          // Bootstrap documentation:
+          //  We do not support multiple add-ons (.input-group-addon or .input-group-btn) on a single side.
+          // therefore we could rely on having only one input-group-addon or input-group-btn
+          var inputGroupWidth = el.querySelector('input + .input-group-addon, input + .input-group-btn').offsetWidth;
+          var adjustedPosition = defaultPosition + inputGroupWidth;
+
+          feedbackIcon.style.right = adjustedPosition + 'px';
+        }
+      });
+    })),
+
+    actions: {
+      change: function change(value) {
+        var _getProperties = this.getProperties('onChange', 'model', 'property'),
+            onChange = _getProperties.onChange,
+            model = _getProperties.model,
+            property = _getProperties.property;
+
+        onChange(value, model, property);
+      }
+    }
+  });
+});
+;define('ember-bootstrap/components/base/bs-form/element/control', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Component.extend({
+
+    /**
+     * @property value
+     * @public
+     */
+    value: null,
+
+    /**
+     * @property ariaDescribedBy
+     * @type {string}
+     * @public
+     */
+    ariaDescribedBy: null,
+
+    /**
+     * This action is called whenever the `value` changes
+     *
+     * @event onChange
+     * @param {*} value
+     * @public
+     */
+    onChange: function onChange() {}
+  });
+});
+;define('ember-bootstrap/components/base/bs-form/element/control/checkbox', ['exports', 'ember-bootstrap/components/base/bs-form/element/control', 'ember-bootstrap/mixins/control-attributes'], function (exports, _control, _controlAttributes) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _control.default.extend(_controlAttributes.default, {
+    attributeBindings: ['value:checked', 'type'],
+
+    /**
+     * @property type
+     * @type {String}
+     * @readonly
+     * @private
+     */
+    type: 'checkbox',
+
+    click: function click(event) {
+      this.get('onChange')(event.target.checked);
+    }
+  });
+});
+;define('ember-bootstrap/components/base/bs-form/element/control/input', ['exports', 'ember-bootstrap/components/base/bs-form/element/control', 'ember-bootstrap/mixins/control-attributes'], function (exports, _control, _controlAttributes) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _control.default.extend(_controlAttributes.default, {
+    attributeBindings: ['value', 'type', 'placeholder', 'size', 'minlength', 'maxlength', 'min', 'max', 'pattern', 'accept', 'autocomplete', 'autosave', 'inputmode', 'multiple', 'step', 'spellcheck'],
+    classNames: ['form-control'],
+
+    /**
+     * @property type
+     * @type {String}
+     * @public
+     */
+    type: 'text',
+
+    change: function change(event) {
+      this.get('onChange')(event.target.value);
+    },
+    input: function input(event) {
+      this.get('onChange')(event.target.value);
+    }
+  });
+});
+;define('ember-bootstrap/components/base/bs-form/element/control/textarea', ['exports', 'ember-bootstrap/components/base/bs-form/element/control', 'ember-bootstrap/mixins/control-attributes'], function (exports, _control, _controlAttributes) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _control.default.extend(_controlAttributes.default, {
+    attributeBindings: ['value', 'placeholder', 'minlength', 'maxlength', 'autocomplete', 'spellcheck', 'rows', 'cols', 'wrap'],
+    tagName: 'textarea',
+    classNames: ['form-control'],
+
+    change: function change(event) {
+      this.get('onChange')(event.target.value);
+    },
+    input: function input(event) {
+      this.get('onChange')(event.target.value);
+    }
+  });
+});
+;define('ember-bootstrap/components/base/bs-form/element/errors', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-form/element/errors'], function (exports, _ember, _errors) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Component.extend({
+    layout: _errors.default,
+    tagName: '',
+
+    /**
+     * @property show
+     * @type {Boolean}
+     * @public
+     */
+    show: false,
+
+    /**
+     * @property messages
+     * @type {Ember.Array}
+     * @public
+     */
+    messages: null
+  });
+});
+;define('ember-bootstrap/components/base/bs-form/element/feedback-icon', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-form/element/feedback-icon'], function (exports, _ember, _feedbackIcon) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Component.extend({
+    layout: _feedbackIcon.default,
+    tagName: '',
+
+    /**
+     * @property show
+     * @type {Boolean}
+     * @public
+     */
+    show: false,
+
+    /**
+     * @property iconName
+     * @type {String}
+     * @public
+     */
+    iconName: null
+  });
+});
+;define('ember-bootstrap/components/base/bs-form/element/help-text', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-form/element/help-text'], function (exports, _ember, _helpText) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Component.extend({
+    layout: _helpText.default,
+
+    /**
+     * @property text
+     * @type {string}
+     * @public
+     */
+    text: null
+  });
+});
+;define('ember-bootstrap/components/base/bs-form/element/label', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-form/element/label'], function (exports, _ember, _label) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed;
+  exports.default = _ember.default.Component.extend({
+    layout: _label.default,
+    tagName: '',
+
+    /**
+     * @property label
+     * @type string
+     * @public
+     */
+    label: null,
+
+    /**
+     * @property invisibleLabel
+     * @type boolean
+     * @public
+     */
+    invisibleLabel: false,
+
+    /**
+     * @property formElementId
+     * @type {String}
+     * @public
+     */
+    formElementId: null,
+
+    /**
+     * @property labelClass
+     * @type {String}
+     * @public
+     */
+    labelClass: null,
+
+    /**
+     * The form layout used for the markup generation (see http://getbootstrap.com/css/#forms):
+     *
+     * * 'horizontal'
+     * * 'vertical'
+     * * 'inline'
+     *
+     * Defaults to the parent `form`'s `formLayout` property.
+     *
+     * @property formLayout
+     * @type string
+     * @default 'vertical'
+     * @public
+     */
+    formLayout: 'vertical',
+
+    /**
+     * The type of the control widget.
+     * Supported types:
+     *
+     * * 'text'
+     * * 'checkbox'
+     * * 'textarea'
+     * * any other type will use an input tag with the `controlType` value as the type attribute (for e.g. HTML5 input
+     * types like 'email'), and the same layout as the 'text' type
+     *
+     * @property controlType
+     * @type string
+     * @default 'text'
+     * @public
+     */
+    controlType: 'text',
+
+    /**
+     * Indicates whether the type of the control widget equals `checkbox`
+     *
+     * @property isCheckbox
+     * @type boolean
+     * @private
+     */
+    isCheckbox: computed.equal('controlType', 'checkbox').readOnly(),
+
+    /**
+     * Indicates whether the form type equals `horizontal`
+     *
+     * @property isHorizontal
+     * @type boolean
+     * @private
+     */
+    isHorizontal: computed.equal('formLayout', 'horizontal').readOnly()
+  });
+});
+;define('ember-bootstrap/components/base/bs-form/element/layout', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Component.extend({
+    tagName: '',
+
+    /**
+     * @property formElementId
+     * @type {String}
+     * @public
+     */
+    formElementId: null,
+
+    /**
+     * @property hasLabel
+     * @type boolean
+     * @public
+     */
+    hasLabel: true,
+
+    /**
+     * @property errorsComponent
+     * @type {Ember.Component}
+     * @public
+     */
+    errorsComponent: null,
+
+    /**
+     * @property feedbackIconComponent
+     * @type {Ember.Component}
+     * @public
+     */
+    feedbackIconComponent: null,
+
+    /**
+     * @property labelComponent
+     * @type {Ember.Component}
+     * @public
+     */
+    labelComponent: null,
+
+    /**
+     * @property helpTextComponent
+     * @type {Ember.Component}
+     * @public
+     */
+    helpTextComponent: null
+  });
+});
+;define('ember-bootstrap/components/base/bs-form/element/layout/horizontal', ['exports', 'ember', 'ember-bootstrap/components/base/bs-form/element/layout', 'ember-bootstrap/templates/components/bs-form/element/layout/horizontal'], function (exports, _ember, _layout, _horizontal) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var assert = _ember.default.assert,
+      computed = _ember.default.computed,
+      isBlank = _ember.default.isBlank;
+  exports.default = _layout.default.extend({
+    layout: _horizontal.default,
+
+    /**
+     * The Bootstrap grid class for form labels within a horizontal layout form.
+     *
+     * @property horizontalLabelGridClass
+     * @type string
+     * @public
+     */
+    horizontalLabelGridClass: null,
+
+    /**
+     * Computed property that specifies the Bootstrap grid class for form controls within a horizontal layout form.
+     *
+     * @property horizontalInputGridClass
+     * @type string
+     * @readonly
+     * @private
+     */
+    horizontalInputGridClass: computed('horizontalLabelGridClass', function () {
+      if (isBlank(this.get('horizontalLabelGridClass'))) {
+        return;
+      }
+      var parts = this.get('horizontalLabelGridClass').split('-');
+      assert('horizontalInputGridClass must match format bootstrap grid column class', parts.length === 3);
+      parts[2] = 12 - parts[2];
+      return parts.join('-');
+    }).readOnly(),
+
+    /**
+     * Computed property that specifies the Bootstrap offset grid class for form controls within a horizontal layout
+     * form, that have no label.
+     *
+     * @property horizontalInputOffsetGridClass
+     * @type string
+     * @readonly
+     * @private
+     */
+    horizontalInputOffsetGridClass: computed('horizontalLabelGridClass', function () {
+      if (isBlank(this.get('horizontalLabelGridClass'))) {
+        return;
+      }
+      var parts = this.get('horizontalLabelGridClass').split('-');
+      parts.splice(2, 0, 'offset');
+      return parts.join('-');
+    })
+
+  });
+});
+;define('ember-bootstrap/components/base/bs-form/element/layout/horizontal/checkbox', ['exports', 'ember-bootstrap/components/base/bs-form/element/layout/horizontal', 'ember-bootstrap/templates/components/bs-form/element/layout/horizontal/checkbox'], function (exports, _horizontal, _checkbox) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _horizontal.default.extend({
+    layout: _checkbox.default
+  });
+});
+;define('ember-bootstrap/components/base/bs-form/element/layout/inline', ['exports', 'ember-bootstrap/components/base/bs-form/element/layout', 'ember-bootstrap/templates/components/bs-form/element/layout/vertical'], function (exports, _layout, _vertical) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _layout.default.extend({
+    layout: _vertical.default
+  });
+});
+;define('ember-bootstrap/components/base/bs-form/element/layout/inline/checkbox', ['exports', 'ember-bootstrap/components/base/bs-form/element/layout/inline', 'ember-bootstrap/templates/components/bs-form/element/layout/vertical/checkbox'], function (exports, _inline, _checkbox) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _inline.default.extend({
+    layout: _checkbox.default
+  });
+});
+;define('ember-bootstrap/components/base/bs-form/element/layout/vertical', ['exports', 'ember-bootstrap/components/base/bs-form/element/layout', 'ember-bootstrap/templates/components/bs-form/element/layout/vertical'], function (exports, _layout, _vertical) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _layout.default.extend({
+    layout: _vertical.default
+  });
+});
+;define('ember-bootstrap/components/base/bs-form/element/layout/vertical/checkbox', ['exports', 'ember-bootstrap/components/base/bs-form/element/layout/vertical', 'ember-bootstrap/templates/components/bs-form/element/layout/vertical/checkbox'], function (exports, _vertical, _checkbox) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _vertical.default.extend({
+    layout: _checkbox.default
+  });
+});
+;define('ember-bootstrap/components/base/bs-form/group', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-form/group', 'ember-bootstrap/config', 'ember-bootstrap/mixins/size-class'], function (exports, _ember, _group, _config, _sizeClass) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed;
+  exports.default = _ember.default.Component.extend(_sizeClass.default, {
+    layout: _group.default,
+
+    classNameBindings: ['validationClass'],
+
+    /**
+     * @property classTypePrefix
+     * @type String
+     * @default 'form-group' (BS3) or 'form-control' (BS4)
+     * @private
+     */
+
+    /**
+     * Whether to show validation state icons.
+     * See http://getbootstrap.com/css/#forms-control-validation
+     *
+     * @property useIcons
+     * @type boolean
+     * @default true
+     * @public
+     */
+    useIcons: true,
+
+    /**
+     * Computed property which is true if the form group is in a validation state
+     *
+     * @property hasValidation
+     * @type boolean
+     * @private
+     * @readonly
+     */
+    hasValidation: computed.notEmpty('validation').readOnly(),
+
+    /**
+     * Computed property which is true if the form group is showing a validation icon
+     *
+     * @property hasFeedback
+     * @type boolean
+     * @private
+     * @readonly
+     */
+    hasFeedback: computed.and('hasValidation', 'useIcons', 'hasIconForValidationState').readOnly(),
+
+    /**
+     * The icon classes to be used for a feedback icon in a "success" validation state.
+     * Defaults to the usual glyphicon classes. This is ignored, and no feedback icon is
+     * rendered if `useIcons` is false.
+     *
+     * You can change this globally by setting the `formValidationSuccessIcon` property of
+     * the ember-bootstrap configuration in your config/environment.js file. If your are
+     * using FontAwesome for example:
+     *
+     * ```js
+     * ENV['ember-bootstrap'] = {
+       *   formValidationSuccessIcon: 'fa fa-check'
+       * }
+     * ```
+     *
+     * @property successIcon
+     * @type string
+     * @default 'glyphicon glyphicon-ok'
+     * @public
+     */
+    successIcon: _config.default.formValidationSuccessIcon,
+
+    /**
+     * The icon classes to be used for a feedback icon in a "error" validation state.
+     * Defaults to the usual glyphicon classes. This is ignored, and no feedback icon is
+     * rendered if `useIcons` is false.
+     *
+     * You can change this globally by setting the `formValidationErrorIcon` property of
+     * the ember-bootstrap configuration in your config/environment.js file. If your are
+     * using FontAwesome for example:
+     *
+     * ```js
+     * ENV['ember-bootstrap'] = {
+       *   formValidationErrorIcon: 'fa fa-times'
+       * }
+     * ```
+     *
+     * @property errorIcon
+     * @type string
+     * @public
+     */
+    errorIcon: _config.default.formValidationErrorIcon,
+
+    /**
+     * The icon classes to be used for a feedback icon in a "warning" validation state.
+     * Defaults to the usual glyphicon classes. This is ignored, and no feedback icon is
+     * rendered if `useIcons` is false.
+     *
+     * You can change this globally by setting the `formValidationWarningIcon` property of
+     * the ember-bootstrap configuration in your config/environment.js file. If your are
+     * using FontAwesome for example:
+     *
+     * ```js
+     * ENV['ember-bootstrap'] = {
+       *   formValidationWarningIcon: 'fa fa-warning'
+       * }
+     * ```
+     *
+     * @property warningIcon
+     * @type string
+     * @public
+     */
+    warningIcon: _config.default.formValidationWarningIcon,
+
+    /**
+     * The icon classes to be used for a feedback icon in a "info" validation state.
+     * Defaults to the usual glyphicon classes. This is ignored, and no feedback icon is
+     * rendered if `useIcons` is false.
+     *
+     * You can change this globally by setting the `formValidationInfoIcon` property of
+     * the ember-bootstrap configuration in your config/environment.js file. If your are
+     * using FontAwesome for example:
+     *
+     * ```js
+     * ENV['ember-bootstrap'] = {
+       *   formValidationInfoIcon: 'fa fa-info-circle
+       * }
+     * ```
+     *
+     * The "info" validation state is not supported in Bootstrap CSS, but can be easily added
+     * using the following LESS style:
+     * ```less
+     * .has-info {
+       *   .form-control-validation(@state-info-text; @state-info-text; @state-info-bg);
+       * }
+     * ```
+     *
+     * @property infoIcon
+     * @type string
+     * @public
+     */
+    infoIcon: _config.default.formValidationInfoIcon,
+
+    /**
+     * @property iconName
+     * @type string
+     * @readonly
+     * @private
+     */
+    iconName: computed('validation', function () {
+      var validation = this.get('validation') || 'success';
+      return this.get(validation + 'Icon');
+    }).readOnly(),
+
+    /**
+     * @property hasIconForValidationState
+     * @type boolean
+     * @readonly
+     * @private
+     */
+    hasIconForValidationState: computed.notEmpty('iconName').readOnly(),
+
+    /**
+     * Set to a validation state to render the form-group with a validation style.
+     * See http://getbootstrap.com/css/#forms-control-validation
+     *
+     * The default states of "success", "warning" and "error" are supported by Bootstrap out-of-the-box.
+     * But you can use custom states as well. This will set a has-<state> class, and (if `useIcons`is true)
+     * a feedback whose class is taken from the <state>Icon property
+     *
+     * Note that BS4 uses the `has-danger` class for the `error` validation state and does not automatically
+     * import glyphicons.
+     *
+     * @property validation
+     * @type string
+     * @public
+     */
+    validation: null,
+
+    /**
+     * @property validationClass
+     * @type string
+     * @readonly
+     * @private
+     */
+    validationClass: computed('_validationType', function () {
+      var validation = this.get('_validationType');
+      if (!_ember.default.isBlank(validation)) {
+        return 'has-' + this.get('_validationType');
+      }
+    }).readOnly()
+  });
+});
+;define('ember-bootstrap/components/base/bs-modal-simple', ['exports', 'ember-bootstrap/components/bs-modal', 'ember-bootstrap/templates/components/bs-modal-simple'], function (exports, _bsModal, _bsModalSimple) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _bsModal.default.extend({
+    layout: _bsModalSimple.default,
+
+    /**
+     * The title of the modal, visible in the modal header. Is ignored if `header` is false.
+     *
+     * @property title
+     * @type string
+     * @public
+     */
+    title: null,
+
+    /**
+     * Display a close button (x icon) in the corner of the modal header.
+     *
+     * @property closeButton
+     * @type boolean
+     * @default true
+     * @public
+     */
+    closeButton: true,
+
+    /**
+     * The title of the default close button.
+     *
+     * @property closeTitle
+     * @type string
+     * @default 'Ok'
+     * @public
+     */
+    closeTitle: 'Ok',
+
+    /**
+     * The title of the submit button (primary button). Will be ignored (i.e. no button) if set to null.
+     *
+     * @property submitTitle
+     * @type string
+     * @default null
+     * @public
+     */
+    submitTitle: null
+
+  });
+});
+;define('ember-bootstrap/components/base/bs-modal', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-modal', 'ember-bootstrap/mixins/transition-support', 'ember-bootstrap/utils/listen-to-cp', 'ember-bootstrap/utils/transition-end'], function (exports, _ember, _bsModal, _transitionSupport, _listenToCp, _transitionEnd) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed,
+      get = _ember.default.get,
+      getOwner = _ember.default.getOwner,
+      observer = _ember.default.observer,
+      schedule = _ember.default.run.schedule;
+  exports.default = _ember.default.Component.extend(_transitionSupport.default, {
+    layout: _bsModal.default,
+
+    /**
+     * Visibility of the modal. Toggle to to show/hide with CSS transitions.
+     *
+     * When the modal is closed by user interaction this property will not update by using two-way bindings in order
+     * to follow DDAU best practices. If you want to react to such changes, subscribe to the `onHide` action
+     *
+     * @property open
+     * @type boolean
+     * @default true
+     * @public
+     */
+    open: true,
+
+    /**
+     * @property isOpen
+     * @private
+     */
+    isOpen: (0, _listenToCp.default)('open'),
+
+    /**
+     * @property _isOpen
+     * @private
+     */
+    _isOpen: false,
+
+    /**
+     * Set to false to disable fade animations.
+     *
+     * @property fade
+     * @type boolean
+     * @default true
+     * @public
+     */
+    fade: computed.not('isFastBoot'),
+
+    /**
+     * @property notFade
+     * @type boolean
+     * @private
+     */
+    notFade: computed.not('fade'),
+
+    /**
+     * Used to apply Bootstrap's visibility classes.
+     *
+     * @property showModal
+     * @type boolean
+     * @default false
+     * @private
+     */
+    showModal: false,
+
+    /**
+     * Render modal markup?
+     *
+     * @property inDom
+     * @type boolean
+     * @default false
+     * @private
+     */
+    inDom: false,
+
+    /**
+     * @property paddingLeft
+     * @type number|null
+     * @default null
+     * @private
+     */
+    paddingLeft: null,
+
+    /**
+     * @property paddingRight
+     * @type number|null
+     * @default null
+     * @private
+     */
+    paddingRight: null,
+
+    /**
+     * Use a semi-transparent modal background to hide the rest of the page.
+     *
+     * @property backdrop
+     * @type boolean
+     * @default true
+     * @public
+     */
+    backdrop: true,
+
+    /**
+     * @property showBackdrop
+     * @type boolean
+     * @default false
+     * @private
+     */
+    showBackdrop: false,
+
+    /**
+     * Closes the modal when escape key is pressed.
+     *
+     * @property keyboard
+     * @type boolean
+     * @default true
+     * @public
+     */
+    keyboard: true,
+
+    /**
+     * The id of the `.modal` element.
+     *
+     * @property modalId
+     * @type string
+     * @readonly
+     * @private
+     */
+    modalId: computed('elementId', function () {
+      return this.get('elementId') + '-modal';
+    }),
+
+    /**
+     * The DOM element of the `.modal` element.
+     *
+     * @property modalElement
+     * @type object
+     * @readonly
+     * @private
+     */
+    modalElement: computed('modalId', function () {
+      return document.getElementById(this.get('modalId'));
+    }).volatile(),
+
+    /**
+     * The id of the backdrop element.
+     *
+     * @property backdropId
+     * @type string
+     * @readonly
+     * @private
+     */
+    backdropId: computed('elementId', function () {
+      return this.get('elementId') + '-backdrop';
+    }),
+
+    /**
+     * The DOM elemnt of the backdrop element.
+     *
+     * @property backdropElement
+     * @type object
+     * @readonly
+     * @private
+     */
+    backdropElement: computed('backdropId', function () {
+      return document.getElementById(this.get('backdropId'));
+    }).volatile(),
+
+    /**
+     * Property for size styling, set to null (default), 'lg' or 'sm'
+     *
+     * Also see the [Bootstrap docs](http://getbootstrap.com/javascript/#modals-sizes)
+     *
+     * @property size
+     * @type String
+     * @public
+     */
+    size: null,
+
+    /**
+     * If true clicking on the backdrop will close the modal.
+     *
+     * @property backdropClose
+     * @type boolean
+     * @default true
+     * @public
+     */
+    backdropClose: true,
+
+    /**
+     * If true component will render in place, rather than be wormholed.
+     *
+     * @property renderInPlace
+     * @type boolean
+     * @default false
+     * @public
+     */
+    renderInPlace: false,
+
+    /**
+     * @property _renderInPlace
+     * @type boolean
+     * @private
+     */
+    _renderInPlace: computed('renderInPlace', 'isFastBoot', function () {
+      return this.get('renderInPlace') || !this.get('isFastBoot') && !document.getElementById('ember-bootstrap-wormhole');
+    }),
+
+    /**
+     * The duration of the fade transition
+     *
+     * @property transitionDuration
+     * @type number
+     * @default 300
+     * @public
+     */
+    transitionDuration: 300,
+
+    /**
+     * The duration of the backdrop fade transition
+     *
+     * @property backdropTransitionDuration
+     * @type number
+     * @default 150
+     * @public
+     */
+    backdropTransitionDuration: 150,
+
+    /**
+     * @property isFastBoot
+     * @type {Boolean}
+     * @private
+     */
+    isFastBoot: computed(function () {
+      if (!getOwner) {
+        // Ember.getOwner is available as of Ember 2.3, while FastBoot requires 2.4. So just return false...
+        return false;
+      }
+
+      var owner = getOwner(this);
+      if (!owner) {
+        return false;
+      }
+
+      var fastboot = owner.lookup('service:fastboot');
+      if (!fastboot) {
+        return false;
+      }
+
+      return get(fastboot, 'isFastBoot');
+    }),
+
+    /**
+     * The action to be sent when the modal footer's submit button (if present) is pressed.
+     * Note that if your modal body contains a form (e.g. [Components.Form](Components.Form.html){{/crossLink}}) this action will
+     * not be triggered. Instead a submit event will be triggered on the form itself. See the class description for an
+     * example.
+     *
+     * @property onSubmit
+     * @type function
+     * @public
+     */
+    onSubmit: function onSubmit() {},
+
+
+    /**
+     * The action to be sent when the modal is closing.
+     * This will be triggered by pressing the modal header's close button (x button) or the modal footer's close button.
+     * Note that this will happen before the modal is hidden from the DOM, as the fade transitions will still need some
+     * time to finish. Use the `onHidden` if you need the modal to be hidden when the action triggers.
+     *
+     * You can return false to prevent closing the modal automatically, and do that in your action by
+     * setting `open` to false.
+     *
+     * @property onHide
+     * @type function
+     * @public
+     */
+    onHide: function onHide() {},
+
+
+    /**
+     * The action to be sent after the modal has been completely hidden (including the CSS transition).
+     *
+     * @property onHidden
+     * @type function
+     * @default null
+     * @public
+     */
+    onHidden: function onHidden() {},
+
+
+    /**
+     * The action to be sent when the modal is opening.
+     * This will be triggered immediately after the modal is shown (so it's safe to access the DOM for
+     * size calculations and the like). This means that if fade=true, it will be shown in between the
+     * backdrop animation and the fade animation.
+     *
+     * @property onShow
+     * @type function
+     * @default null
+     * @public
+     */
+    onShow: function onShow() {},
+
+
+    /**
+     * The action to be sent after the modal has been completely shown (including the CSS transition).
+     *
+     * @property onShown
+     * @type function
+     * @public
+     */
+    onShown: function onShown() {},
+
+
+    actions: {
+      close: function close() {
+        if (this.get('onHide')() !== false) {
+          this.set('isOpen', false);
+        }
+      },
+      submit: function submit() {
+        var forms = this.get('modalElement').querySelectorAll('.modal-body form');
+        if (forms.length > 0) {
+          // trigger submit event on body forms
+          var event = document.createEvent('Events');
+          event.initEvent('submit', true, true);
+          forms.forEach(function (form) {
+            form.dispatchEvent(event);
+          });
+        } else {
+          // if we have no form, we send a submit action
+          this.get('onSubmit')();
+        }
+      }
+    },
+
+    /**
+     * Give the modal (or its autofocus element) focus
+     *
+     * @method takeFocus
+     * @private
+     */
+    takeFocus: function takeFocus() {
+      var modalEl = this.get('modalElement');
+      var focusElement = modalEl && modalEl.querySelector('[autofocus]');
+      if (!focusElement) {
+        focusElement = modalEl;
+      }
+      if (focusElement) {
+        focusElement.focus();
+      }
+    },
+
+
+    /**
+     * Show the modal
+     *
+     * @method show
+     * @private
+     */
+    show: function show() {
+      if (this._isOpen) {
+        return;
+      }
+      this._isOpen = true;
+
+      this.checkScrollbar();
+      this.setScrollbar();
+
+      document.body.classList.add('modal-open');
+
+      this.resize();
+
+      var callback = function callback() {
+        var _this = this;
+
+        if (this.get('isDestroyed')) {
+          return;
+        }
+
+        this.set('inDom', true);
+        schedule('afterRender', function () {
+          var modalEl = _this.get('modalElement');
+          modalEl.scrollTop = 0;
+
+          _this.handleUpdate();
+          _this.set('showModal', true);
+          _this.get('onShow')();
+
+          if (_this.get('usesTransition')) {
+            (0, _transitionEnd.default)(_this.get('modalElement'), function () {
+              this.takeFocus();
+              this.get('onShown')();
+            }, _this, _this.get('transitionDuration'));
+          } else {
+            _this.takeFocus();
+            _this.get('onShown')();
+          }
+        });
+      };
+      this.handleBackdrop(callback);
+    },
+
+
+    /**
+     * Hide the modal
+     *
+     * @method hide
+     * @private
+     */
+    hide: function hide() {
+      if (!this._isOpen) {
+        return;
+      }
+      this._isOpen = false;
+
+      this.resize();
+      this.set('showModal', false);
+
+      if (this.get('usesTransition')) {
+        (0, _transitionEnd.default)(this.get('modalElement'), this.hideModal, this, this.get('transitionDuration'));
+      } else {
+        this.hideModal();
+      }
+    },
+
+
+    /**
+     * Clean up after modal is hidden and call onHidden
+     *
+     * @method hideModal
+     * @private
+     */
+    hideModal: function hideModal() {
+      var _this2 = this;
+
+      if (this.get('isDestroyed')) {
+        return;
+      }
+
+      this.set('inDom', false);
+
+      this.handleBackdrop(function () {
+        document.body.classList.remove('modal-open');
+        _this2.resetAdjustments();
+        _this2.resetScrollbar();
+        _this2.get('onHidden')();
+      });
+    },
+
+
+    /**
+     * SHow/hide the backdrop
+     *
+     * @method handleBackdrop
+     * @param callback
+     * @private
+     */
+    handleBackdrop: function handleBackdrop(callback) {
+      var doAnimate = this.get('usesTransition');
+
+      if (this.get('isOpen') && this.get('backdrop')) {
+        this.set('showBackdrop', true);
+
+        if (!callback) {
+          return;
+        }
+
+        if (doAnimate) {
+          _ember.default.run.schedule('afterRender', this, function () {
+            var backdrop = this.get('backdropElement');
+            _ember.default.assert('Backdrop element should be in DOM', backdrop);
+            (0, _transitionEnd.default)(backdrop, callback, this, this.get('backdropTransitionDuration'));
+          });
+        } else {
+          callback.call(this);
+        }
+      } else if (!this.get('isOpen') && this.get('backdrop')) {
+        var backdrop = this.get('backdropElement');
+        _ember.default.assert('Backdrop element should be in DOM', backdrop);
+
+        var callbackRemove = function callbackRemove() {
+          this.set('showBackdrop', false);
+          if (callback) {
+            callback.call(this);
+          }
+        };
+        if (doAnimate) {
+          (0, _transitionEnd.default)(backdrop, callbackRemove, this, this.get('backdropTransitionDuration'));
+        } else {
+          callbackRemove.call(this);
+        }
+      } else if (callback) {
+        _ember.default.run.next(this, callback);
+      }
+    },
+
+
+    /**
+     * Attach/Detach resize event listeners
+     *
+     * @method resize
+     * @private
+     */
+    resize: function resize() {
+      if (this.get('isOpen')) {
+        this._handleUpdate = _ember.default.run.bind(this, this.handleUpdate);
+        window.addEventListener('resize', this._handleUpdate, false);
+      } else {
+        window.removeEventListener('resize', this._handleUpdate, false);
+      }
+    },
+
+
+    /**
+     * @method handleUpdate
+     * @private
+     */
+    handleUpdate: function handleUpdate() {
+      this.adjustDialog();
+    },
+
+
+    /**
+     * @method adjustDialog
+     * @private
+     */
+    adjustDialog: function adjustDialog() {
+      var modalIsOverflowing = this.get('modalElement').scrollHeight > document.documentElement.clientHeight;
+      this.setProperties({
+        paddingLeft: !this.bodyIsOverflowing && modalIsOverflowing ? this.get('scrollbarWidth') : null,
+        paddingRight: this.bodyIsOverflowing && !modalIsOverflowing ? this.get('scrollbarWidth') : null
+      });
+    },
+
+
+    /**
+     * @method resetAdjustments
+     * @private
+     */
+    resetAdjustments: function resetAdjustments() {
+      this.setProperties({
+        paddingLeft: null,
+        paddingRight: null
+      });
+    },
+
+
+    /**
+     * @method checkScrollbar
+     * @private
+     */
+    checkScrollbar: function checkScrollbar() {
+      var fullWindowWidth = window.innerWidth;
+      if (!fullWindowWidth) {
+        // workaround for missing window.innerWidth in IE8
+        var documentElementRect = document.documentElement.getBoundingClientRect();
+        fullWindowWidth = documentElementRect.right - Math.abs(documentElementRect.left);
+      }
+
+      this.bodyIsOverflowing = document.body.clientWidth < fullWindowWidth;
+    },
+
+
+    /**
+     * @method setScrollbar
+     * @private
+     */
+    setScrollbar: function setScrollbar() {
+      var bodyPad = parseInt(document.body.style.paddingRight || 0, 10);
+      this._originalBodyPad = document.body.style.paddingRight || '';
+      if (this.bodyIsOverflowing) {
+        document.body.style.paddingRight = bodyPad + this.get('scrollbarWidth');
+      }
+    },
+
+
+    /**
+     * @method resetScrollbar
+     * @private
+     */
+    resetScrollbar: function resetScrollbar() {
+      document.body.style.paddingRight = this._originalBodyPad;
+    },
+
+
+    /**
+     * @property scrollbarWidth
+     * @type number
+     * @readonly
+     * @private
+     */
+    scrollbarWidth: computed(function () {
+      var scrollDiv = document.createElement('div');
+      scrollDiv.className = 'modal-scrollbar-measure';
+      var modalEl = this.get('modalElement');
+      modalEl.parentNode.insertBefore(scrollDiv, modalEl.nextSibling);
+      var scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+      scrollDiv.parentNode.removeChild(scrollDiv);
+      return scrollbarWidth;
+    }),
+
+    didInsertElement: function didInsertElement() {
+      this._super.apply(this, arguments);
+      if (this.get('isOpen')) {
+        this.show();
+      }
+    },
+    willDestroyElement: function willDestroyElement() {
+      this._super.apply(this, arguments);
+      window.removeEventListener('resize', this._handleUpdate, false);
+      document.body.classList.remove('modal-open');
+      this.resetScrollbar();
+    },
+
+
+    _observeOpen: observer('isOpen', function () {
+      if (this.get('isOpen')) {
+        this.show();
+      } else {
+        this.hide();
+      }
+    }),
+
+    init: function init() {
+      this._super.apply(this, arguments);
+
+      var _getProperties = this.getProperties('isOpen', 'backdrop', 'fade', 'isFastBoot'),
+          isOpen = _getProperties.isOpen,
+          backdrop = _getProperties.backdrop,
+          fade = _getProperties.fade,
+          isFastBoot = _getProperties.isFastBoot;
+
+      this.setProperties({
+        showModal: isOpen && (!fade || isFastBoot),
+        showBackdrop: isOpen && backdrop,
+        inDom: isOpen && isFastBoot
+      });
+    }
+  });
+});
+;define('ember-bootstrap/components/base/bs-modal/body', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-modal/body'], function (exports, _ember, _body) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Component.extend({
+    layout: _body.default,
+    classNames: ['modal-body']
+  });
+});
+;define('ember-bootstrap/components/base/bs-modal/dialog', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-modal/dialog'], function (exports, _ember, _dialog) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed,
+      htmlSafe = _ember.default.String.htmlSafe;
+  exports.default = _ember.default.Component.extend({
+    layout: _dialog.default,
+    classNames: ['modal'],
+    classNameBindings: ['fade'],
+    attributeBindings: ['tabindex', 'style'],
+    ariaRole: 'dialog',
+    tabindex: '-1',
+
+    /**
+     * Set to false to disable fade animations.
+     *
+     * @property fade
+     * @type boolean
+     * @default true
+     * @public
+     */
+    fade: true,
+
+    /**
+     * Used to apply Bootstrap's visibility classes
+     *
+     * @property showModal
+     * @type boolean
+     * @default false
+     * @private
+     */
+    showModal: false,
+
+    /**
+     * Render modal markup?
+     *
+     * @property inDom
+     * @type boolean
+     * @default false
+     * @private
+     */
+    inDom: false,
+
+    /**
+     * @property paddingLeft
+     * @type number|null
+     * @default null
+     * @private
+     */
+    paddingLeft: null,
+
+    /**
+     * @property paddingRight
+     * @type number|null
+     * @default null
+     * @private
+     */
+    paddingRight: null,
+
+    /**
+     * Closes the modal when escape key is pressed.
+     *
+     * @property keyboard
+     * @type boolean
+     * @default true
+     * @public
+     */
+    keyboard: true,
+
+    /**
+     * Property for size styling, set to null (default), 'lg' or 'sm'
+     *
+     * Also see the [Bootstrap docs](http://getbootstrap.com/javascript/#modals-sizes)
+     *
+     * @property size
+     * @type String
+     * @public
+     */
+    size: null,
+
+    /**
+     * If true clicking on the backdrop will close the modal.
+     *
+     * @property backdropClose
+     * @type boolean
+     * @default true
+     * @public
+     */
+    backdropClose: true,
+
+    /**
+     * @property style
+     * @type string
+     * @readOnly
+     * @private
+     */
+    style: computed('inDom', 'paddingLeft', 'paddingRight', function () {
+      var styles = [];
+
+      var _getProperties = this.getProperties('inDom', 'paddingLeft', 'paddingRight'),
+          inDom = _getProperties.inDom,
+          paddingLeft = _getProperties.paddingLeft,
+          paddingRight = _getProperties.paddingRight;
+
+      if (inDom) {
+        styles.push('display: block');
+      }
+      if (paddingLeft) {
+        styles.push('padding-left: ' + paddingLeft + 'px');
+      }
+      if (paddingRight) {
+        styles.push('padding-right: ' + paddingRight + 'px');
+      }
+
+      return htmlSafe(styles.join(';'));
+    }),
+
+    /**
+     * Name of the size class
+     *
+     * @property sizeClass
+     * @type string
+     * @readOnly
+     * @private
+     */
+    sizeClass: computed('size', function () {
+      var size = this.get('size');
+      return _ember.default.isBlank(size) ? null : 'modal-' + size;
+    }).readOnly(),
+
+    /**
+     * @event onClose
+     * @public
+     */
+    onClose: function onClose() {},
+    keyDown: function keyDown(e) {
+      var code = e.keyCode || e.which;
+      if (code === 27 && this.get('keyboard')) {
+        this.get('onClose')();
+      }
+    },
+    click: function click(e) {
+      if (!e.target.classList.contains('modal') || !this.get('backdropClose')) {
+        return;
+      }
+      this.get('onClose')();
+    }
+  });
+});
+;define('ember-bootstrap/components/base/bs-modal/footer', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-modal/footer'], function (exports, _ember, _footer) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed;
+  exports.default = _ember.default.Component.extend({
+    layout: _footer.default,
+    tagName: 'form',
+    classNames: ['modal-footer'],
+
+    /**
+     * The title of the default close button. Will be ignored (i.e. no close button) if you provide your own block
+     * template.
+     *
+     * @property closeTitle
+     * @type string
+     * @default 'Ok'
+     * @public
+     */
+    closeTitle: 'Ok',
+
+    /**
+     * The title of the submit button (primary button). Will be ignored (i.e. no button) if set to null or if you provide
+     * your own block template.
+     *
+     * @property submitTitle
+     * @type string
+     * @default null
+     * @public
+     */
+    submitTitle: null,
+
+    hasSubmitButton: computed.notEmpty('submitTitle'),
+
+    /**
+     * Set to true to disable the submit button. If you bind this to some property that indicates if submitting is allowed
+     * (form validation for example) this can be used to prevent the user from pressing the submit button.
+     *
+     * @property submitDisabled
+     * @type boolean
+     * @default false
+     * @public
+     */
+    submitDisabled: false,
+
+    /**
+     * The action to send to the parent modal component when the modal footer's form is submitted
+     *
+     * @event onSubmit
+     * @public
+     */
+    onSubmit: function onSubmit() {},
+
+
+    /**
+     * @event onClose
+     * @public
+     */
+    onClose: function onClose() {},
+    submit: function submit(e) {
+      e.preventDefault();
+      // send to parent bs-modal component
+      this.get('onSubmit')();
+    }
+  });
+});
+;define('ember-bootstrap/components/base/bs-modal/header', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-modal/header'], function (exports, _ember, _header) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Component.extend({
+    layout: _header.default,
+    classNames: ['modal-header'],
+
+    /**
+     * Show a close button (x icon)
+     *
+     * @property closeButton
+     * @type boolean
+     * @default true
+     * @public
+     */
+    closeButton: true,
+
+    /**
+     * The title to display in the modal header
+     *
+     * @property title
+     * @type string
+     * @default null
+     * @public
+     */
+    title: null,
+
+    /**
+     * @event onClose
+     * @public
+     */
+    onClose: function onClose() {}
+  });
+});
+;define('ember-bootstrap/components/base/bs-modal/header/close', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-modal/header/close'], function (exports, _ember, _close) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Component.extend({
+    layout: _close.default,
+    tagName: 'button',
+    classNames: ['close'],
+    attributeBindings: ['type', 'aria-label'],
+    'aria-label': 'Close',
+    type: 'button',
+
+    /**
+     * @event onClick
+     * @public
+     */
+    onClick: function onClick() {},
+    click: function click() {
+      this.get('onClick')();
+    }
+  });
+});
+;define('ember-bootstrap/components/base/bs-modal/header/title', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-modal/header/title'], function (exports, _ember, _title) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Component.extend({
+    layout: _title.default,
+    tagName: 'h4',
+    classNames: ['modal-title']
+  });
+});
+;define('ember-bootstrap/components/base/bs-nav', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-nav'], function (exports, _ember, _bsNav) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var isPresent = _ember.default.isPresent;
+  exports.default = _ember.default.Component.extend({
+    layout: _bsNav.default,
+
+    tagName: 'ul',
+    classNames: ['nav'],
+
+    classNameBindings: ['typeClass', 'justified:nav-justified'],
+
+    typeClass: _ember.default.computed('type', function () {
+      var type = this.get('type');
+      if (isPresent(type)) {
+        return 'nav-' + type;
+      }
+    }),
+
+    /**
+     * Special type of nav, either "pills" or "tabs"
+     *
+     * @property type
+     * @type String
+     * @default null
+     * @public
+     */
+    type: null,
+
+    /**
+     * Make the nav justified, see [bootstrap docs](http://getbootstrap.com/components/#nav-justified)
+     *
+     * @property justified
+     * @type boolean
+     * @default false
+     * @public
+     */
+    justified: false,
+
+    /**
+     * Make the nav pills stacked, see [bootstrap docs](http://getbootstrap.com/components/#nav-pills)
+     *
+     * @property stacked
+     * @type boolean
+     * @default false
+     * @public
+     */
+    stacked: false,
+
+    /**
+     * @property itemComponent
+     * @type {String}
+     * @private
+     */
+    itemComponent: 'bs-nav/item',
+
+    /**
+     * @property linkToComponent
+     * @type {String}
+     * @private
+     */
+    linkToComponent: 'bs-nav/link-to',
+
+    /**
+     * @property dropdownComponent
+     * @type {String}
+     * @private
+     */
+    dropdownComponent: 'bs-dropdown'
+  });
+});
+;define('ember-bootstrap/components/base/bs-nav/item', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-nav/item', 'ember-bootstrap/mixins/component-parent'], function (exports, _ember, _item, _componentParent) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed,
+      LinkComponent = _ember.default.LinkComponent;
+  exports.default = _ember.default.Component.extend(_componentParent.default, {
+    layout: _item.default,
+    classNameBindings: ['disabled', 'active'],
+    tagName: 'li',
+    ariaRole: 'presentation',
+
+    /**
+     * Render the nav item as disabled (see [Bootstrap docs](http://getbootstrap.com/components/#nav-disabled-links)).
+     * By default it will look at any nested `link-to` components and make itself disabled if there is a disabled link.
+     * See the [link-to API](http://emberjs.com/api/classes/Ember.Templates.helpers.html#toc_disabling-the-code-link-to-code-component)
+     *
+     * @property disabled
+     * @type boolean
+     * @public
+     */
+    disabled: computed.gt('disabledChildLinks.length', 0),
+
+    /**
+     * Render the nav item as active.
+     * By default it will look at any nested `link-to` components and make itself active if there is an active link
+     * (i.e. the link points to the current route).
+     * See the [link-to API](http://emberjs.com/api/classes/Ember.Templates.helpers.html#toc_handling-current-route)
+     *
+     * @property active
+     * @type boolean
+     * @public
+     */
+    active: computed.gt('activeChildLinks.length', 0),
+
+    /**
+     * Collection of all `Ember.LinkComponent`s that are children
+     *
+     * @property childLinks
+     * @private
+     */
+    childLinks: computed.filter('children', function (view) {
+      return view instanceof LinkComponent;
+    }),
+
+    activeChildLinks: computed.filterBy('childLinks', 'active'),
+    disabledChildLinks: computed.filterBy('childLinks', 'disabled'),
+
+    /**
+     * Called when clicking the nav item
+     *
+     * @event onClick
+     * @public
+     */
+    onClick: function onClick() {},
+    click: function click() {
+      this.onClick();
+    }
+  });
+});
+;define('ember-bootstrap/components/base/bs-nav/link-to', ['exports', 'ember', 'ember-bootstrap/mixins/component-child'], function (exports, _ember, _componentChild) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.LinkComponent.extend(_componentChild.default, {});
+});
+;define('ember-bootstrap/components/base/bs-navbar', ['exports', 'ember', 'ember-bootstrap/mixins/type-class', 'ember-bootstrap/templates/components/bs-navbar', 'ember-bootstrap/utils/listen-to-cp'], function (exports, _ember, _typeClass, _bsNavbar, _listenToCp) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var observer = _ember.default.observer;
+  exports.default = _ember.default.Component.extend(_typeClass.default, {
+    layout: _bsNavbar.default,
+
+    tagName: 'nav',
+    classNames: ['navbar'],
+    classNameBindings: ['positionClass'],
+
+    classTypePrefix: 'navbar',
+
+    /**
+     * Manages the state for the responsive menu between the toggle and the content.
+     *
+     * @property collapsed
+     * @type boolean
+     * @default true
+     * @public
+     */
+    collapsed: true,
+
+    /**
+     * @property _collapsed
+     * @private
+     */
+    _collapsed: (0, _listenToCp.default)('collapsed'),
+
+    /**
+     * Controls whether the wrapping div is a fluid container or not.
+     *
+     * @property fluid
+     * @type boolean
+     * @default true
+     * @public
+     */
+    fluid: true,
+
+    /**
+     * Specifies the position classes for the navbar, currently supporting none, "fixed-top", "fixed-bottom", and
+     * either "static-top" (BS3) or "sticky-top" (BS4).
+     * See the [bootstrap docs](http://getbootstrap.com/components/#navbar-fixed-top) for details.
+     *
+     * @property position
+     * @type String
+     * @default null
+     * @public
+     */
+    position: null,
+
+    positionClass: _ember.default.computed('position', function () {
+      var position = this.get('position');
+      var validPositions = this.get('_validPositions');
+      var positionPrefix = this.get('_positionPrefix');
+
+      if (validPositions.indexOf(position) === -1) {
+        return null;
+      }
+
+      return '' + positionPrefix + position;
+    }),
+
+    /**
+     * The action to be sent when the navbar is about to be collapsed.
+     *
+     * You can return false to prevent collapsing the navbar automatically, and do that in your action by
+     * setting `collapsed` to true.
+     *
+     * @event onCollapse
+     * @public
+     */
+    onCollapse: function onCollapse() {},
+
+
+    /**
+     * The action to be sent after the navbar has been collapsed (including the CSS transition).
+     *
+     * @event onCollapsed
+     * @public
+     */
+    onCollapsed: function onCollapsed() {},
+
+
+    /**
+     * The action to be sent when the navbar is about to be expanded.
+     *
+     * You can return false to prevent expanding the navbar automatically, and do that in your action by
+     * setting `collapsed` to false.
+     *
+     * @event onExpand
+     * @public
+     */
+    onExpand: function onExpand() {},
+
+
+    /**
+     * The action to be sent after the navbar has been expanded (including the CSS transition).
+     *
+     * @event onExpanded
+     * @public
+     */
+    onExpanded: function onExpanded() {},
+
+
+    _onCollapsedChange: observer('_collapsed', function () {
+      var collapsed = this.get('_collapsed');
+      var active = this.get('active');
+      if (collapsed !== active) {
+        return;
+      }
+      if (collapsed === false) {
+        this.show();
+      } else {
+        this.hide();
+      }
+    }),
+
+    /**
+     * @method expand
+     * @private
+     */
+    expand: function expand() {
+      if (this.onExpand() !== false) {
+        this.set('_collapsed', false);
+      }
+    },
+
+
+    /**
+     * @method collapse
+     * @private
+     */
+    collapse: function collapse() {
+      if (this.onCollapse() !== false) {
+        this.set('_collapsed', true);
+      }
+    },
+
+
+    actions: {
+      expand: function expand() {
+        this.expand();
+      },
+      collapse: function collapse() {
+        this.collapse();
+      },
+      toggleNavbar: function toggleNavbar() {
+        if (this.get('_collapsed')) {
+          this.expand();
+        } else {
+          this.collapse();
+        }
+      }
+    }
+
+    /**
+     * Bootstrap 4 Only: Defines the responsive toggle breakpoint size. Options are the standard
+     * two character Bootstrap size abbreviations. Used to set the `navbar-toggleable-*`
+     * class.
+     *
+     * @property toggleBreakpoint
+     * @type String
+     * @default 'md'
+     * @public
+     */
+
+    /**
+     * Bootstrap 4 Only: Sets the background color for the navbar. Can be any color
+     * in the set that composes the `bg-*` classes and can be extended by creating your
+     * own `bg-*` classes.
+     *
+     * @property backgroundColor
+     * @type String
+     * @default 'faded'
+     * @public
+     */
+  });
+});
+;define('ember-bootstrap/components/base/bs-navbar/content', ['exports', 'ember-bootstrap/templates/components/bs-navbar/content', 'ember-bootstrap/components/bs-collapse'], function (exports, _content, _bsCollapse) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _bsCollapse.default.extend({
+    layout: _content.default,
+
+    classNames: ['navbar-collapse']
+  });
+});
+;define('ember-bootstrap/components/base/bs-navbar/link-to', ['exports', 'ember-bootstrap/components/bs-nav/link-to'], function (exports, _linkTo) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _linkTo.default.extend({
+
+    /**
+     * @property collapseNavbar
+     * @type {Boolean}
+     * @default true
+     * @public
+     */
+    collapseNavbar: true,
+
+    /**
+     * @event onCollapse
+     * @private
+     */
+    onCollapse: function onCollapse() {},
+    click: function click() {
+      if (this.get('collapseNavbar')) {
+        this.onCollapse();
+      }
+    }
+  });
+});
+;define('ember-bootstrap/components/base/bs-navbar/nav', ['exports', 'ember-bootstrap/components/bs-nav'], function (exports, _bsNav) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _bsNav.default.extend({
+    classNames: ['navbar-nav'],
+
+    didReceiveAttrs: function didReceiveAttrs() {
+      this._super.apply(this, arguments);
+      this.set('justified', false);
+    }
+  });
+});
+;define('ember-bootstrap/components/base/bs-navbar/toggle', ['exports', 'ember-bootstrap/components/bs-button', 'ember-bootstrap/templates/components/bs-navbar/toggle'], function (exports, _bsButton, _toggle) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _bsButton.default.extend({
+    layout: _toggle.default,
+
+    classNameBindings: ['collapsed'],
+    collapsed: true
+
+    /**
+     * Bootstrap 4 Only: Defines the alignment of the toggler. Valid values are 'left' and 'right'
+     * to set the `navbar-toggler-*` class.
+     *
+     * @property align
+     * @type String
+     * @default null
+     * @public
+     */
+
+  });
+});
+;define('ember-bootstrap/components/base/bs-popover', ['exports', 'ember', 'ember-bootstrap/components/base/bs-contextual-help', 'ember-bootstrap/templates/components/bs-popover'], function (exports, _ember, _bsContextualHelp, _bsPopover) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed;
+  exports.default = _bsContextualHelp.default.extend({
+    layout: _bsPopover.default,
+
+    /**
+     * @property placement
+     * @type string
+     * @default 'right'
+     * @public
+     */
+    placement: 'right',
+
+    /**
+     * @property triggerEvents
+     * @type array|string
+     * @default 'click'
+     * @public
+     */
+    triggerEvents: 'click',
+
+    /**
+     * The DOm element of the arrow element.
+     *
+     * @property arrowElement
+     * @type object
+     * @readonly
+     * @private
+     */
+    arrowElement: computed('overlayElement', function () {
+      return this.get('overlayElement').querySelector('.arrow');
+    }).volatile()
+  });
+});
+;define('ember-bootstrap/components/base/bs-popover/element', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-popover/element'], function (exports, _ember, _element) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed;
+  exports.default = _ember.default.Component.extend({
+    layout: _element.default,
+
+    classNames: ['popover'],
+    classNameBindings: ['fade'],
+    ariaRole: 'tooltip',
+
+    /**
+     * @property placement
+     * @type string
+     * @default 'top'
+     * @public
+     */
+    placement: 'top',
+
+    /**
+     * @property fade
+     * @type boolean
+     * @default true
+     * @public
+     */
+    fade: true,
+
+    /**
+     * @property showHelp
+     * @type boolean
+     * @default false
+     * @public
+     */
+    showHelp: false,
+
+    /**
+     * @property title
+     * @type string
+     * @public
+     */
+    title: undefined,
+
+    /**
+     * @property hasTitle
+     * @type boolean
+     * @private
+     */
+    hasTitle: computed.notEmpty('title')
+  });
+});
+;define('ember-bootstrap/components/base/bs-progress', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-progress'], function (exports, _ember, _bsProgress) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Component.extend({
+    layout: _bsProgress.default,
+    classNames: ['progress']
+  });
+});
+;define('ember-bootstrap/components/base/bs-progress/bar', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-progress/bar', 'ember-bootstrap/mixins/type-class'], function (exports, _ember, _bar, _typeClass) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed,
+      htmlSafe = _ember.default.String.htmlSafe;
+  exports.default = _ember.default.Component.extend(_typeClass.default, {
+    layout: _bar.default,
+    classNames: ['progress-bar'],
+    classNameBindings: ['progressBarStriped'],
+
+    attributeBindings: ['style', 'ariaValuenow', 'ariaValuemin', 'ariaValuemax'],
+
+    /**
+     * The lower limit of the value range
+     *
+     * @property minValue
+     * @type number
+     * @default 0
+     * @public
+     */
+    minValue: 0,
+
+    /**
+     * The upper limit of the value range
+     *
+     * @property maxValue
+     * @type number
+     * @default 100
+     * @public
+     */
+    maxValue: 100,
+
+    /**
+     * The value the progress bar should represent
+     *
+     * @property value
+     * @type number
+     * @default 0
+     * @public
+     */
+    value: 0,
+
+    /**
+     If true a label will be shown inside the progress bar.
+      By default it will be the percentage corresponding to the `value` property, rounded to `roundDigits` digits.
+     You can customize it by using the component with a block template, which the component yields the percentage
+     value to:
+      ```hbs
+     {{#bs-progress}}
+       {{#bs-progress-bar value=progressValue as |percent|}}{{progressValue}} ({{percent}}%){{/bs-progress-bar}}
+     {{/bs-progress}}
+     ```
+      @property showLabel
+     @type boolean
+     @default false
+     @public
+     */
+    showLabel: false,
+
+    /**
+     * Create a striped effect, see http://getbootstrap.com/components/#progress-striped
+     *
+     * @property striped
+     * @type boolean
+     * @default false
+     * @public
+     */
+    striped: false,
+
+    /**
+     * Animate the stripes, see http://getbootstrap.com/components/#progress-animated
+     *
+     * @property animate
+     * @type boolean
+     * @default false
+     * @public
+     */
+    animate: false,
+
+    /**
+     * Specify to how many digits the progress bar label should be rounded.
+     *
+     * @property roundDigits
+     * @type number
+     * @default 0
+     * @public
+     */
+    roundDigits: 0,
+
+    progressBarStriped: computed.readOnly('striped'),
+    progressBarAnimate: computed.readOnly('animate'),
+
+    ariaValuenow: computed.readOnly('value'),
+    ariaValuemin: computed.readOnly('minValue'),
+    ariaValuemax: computed.readOnly('maxValue'),
+
+    /**
+     * The percentage of `value`
+     *
+     * @property percent
+     * @type number
+     * @protected
+     * @readonly
+     */
+    percent: computed('value', 'minValue', 'maxValue', function () {
+      var value = parseFloat(this.get('value'));
+      var minValue = parseFloat(this.get('minValue'));
+      var maxValue = parseFloat(this.get('maxValue'));
+
+      return Math.min(Math.max((value - minValue) / (maxValue - minValue), 0), 1) * 100;
+    }).readOnly(),
+
+    /**
+     * The percentage of `value`, rounded to `roundDigits` digits
+     *
+     * @property percentRounded
+     * @type number
+     * @protected
+     * @readonly
+     */
+    percentRounded: computed('percent', 'roundDigits', function () {
+      var roundFactor = Math.pow(10, this.get('roundDigits'));
+      return Math.round(this.get('percent') * roundFactor) / roundFactor;
+    }).readOnly(),
+
+    /**
+     * @property style
+     * @type string
+     * @private
+     * @readonly
+     */
+    style: computed('percent', function () {
+      var percent = this.get('percent');
+      return htmlSafe('width: ' + percent + '%');
+    })
+
+  });
+});
+;define('ember-bootstrap/components/base/bs-tab', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-tab', 'ember-bootstrap/mixins/component-parent', 'ember-bootstrap/components/bs-tab/pane', 'ember-bootstrap/utils/listen-to-cp'], function (exports, _ember, _bsTab, _componentParent, _pane, _listenToCp) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed,
+      isPresent = _ember.default.isPresent,
+      A = _ember.default.A;
+  exports.default = _ember.default.Component.extend(_componentParent.default, {
+    layout: _bsTab.default,
+
+    /**
+     * Type of nav, either "pills" or "tabs"
+     *
+     * @property type
+     * @type String
+     * @default 'tabs'
+     * @public
+     */
+    type: 'tabs',
+
+    /**
+     * By default the tabs will be automatically generated using the available [TabPane](Components.TabPane.html)
+     * components. If set to true, you can deactivate this and setup the tabs manually. See the example above.
+     *
+     * @property customTabs
+     * @type boolean
+     * @default false
+     * @public
+     */
+    customTabs: false,
+
+    /**
+     * The id (`elementId`) of the active [TabPane](Components.TabPane.html).
+     * By default the first tab will be active, but this can be changed by setting this property
+     *
+     * ```hbs
+     * {{#bs-tab activeId="pane2"}}
+     *   {{#tab.pane id="pane1" title="Tab 1"}}
+     *      ...
+     *   {{/tab.pane}}
+     *   {{#tab.pane id="pane1" title="Tab 1"}}
+     *     ...
+     *   {{/tab.pane}}
+     * {{/bs-tab}}
+     * ```
+     *
+     * When the selection is changed by user interaction this property will not update by using two-way bindings in order
+     * to follow DDAU best practices. If you want to react to such changes, subscribe to the `onChange` action
+     *
+     * @property activeId
+     * @type string
+     * @public
+     */
+    activeId: computed.oneWay('childPanes.firstObject.elementId'),
+
+    /**
+     * @property isActiveId
+     * @private
+     */
+    isActiveId: (0, _listenToCp.default)('activeId'),
+
+    /**
+     * Set to false to disable the fade animation when switching tabs.
+     *
+     * @property fade
+     * @type boolean
+     * @default true
+     * @public
+     */
+    fade: true,
+
+    /**
+     * The duration of the fade animation
+     *
+     * @property fadeDuration
+     * @type integer
+     * @default 150
+     * @public
+     */
+    fadeDuration: 150,
+
+    /**
+     * This action is called when switching the active tab, with the new and previous pane id
+     *
+     * You can return false to prevent changing the active tab automatically, and do that in your action by
+     * setting `activeId`.
+     *
+     * @event onChange
+     * @public
+     */
+    onChange: function onChange() {},
+
+
+    /**
+     * All `TabPane` child components
+     *
+     * @property childPanes
+     * @type array
+     * @readonly
+     * @private
+     */
+    childPanes: computed.filter('children', function (view) {
+      return view instanceof _pane.default;
+    }),
+
+    /**
+     * Array of objects that define the tab structure
+     *
+     * @property navItems
+     * @type array
+     * @readonly
+     * @private
+     */
+    navItems: computed('childPanes.@each.{elementId,title,group}', function () {
+      var items = A();
+      this.get('childPanes').forEach(function (pane) {
+        var groupTitle = pane.get('groupTitle');
+        var item = pane.getProperties('elementId', 'title');
+        if (isPresent(groupTitle)) {
+          var group = items.findBy('groupTitle', groupTitle);
+          if (group) {
+            group.children.push(item);
+            group.childIds.push(item.elementId);
+          } else {
+            items.push({
+              isGroup: true,
+              groupTitle: groupTitle,
+              children: A([item]),
+              childIds: A([item.elementId])
+            });
+          }
+        } else {
+          items.push(item);
+        }
+      });
+      return items;
+    }),
+
+    actions: {
+      select: function select(id) {
+        var previous = this.get('isActiveId');
+        if (this.get('onChange')(id, previous) !== false) {
+          // change active tab when `onChange` does not return false
+          this.set('isActiveId', id);
+        }
+      }
+    }
+  });
+});
+;define('ember-bootstrap/components/base/bs-tab/pane', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-tab/pane', 'ember-bootstrap/mixins/component-child', 'ember-bootstrap/mixins/transition-support', 'ember-bootstrap/utils/transition-end'], function (exports, _ember, _pane, _componentChild, _transitionSupport, _transitionEnd) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed,
+      observer = _ember.default.observer,
+      scheduleOnce = _ember.default.run.scheduleOnce;
+  exports.default = _ember.default.Component.extend(_componentChild.default, _transitionSupport.default, {
+    layout: _pane.default,
+    classNameBindings: ['active', 'usesTransition:fade'],
+    classNames: ['tab-pane'],
+    ariaRole: 'tabpanel',
+
+    /**
+     * @property activeId
+     * @private
+     */
+    activeId: null,
+
+    /**
+     * True if this pane is active (visible)
+     *
+     * @property isActive
+     * @type boolean
+     * @readonly
+     * @private
+     */
+    isActive: computed('activeId', 'elementId', function () {
+      return this.get('activeId') === this.get('elementId');
+    }).readOnly(),
+
+    /**
+     * Used to apply Bootstrap's "active" class
+     *
+     * @property active
+     * @type boolean
+     * @default false
+     * @private
+     */
+    active: false,
+
+    /**
+     * Used to trigger the Bootstrap visibility classes.
+     *
+     * @property showContent
+     * @type boolean
+     * @default false
+     * @private
+     */
+    showContent: false,
+
+    /**
+     * The title for this tab pane. This is used by the `bs-tab` component to automatically generate
+     * the tab navigation.
+     * See the [Components.Tab](Components.Tab.html) for examples.
+     *
+     * @property title
+     * @type string
+     * @default null
+     * @public
+     */
+    title: null,
+
+    /**
+     * An optional group title used by the `bs-tab` component to group all panes with the same group title
+     * under a common drop down in the tab navigation.
+     * See the [Components.Tab](Components.Tab.html) for examples.
+     *
+     * @property groupTitle
+     * @type string
+     * @default null
+     * @public
+     */
+    groupTitle: null,
+
+    /**
+     * Use fade animation when switching tabs.
+     *
+     * @property fade
+     * @type boolean
+     * @private
+     */
+    fade: true,
+
+    /**
+     * The duration of the fade out animation
+     *
+     * @property fadeDuration
+     * @type integer
+     * @default 150
+     * @private
+     */
+    fadeDuration: 150,
+
+    /**
+     * Show the pane
+     *
+     * @method show
+     * @protected
+     */
+    show: function show() {
+      if (this.get('usesTransition')) {
+        (0, _transitionEnd.default)(this.get('element'), function () {
+          if (!this.get('isDestroyed')) {
+            this.setProperties({
+              active: true,
+              showContent: true
+            });
+          }
+        }, this, this.get('fadeDuration'));
+      } else {
+        this.set('active', true);
+      }
+    },
+
+
+    /**
+     * Hide the pane
+     *
+     * @method hide
+     * @protected
+     */
+    hide: function hide() {
+      if (this.get('usesTransition')) {
+        (0, _transitionEnd.default)(this.get('element'), function () {
+          if (!this.get('isDestroyed')) {
+            this.set('active', false);
+          }
+        }, this, this.get('fadeDuration'));
+        this.set('showContent', false);
+      } else {
+        this.set('active', false);
+      }
+    },
+
+
+    _showHide: observer('isActive', function () {
+      if (this.get('isActive')) {
+        this.show();
+      } else {
+        this.hide();
+      }
+    }),
+
+    init: function init() {
+      this._super.apply(this, arguments);
+      scheduleOnce('afterRender', this, function () {
+        // isActive comes from parent component, so only available after render...
+        this.set('active', this.get('isActive'));
+        this.set('showContent', this.get('isActive') && this.get('fade'));
+      });
+    }
+  });
+});
+;define('ember-bootstrap/components/base/bs-tooltip', ['exports', 'ember', 'ember-bootstrap/components/base/bs-contextual-help', 'ember-bootstrap/templates/components/bs-tooltip'], function (exports, _ember, _bsContextualHelp, _bsTooltip) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed;
+  exports.default = _bsContextualHelp.default.extend({
+    layout: _bsTooltip.default,
+
+    /**
+     * The DOM element of the arrow element.
+     *
+     * @property arrowElement
+     * @type object
+     * @readonly
+     * @private
+     */
+    arrowElement: computed('overlayElement', function () {
+      return this.get('overlayElement').querySelector('.tooltip-arrow');
+    }).volatile()
+  });
+});
+;define('ember-bootstrap/components/base/bs-tooltip/element', ['exports', 'ember', 'ember-bootstrap/templates/components/bs-tooltip/element'], function (exports, _ember, _element) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Component.extend({
+    layout: _element.default,
+
+    classNames: ['tooltip'],
+    classNameBindings: ['fade'],
+    ariaRole: 'tooltip',
+
+    /**
+     * @property placement
+     * @type string
+     * @default 'top'
+     * @public
+     */
+    placement: 'top',
+
+    /**
+     * @property fade
+     * @type boolean
+     * @default true
+     * @public
+     */
+    fade: true,
+
+    /**
+     * @property showHelp
+     * @type boolean
+     * @default false
+     * @public
+     */
+    showHelp: false
+  });
+});
+;define('ember-bootstrap/components/bs-accordion', ['exports', 'ember-bootstrap/components/base/bs-accordion'], function (exports, _bsAccordion) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _bsAccordion.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-accordion/item', ['exports', 'ember-bootstrap/components/base/bs-accordion/item'], function (exports, _item) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _item.default.extend({
+    classNames: ['card'],
+
+    /**
+     * @property classTypePrefix
+     * @type String
+     * @default 'card'
+     * @protected
+     */
+    classTypePrefix: 'card'
+  });
+});
+;define('ember-bootstrap/components/bs-accordion/item/body', ['exports', 'ember-bootstrap/components/base/bs-accordion/item/body'], function (exports, _body) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _body.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-accordion/item/title', ['exports', 'ember-bootstrap/components/base/bs-accordion/item/title'], function (exports, _title) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _title.default.extend({
+    classNames: ['card-header']
+  });
+});
+;define('ember-bootstrap/components/bs-alert', ['exports', 'ember-bootstrap/components/base/bs-alert'], function (exports, _bsAlert) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _bsAlert.default.extend({
+    classNameBindings: ['showAlert:show']
+  });
+});
+;define('ember-bootstrap/components/bs-button-group', ['exports', 'ember-bootstrap/components/base/bs-button-group'], function (exports, _bsButtonGroup) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _bsButtonGroup.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-button-group/button', ['exports', 'ember-bootstrap/components/base/bs-button-group/button'], function (exports, _button) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _button.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-button', ['exports', 'ember-bootstrap/components/base/bs-button'], function (exports, _bsButton) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _bsButton.default.extend({
+    type: 'secondary'
+  });
+});
+;define('ember-bootstrap/components/bs-collapse', ['exports', 'ember-bootstrap/components/base/bs-collapse'], function (exports, _bsCollapse) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _bsCollapse.default.extend({
+    classNameBindings: ['showContent:show']
+  });
+});
+;define('ember-bootstrap/components/bs-dropdown', ['exports', 'ember-bootstrap/components/base/bs-dropdown'], function (exports, _bsDropdown) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _bsDropdown.default.extend({
+    classNameBindings: ['isOpen:show', 'inNav:nav-item']
+  });
+});
+;define('ember-bootstrap/components/bs-dropdown/button', ['exports', 'ember-bootstrap/components/base/bs-dropdown/button'], function (exports, _button) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _button.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-dropdown/menu', ['exports', 'ember-bootstrap/components/base/bs-dropdown/menu'], function (exports, _menu) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _menu.default.extend({
+    tagName: 'div'
+  });
+});
+;define('ember-bootstrap/components/bs-dropdown/menu/divider', ['exports', 'ember-bootstrap/components/base/bs-dropdown/menu/divider'], function (exports, _divider) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _divider.default.extend({
+    classNames: ['dropdown-divider']
+  });
+});
+;define('ember-bootstrap/components/bs-dropdown/menu/item', ['exports', 'ember-bootstrap/components/base/bs-dropdown/menu/item'], function (exports, _item) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _item.default.extend({
+    tagName: ''
+  });
+});
+;define('ember-bootstrap/components/bs-dropdown/menu/link-to', ['exports', 'ember-bootstrap/components/base/bs-dropdown/menu/link-to'], function (exports, _linkTo) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _linkTo.default.extend({
+    classNames: ['dropdown-item']
+  });
+});
+;define('ember-bootstrap/components/bs-dropdown/toggle', ['exports', 'ember-bootstrap/components/base/bs-dropdown/toggle'], function (exports, _toggle) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _toggle.default.extend({
+    classNameBindings: ['inNav:nav-link']
+  });
+});
+;define('ember-bootstrap/components/bs-form', ['exports', 'ember', 'ember-bootstrap/components/base/bs-form'], function (exports, _ember, _bsForm) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed;
+  exports.default = _bsForm.default.extend({
+    layoutClass: computed('formLayout', function () {
+      var layout = this.get('formLayout');
+      return layout === 'inline' ? 'form-inline' : null;
+    }).readOnly()
+  });
+});
+;define('ember-bootstrap/components/bs-form/element', ['exports', 'ember-bootstrap/components/base/bs-form/element'], function (exports, _element) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _element.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-form/element/control', ['exports', 'ember-bootstrap/components/base/bs-form/element/control'], function (exports, _control) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _control.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-form/element/control/checkbox', ['exports', 'ember-bootstrap/components/base/bs-form/element/control/checkbox'], function (exports, _checkbox) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _checkbox.default.extend({
+    classNames: ['form-check-input']
+  });
+});
+;define('ember-bootstrap/components/bs-form/element/control/input', ['exports', 'ember', 'ember-bootstrap/components/base/bs-form/element/control/input'], function (exports, _ember, _input) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _input.default.extend({
+    classNameBindings: ['formFeedbackClass'],
+
+    validationType: null,
+
+    formFeedbackClass: _ember.default.computed('validationType', function () {
+      var validationType = this.get('validationType');
+      return validationType ? 'form-control-' + validationType : null;
+    })
+  });
+});
+;define('ember-bootstrap/components/bs-form/element/control/textarea', ['exports', 'ember-bootstrap/components/base/bs-form/element/control/textarea'], function (exports, _textarea) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _textarea.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-form/element/errors', ['exports', 'ember-bootstrap/components/base/bs-form/element/errors'], function (exports, _errors) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _errors.default.extend({
+    feedbackClass: 'form-control-feedback'
+  });
+});
+;define('ember-bootstrap/components/bs-form/element/feedback-icon', ['exports', 'ember-bootstrap/components/base/bs-form/element/feedback-icon'], function (exports, _feedbackIcon) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _feedbackIcon.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-form/element/help-text', ['exports', 'ember-bootstrap/components/base/bs-form/element/help-text'], function (exports, _helpText) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _helpText.default.extend({
+    classNames: ['form-text']
+  });
+});
+;define('ember-bootstrap/components/bs-form/element/label', ['exports', 'ember-bootstrap/components/base/bs-form/element/label'], function (exports, _label) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _label.default.extend({
+    tagName: 'label',
+
+    classNames: [],
+    classNameBindings: ['invisibleLabel:sr-only', 'isHorizontal:col-form-label', 'isCheckbox:form-check-label', 'labelClass'],
+    attributeBindings: ['formElementId:for']
+  });
+});
+;define('ember-bootstrap/components/bs-form/element/layout', ['exports', 'ember-bootstrap/components/base/bs-form/element/layout'], function (exports, _layout) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _layout.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-form/element/layout/horizontal', ['exports', 'ember-bootstrap/components/base/bs-form/element/layout/horizontal'], function (exports, _horizontal) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _horizontal.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-form/element/layout/horizontal/checkbox', ['exports', 'ember-bootstrap/components/base/bs-form/element/layout/horizontal/checkbox'], function (exports, _checkbox) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _checkbox.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-form/element/layout/inline', ['exports', 'ember-bootstrap/components/base/bs-form/element/layout/inline'], function (exports, _inline) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _inline.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-form/element/layout/inline/checkbox', ['exports', 'ember-bootstrap/components/base/bs-form/element/layout/inline/checkbox'], function (exports, _checkbox) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _checkbox.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-form/element/layout/vertical', ['exports', 'ember-bootstrap/components/base/bs-form/element/layout/vertical'], function (exports, _vertical) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _vertical.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-form/element/layout/vertical/checkbox', ['exports', 'ember-bootstrap/components/base/bs-form/element/layout/vertical/checkbox'], function (exports, _checkbox) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _checkbox.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-form/group', ['exports', 'ember', 'ember-bootstrap/components/base/bs-form/group'], function (exports, _ember, _group) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed;
+  exports.default = _group.default.extend({
+    classNameBindings: ['isHorizontal:row', 'isCheckbox:form-check:form-group'],
+    classTypePrefix: 'form-control',
+
+    /**
+     * Indicates whether the type of the control widget equals `checkbox`
+     *
+     * @property isCheckbox
+     * @type boolean
+     * @private
+     */
+    isCheckbox: computed.equal('controlType', 'checkbox').readOnly(),
+
+    /**
+     * Indicates whether the form type equals `horizontal`
+     *
+     * @property isHorizontal
+     * @type boolean
+     * @private
+     */
+    isHorizontal: computed.equal('formLayout', 'horizontal').readOnly(),
+
+    _validationType: computed('validation', function () {
+      var validation = this.get('validation');
+      return validation === 'error' ? 'danger' : validation;
+    }).readOnly()
+  });
+});
+;define('ember-bootstrap/components/bs-modal-simple', ['exports', 'ember-bootstrap/components/base/bs-modal-simple'], function (exports, _bsModalSimple) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _bsModalSimple.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-modal', ['exports', 'ember-bootstrap/components/base/bs-modal'], function (exports, _bsModal) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _bsModal.default.extend({
+    showClass: 'show'
+  });
+});
+;define('ember-bootstrap/components/bs-modal/body', ['exports', 'ember-bootstrap/components/base/bs-modal/body'], function (exports, _body) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _body.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-modal/dialog', ['exports', 'ember-bootstrap/components/base/bs-modal/dialog'], function (exports, _dialog) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _dialog.default.extend({
+    classNameBindings: ['showModal:show']
+  });
+});
+;define('ember-bootstrap/components/bs-modal/footer', ['exports', 'ember-bootstrap/components/base/bs-modal/footer'], function (exports, _footer) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _footer.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-modal/header', ['exports', 'ember-bootstrap/components/base/bs-modal/header'], function (exports, _header) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _header.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-modal/header/close', ['exports', 'ember-bootstrap/components/base/bs-modal/header/close'], function (exports, _close) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _close.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-modal/header/title', ['exports', 'ember-bootstrap/components/base/bs-modal/header/title'], function (exports, _title) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _title.default.extend({
+    tagName: 'h5'
+  });
+});
+;define('ember-bootstrap/components/bs-nav', ['exports', 'ember-bootstrap/components/base/bs-nav'], function (exports, _bsNav) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _bsNav.default.extend({
+    classNameBindings: ['stacked:flex-column']
+  });
+});
+;define('ember-bootstrap/components/bs-nav/item', ['exports', 'ember-bootstrap/components/base/bs-nav/item'], function (exports, _item) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _item.default.extend({
+    classNames: ['nav-item']
+  });
+});
+;define('ember-bootstrap/components/bs-nav/link-to', ['exports', 'ember-bootstrap/components/base/bs-nav/link-to'], function (exports, _linkTo) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _linkTo.default.extend({
+    classNames: ['nav-link']
+  });
+});
+;define('ember-bootstrap/components/bs-navbar', ['exports', 'ember', 'ember-bootstrap/components/base/bs-navbar'], function (exports, _ember, _bsNavbar) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _bsNavbar.default.extend({
+    classNameBindings: ['breakpointClass', 'backgroundClass'],
+
+    type: 'light',
+
+    /**
+     * Defines the responsive toggle breakpoint size. Options are the standard
+     * two character Bootstrap size abbreviations. Used to set the `navbar-toggleable-*`
+     * class.
+     *
+     * @property toggleBreakpoint
+     * @type String
+     * @default 'md'
+     * @public
+     */
+    toggleBreakpoint: 'md',
+
+    /**
+     * Sets the background color for the navbar. Can be any color
+     * in the set that composes the `bg-*` classes.
+     *
+     * @property backgroundColor
+     * @type String
+     * @default 'faded'
+     * @public
+     */
+    backgroundColor: 'faded',
+
+    breakpointClass: _ember.default.computed('toggleBreakpoint', function () {
+      var toggleBreakpoint = this.get('toggleBreakpoint');
+
+      return 'navbar-toggleable-' + toggleBreakpoint;
+    }),
+
+    backgroundClass: _ember.default.computed('backgroundColor', function () {
+      var backgroundColor = this.get('backgroundColor');
+
+      return 'bg-' + backgroundColor;
+    }),
+
+    _validPositions: ['fixed-top', 'fixed-bottom', 'sticky-top'],
+
+    _positionPrefix: ''
+  });
+});
+;define('ember-bootstrap/components/bs-navbar/content', ['exports', 'ember-bootstrap/components/base/bs-navbar/content'], function (exports, _content) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _content.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-navbar/link-to', ['exports', 'ember-bootstrap/components/base/bs-navbar/link-to'], function (exports, _linkTo) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _linkTo.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-navbar/nav', ['exports', 'ember-bootstrap/components/base/bs-navbar/nav'], function (exports, _nav) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _nav.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-navbar/toggle', ['exports', 'ember', 'ember-bootstrap/components/base/bs-navbar/toggle'], function (exports, _ember, _toggle) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed;
+  exports.default = _toggle.default.extend({
+    classNames: ['navbar-toggler'],
+    classNameBindings: ['alignmentClass'],
+
+    /**
+     * Defines the alignment of the toggler. Valid values are 'left' and 'right'
+     * to set the `navbar-toggler-*` class.
+     *
+     * @property align
+     * @type String
+     * @default null
+     * @public
+     */
+    align: null,
+
+    alignmentClass: computed('align', function () {
+      var align = this.get('align');
+
+      if (align) {
+        return 'navbar-toggler-' + align;
+      }
+    }).readOnly()
+  });
+});
+;define('ember-bootstrap/components/bs-popover', ['exports', 'ember-bootstrap/components/base/bs-popover'], function (exports, _bsPopover) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _bsPopover.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-popover/element', ['exports', 'ember', 'ember-bootstrap/components/base/bs-popover/element'], function (exports, _ember, _element) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _element.default.extend({
+    classNameBindings: ['placementClass', 'showHelp:show'],
+
+    placementClass: _ember.default.computed('placement', function () {
+      var placement = this.get('placement');
+
+      return 'popover-' + placement;
+    })
+  });
+});
+;define('ember-bootstrap/components/bs-progress', ['exports', 'ember-bootstrap/components/base/bs-progress'], function (exports, _bsProgress) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _bsProgress.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-progress/bar', ['exports', 'ember-bootstrap/components/base/bs-progress/bar'], function (exports, _bar) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _bar.default.extend({
+    classNameBindings: ['progressBarAnimate:progress-bar-animated'],
+
+    /**
+     * @property classTypePrefix
+     * @type String
+     * @default 'bg'
+     * @protected
+     */
+    classTypePrefix: 'bg'
+  });
+});
+;define('ember-bootstrap/components/bs-tab', ['exports', 'ember-bootstrap/components/base/bs-tab'], function (exports, _bsTab) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _bsTab.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-tab/pane', ['exports', 'ember-bootstrap/components/base/bs-tab/pane'], function (exports, _pane) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _pane.default.extend({
+    classNameBindings: ['showContent:show']
+  });
+});
+;define('ember-bootstrap/components/bs-tooltip', ['exports', 'ember-bootstrap/components/base/bs-tooltip'], function (exports, _bsTooltip) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _bsTooltip.default;
+    }
+  });
+});
+;define('ember-bootstrap/components/bs-tooltip/element', ['exports', 'ember', 'ember-bootstrap/components/base/bs-tooltip/element'], function (exports, _ember, _element) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed;
+  exports.default = _element.default.extend({
+    classNameBindings: ['placementClass', 'showHelp:show'],
+
+    placementClass: computed('placement', function () {
+      var placement = this.get('placement');
+
+      return 'tooltip-' + placement;
+    }).readOnly()
+  });
+});
+;define('ember-bootstrap/config', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+
+  var Config = _ember.default.Object.extend();
+
+  Config.reopenClass({
+    formValidationSuccessIcon: 'glyphicon glyphicon-ok',
+    formValidationErrorIcon: 'glyphicon glyphicon-remove',
+    formValidationWarningIcon: 'glyphicon glyphicon-warning-sign',
+    formValidationInfoIcon: 'glyphicon glyphicon-info-sign',
+    insertEmberWormholeElementToDom: true,
+
+    load: function load() {
+      var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+      for (var property in config) {
+        if (this.hasOwnProperty(property) && typeof this[property] !== 'function') {
+          this[property] = config[property];
+        }
+      }
+    }
+  });
+
+  exports.default = Config;
+});
+;define('ember-bootstrap/helpers/bs-contains', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.bsContains = bsContains;
+  var isArray = _ember.default.isArray,
+      A = _ember.default.A;
+  function bsContains(params /* , hash*/) {
+    return isArray(params[0]) ? A(params[0]).includes(params[1]) : false;
+  }
+
+  exports.default = _ember.default.Helper.helper(bsContains);
+});
+;define('ember-bootstrap/helpers/bs-eq', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.eq = eq;
+  function eq(params) {
+    return params[0] === params[1];
+  }
+
+  exports.default = _ember.default.Helper.helper(eq);
+});
+;define('ember-bootstrap/mixins/component-child', ['exports', 'ember', 'ember-bootstrap/mixins/component-parent'], function (exports, _ember, _componentParent) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed;
+  exports.default = _ember.default.Mixin.create({
+
+    /**
+     * The parent component
+     *
+     * @property _parent
+     * @private
+     */
+    _parent: computed(function () {
+      return this.nearestOfType(_componentParent.default);
+    }),
+
+    /**
+     * flag to check if component has already been registered
+     * @property _didRegister
+     * @type boolean
+     * @private
+     */
+    _didRegister: false,
+
+    /**
+     * Register ourself as a child at the parent component
+     * We use the `willRender` event here to also support the fastboot environment, where there is no `didInsertElement`
+     *
+     * @method _registerWithParent
+     * @private
+     */
+    _registerWithParent: function _registerWithParent() {
+      if (!this._didRegister) {
+        var parent = this.get('_parent');
+        if (parent) {
+          parent.registerChild(this);
+          this._didRegister = true;
+        }
+      }
+    },
+
+
+    /**
+     * Unregister from the parent component
+     *
+     * @method _unregisterFromParent
+     * @private
+     */
+    _unregisterFromParent: function _unregisterFromParent() {
+      var parent = this.get('_parent');
+      if (this._didRegister && parent) {
+        parent.removeChild(this);
+        this._didRegister = false;
+      }
+    },
+    didReceiveAttrs: function didReceiveAttrs() {
+      this._super.apply(this, arguments);
+      this._registerWithParent();
+    },
+    willRender: function willRender() {
+      this._super.apply(this, arguments);
+      this._registerWithParent();
+    },
+    willDestroyElement: function willDestroyElement() {
+      this._super.apply(this, arguments);
+      this._registerWithParent();
+    }
+  });
+});
+;define('ember-bootstrap/mixins/component-parent', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Mixin.create({
+
+    /**
+     * Array of registered child components
+     *
+     * @property children
+     * @type array
+     * @protected
+     */
+    children: null,
+
+    init: function init() {
+      this._super.apply(this, arguments);
+      this.set('children', _ember.default.A());
+    },
+
+
+    /**
+     * Register a component as a child of this parent
+     *
+     * @method registerChild
+     * @param child
+     * @public
+     */
+    registerChild: function registerChild(child) {
+      _ember.default.run.schedule('sync', this, function () {
+        this.get('children').addObject(child);
+      });
+    },
+
+
+    /**
+     * Remove the child component from this parent component
+     *
+     * @method removeChild
+     * @param child
+     * @public
+     */
+    removeChild: function removeChild(child) {
+      this.get('children').removeObject(child);
+    }
+  });
+});
+;define('ember-bootstrap/mixins/control-attributes', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Mixin.create({
+    attributeBindings: ['name', 'autofocus', 'disabled', 'readonly', 'required', 'tabindex', 'form', 'title', 'ariaDescribedBy:aria-describedby'],
+    tagName: 'input'
+  });
+});
+;define('ember-bootstrap/mixins/dropdown-toggle', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var next = _ember.default.run.next;
+  exports.default = _ember.default.Mixin.create({
+    classNames: ['dropdown-toggle'],
+
+    /**
+     * @property ariaRole
+     * @default button
+     * @type string
+     * @protected
+     */
+    ariaRole: 'button',
+
+    /**
+     * Reference to the parent dropdown component
+     *
+     * @property dropdown
+     * @type {Components.Dropdown}
+     * @private
+     */
+    dropdown: null,
+
+    didReceiveAttrs: function didReceiveAttrs() {
+      this._super.apply(this, arguments);
+      var dropdown = this.get('dropdown');
+      if (dropdown) {
+        next(this, function () {
+          if (!this.get('isDestroyed')) {
+            dropdown.set('toggle', this);
+          }
+        });
+      }
+    }
+  });
+});
+;define('ember-bootstrap/mixins/size-class', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Mixin.create({
+    /**
+     * Prefix for the size class, e.g. "btn" for button size classes ("btn-lg", "btn-sm" etc.)
+     *
+     * @property classTypePrefix
+     * @type string
+     * @required
+     * @protected
+     */
+    classTypePrefix: null,
+
+    classNameBindings: ['sizeClass'],
+
+    sizeClass: _ember.default.computed('size', function () {
+      var prefix = this.get('classTypePrefix');
+      var size = this.get('size');
+      return _ember.default.isBlank(size) ? null : prefix + '-' + size;
+    }),
+
+    /**
+     * Property for size styling, set to 'lg', 'sm' or 'xs'
+     *
+     * Also see the [Bootstrap docs](http://getbootstrap.com/css/#buttons-sizes)
+     *
+     * @property size
+     * @type String
+     * @public
+     */
+    size: null
+  });
+});
+;define('ember-bootstrap/mixins/sub-component', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Mixin.create({
+    targetObject: _ember.default.computed.alias('parentView')
+  });
+});
+;define('ember-bootstrap/mixins/transition-support', ['exports', 'ember', 'ember-bootstrap/utils/transition-support'], function (exports, _ember, _transitionSupport) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var computed = _ember.default.computed;
+  exports.default = _ember.default.Mixin.create({
+
+    /**
+     * @property transitionsEnabled
+     * @type boolean
+     * @private
+     */
+    transitionsEnabled: computed.reads('fade'),
+
+    /**
+     * Access to the fastboot service if available
+     *
+     * @property fastboot
+     * @type {Ember.Service}
+     * @private
+     */
+    fastboot: _ember.default.computed(function () {
+      var owner = _ember.default.getOwner(this);
+      return owner.lookup('service:fastboot');
+    }),
+
+    /**
+     * Use CSS transitions?
+     *
+     * @property usesTransition
+     * @type boolean
+     * @readonly
+     * @private
+     */
+    usesTransition: computed('fade', 'fastboot.isFastBoot', function () {
+      return !this.get('fastboot.isFastBoot') && !!_transitionSupport.default && this.get('transitionsEnabled');
+    })
+  });
+});
+;define('ember-bootstrap/mixins/type-class', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Mixin.create({
+    /**
+     * Prefix for the type class, e.g. "btn" for button type classes ("btn-primary2 etc.)
+     *
+     * @property classTypePrefix
+     * @type string
+     * @required
+     * @protected
+     */
+    classTypePrefix: null,
+
+    classNameBindings: ['typeClass'],
+
+    typeClass: _ember.default.computed('type', function () {
+      var prefix = this.get('classTypePrefix');
+      var type = this.get('type') || 'default';
+      return prefix + '-' + type;
+    }),
+
+    /**
+     * Property for type styling
+     *
+     * For the available types see the [Bootstrap docs](http://getbootstrap.com/css/#buttons-options) (use without "btn-" prefix)
+     *
+     * @property type
+     * @type String
+     * @default 'default'
+     * @public
+     */
+    type: 'default'
+  });
+});
+;define("ember-bootstrap/templates/components/bs-accordion", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "/xfqfc+P", "block": "{\"statements\":[[18,\"default\",[[33,[\"hash\"],null,[[\"item\",\"change\"],[[33,[\"component\"],[\"bs-accordion/item\"],[[\"selected\",\"onClick\"],[[28,[\"isSelected\"]],[33,[\"action\"],[[28,[null]],\"change\"],null]]]],[33,[\"action\"],[[28,[null]],\"change\"],null]]]]]]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-accordion.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-accordion/body", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "RmBOI6Vh", "block": "{\"statements\":[[6,[\"bs-collapse\"],null,[[\"collapsed\",\"class\"],[[28,[\"collapsed\"]],\"card-collapse\"]],{\"statements\":[[0,\"  \"],[11,\"div\",[]],[15,\"class\",\"card-block\"],[13],[0,\"\\n    \"],[18,\"default\"],[0,\"\\n  \"],[14],[0,\"\\n\"]],\"locals\":[]},null]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-accordion/body.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-accordion/item", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "KCh8PbX5", "block": "{\"statements\":[[6,[\"if\"],[[30,\"default\"]],null,{\"statements\":[[0,\"  \"],[18,\"default\",[[33,[\"hash\"],null,[[\"title\",\"body\"],[[33,[\"component\"],[\"bs-accordion/item/title\"],[[\"collapsed\",\"onClick\"],[[28,[\"collapsed\"]],[33,[\"action\"],[[28,[null]],[28,[\"onClick\"]],[28,[\"value\"]]],null]]]],[33,[\"component\"],[\"bs-accordion/item/body\"],[[\"collapsed\"],[[28,[\"collapsed\"]]]]]]]]]],[0,\"\\n\"]],\"locals\":[]},{\"statements\":[[6,[\"bs-accordion/item/title\"],null,[[\"collapsed\",\"onClick\"],[[28,[\"collapsed\"]],[33,[\"action\"],[[28,[null]],[28,[\"onClick\"]],[28,[\"value\"]]],null]]],{\"statements\":[[0,\"    \"],[1,[26,[\"title\"]],false],[0,\"\\n\"]],\"locals\":[]},null],[6,[\"bs-accordion/item/body\"],null,[[\"collapsed\"],[[28,[\"collapsed\"]]]],{\"statements\":[[0,\"    \"],[18,\"default\"],[0,\"\\n\"]],\"locals\":[]},null]],\"locals\":[]}]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-accordion/item.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-accordion/title", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "ZHXID18Q", "block": "{\"statements\":[[11,\"h5\",[]],[15,\"class\",\"card-title mb-0\"],[13],[0,\"\\n  \"],[11,\"a\",[]],[15,\"href\",\"#\"],[13],[0,\"\\n    \"],[18,\"default\"],[0,\"\\n  \"],[14],[0,\"\\n\"],[14],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-accordion/title.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-alert", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "pFnA5yh9", "block": "{\"statements\":[[6,[\"unless\"],[[28,[\"hidden\"]]],null,{\"statements\":[[6,[\"if\"],[[28,[\"dismissible\"]]],null,{\"statements\":[[0,\"    \"],[11,\"button\",[]],[15,\"type\",\"button\"],[15,\"class\",\"close\"],[15,\"aria-label\",\"Close\"],[5,[\"action\"],[[28,[null]],\"dismiss\"]],[13],[0,\"\\n      \"],[11,\"span\",[]],[15,\"aria-hidden\",\"true\"],[13],[0,\"×\"],[14],[0,\"\\n    \"],[14],[0,\"\\n\"]],\"locals\":[]},null],[0,\"  \"],[18,\"default\"],[0,\"\\n\"]],\"locals\":[]},null]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-alert.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-button-group", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "myc1fMPU", "block": "{\"statements\":[[18,\"default\",[[33,[\"hash\"],null,[[\"button\"],[[33,[\"component\"],[\"bs-button-group/button\"],[[\"buttonGroupType\",\"groupValue\",\"onClick\"],[[28,[\"type\"]],[28,[\"value\"]],[33,[\"action\"],[[28,[null]],\"buttonPressed\"],null]]]]]]]]]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-button-group.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-button", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "2XGZoEGB", "block": "{\"statements\":[[6,[\"if\"],[[28,[\"icon\"]]],null,{\"statements\":[[11,\"i\",[]],[16,\"class\",[34,[[26,[\"icon\"]]]]],[13],[14],[0,\" \"]],\"locals\":[]},null],[1,[26,[\"text\"]],false],[18,\"default\"]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-button.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-dropdown", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "kaGENxc/", "block": "{\"statements\":[[18,\"default\",[[33,[\"hash\"],null,[[\"button\",\"toggle\",\"menu\",\"isOpen\"],[[33,[\"component\"],[\"bs-dropdown/button\"],[[\"dropdown\",\"onClick\"],[[28,[null]],[33,[\"action\"],[[28,[null]],\"toggleDropdown\"],null]]]],[33,[\"component\"],[\"bs-dropdown/toggle\"],[[\"dropdown\",\"inNav\",\"onClick\"],[[28,[null]],[28,[\"inNav\"]],[33,[\"action\"],[[28,[null]],\"toggleDropdown\"],null]]]],[33,[\"component\"],[\"bs-dropdown/menu\"],null],[28,[\"isOpen\"]]]]]]]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-dropdown.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-dropdown/menu", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "WyeuPdsF", "block": "{\"statements\":[[18,\"default\",[[33,[\"hash\"],null,[[\"item\",\"link-to\",\"divider\"],[[33,[\"component\"],[\"bs-dropdown/menu/item\"],null],[33,[\"component\"],[\"bs-dropdown/menu/link-to\"],null],[33,[\"component\"],[\"bs-dropdown/menu/divider\"],null]]]]]],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-dropdown/menu.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-form", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "BGuiXVEe", "block": "{\"statements\":[[18,\"default\",[[33,[\"hash\"],null,[[\"element\",\"group\"],[[33,[\"component\"],[\"bs-form/element\"],[[\"model\",\"formLayout\",\"horizontalLabelGridClass\",\"showAllValidations\",\"onChange\"],[[28,[\"model\"]],[28,[\"formLayout\"]],[28,[\"horizontalLabelGridClass\"]],[28,[\"showAllValidations\"]],[33,[\"action\"],[[28,[null]],\"change\"],null]]]],[33,[\"component\"],[\"bs-form/group\"],[[\"formLayout\"],[[28,[\"formLayout\"]]]]]]]]]]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-form.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-form/element", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "0OVf7hUy", "block": "{\"statements\":[[6,[\"component\"],[[28,[\"layoutComponent\"]]],[[\"hasLabel\",\"formElementId\",\"horizontalLabelGridClass\",\"errorsComponent\",\"feedbackIconComponent\",\"labelComponent\",\"helpTextComponent\"],[[28,[\"hasLabel\"]],[28,[\"formElementId\"]],[28,[\"horizontalLabelGridClass\"]],[33,[\"component\"],[[28,[\"errorsComponent\"]]],[[\"messages\",\"show\"],[[28,[\"validationMessages\"]],[28,[\"showValidationMessages\"]]]]],[33,[\"component\"],[[28,[\"feedbackIconComponent\"]]],[[\"iconName\",\"show\"],[[28,[\"iconName\"]],[28,[\"hasFeedback\"]]]]],[33,[\"component\"],[[28,[\"labelComponent\"]]],[[\"label\",\"invisibleLabel\",\"formElementId\",\"controlType\",\"formLayout\"],[[28,[\"label\"]],[28,[\"invisibleLabel\"]],[28,[\"formElementId\"]],[28,[\"controlType\"]],[28,[\"formLayout\"]]]]],[33,[\"if\"],[[28,[\"hasHelpText\"]],[33,[\"component\"],[[28,[\"helpTextComponent\"]]],[[\"text\",\"id\"],[[28,[\"helpText\"]],[28,[\"ariaDescribedBy\"]]]]]],null]]],{\"statements\":[[6,[\"with\"],[[33,[\"component\"],[[28,[\"controlComponent\"]]],[[\"value\",\"id\",\"name\",\"type\",\"label\",\"placeholder\",\"autofocus\",\"disabled\",\"readonly\",\"required\",\"size\",\"tabindex\",\"minlength\",\"maxlength\",\"min\",\"max\",\"pattern\",\"accept\",\"autocomplete\",\"autosave\",\"inputmode\",\"multiple\",\"step\",\"form\",\"spellcheck\",\"cols\",\"rows\",\"wrap\",\"title\",\"options\",\"optionLabelPath\",\"ariaDescribedBy\",\"onChange\",\"validationType\"],[[28,[\"value\"]],[28,[\"formElementId\"]],[28,[\"name\"]],[28,[\"controlType\"]],[28,[\"label\"]],[28,[\"placeholder\"]],[28,[\"autofocus\"]],[28,[\"disabled\"]],[28,[\"readonly\"]],[28,[\"required\"]],[28,[\"size\"]],[28,[\"tabindex\"]],[28,[\"minlength\"]],[28,[\"maxlength\"]],[28,[\"min\"]],[28,[\"max\"]],[28,[\"pattern\"]],[28,[\"accept\"]],[28,[\"autocomplete\"]],[28,[\"autosave\"]],[28,[\"inputmode\"]],[28,[\"multiple\"]],[28,[\"step\"]],[28,[\"form\"]],[28,[\"spellcheck\"]],[28,[\"cols\"]],[28,[\"rows\"]],[28,[\"wrap\"]],[28,[\"title\"]],[28,[\"options\"]],[28,[\"optionLabelPath\"]],[33,[\"if\"],[[28,[\"hasHelpText\"]],[28,[\"ariaDescribedBy\"]]],null],[33,[\"action\"],[[28,[null]],\"change\"],null],[28,[\"_validationType\"]]]]]],null,{\"statements\":[[6,[\"if\"],[[29,\"default\"]],null,{\"statements\":[[0,\"      \"],[18,\"default\",[[33,[\"hash\"],null,[[\"value\",\"id\",\"validation\",\"control\"],[[28,[\"value\"]],[28,[\"formElementId\"]],[28,[\"validation\"]],[28,[\"control\"]]]]]]],[0,\"\\n\"]],\"locals\":[]},{\"statements\":[[0,\"      \"],[1,[33,[\"component\"],[[28,[\"control\"]]],null],false],[0,\"\\n\"]],\"locals\":[]}]],\"locals\":[\"control\"]},null]],\"locals\":[]},null]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-form/element.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-form/element/errors", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "ioW6uuhq", "block": "{\"statements\":[[6,[\"if\"],[[28,[\"show\"]]],null,{\"statements\":[[0,\"  \"],[11,\"div\",[]],[16,\"class\",[26,[\"feedbackClass\"]],null],[13],[1,[28,[\"messages\",\"firstObject\"]],false],[14],[0,\"\\n\"]],\"locals\":[]},null]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-form/element/errors.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-form/element/feedback-icon", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "SXp1m4Kc", "block": "{\"statements\":[[6,[\"if\"],[[28,[\"show\"]]],null,{\"statements\":[[0,\"  \"],[11,\"span\",[]],[16,\"class\",[34,[\"form-control-feedback \",[26,[\"iconName\"]]]]],[15,\"aria-hidden\",\"true\"],[13],[14],[0,\"\\n\"]],\"locals\":[]},null]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-form/element/feedback-icon.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-form/element/help-text", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "Ci47Mw4t", "block": "{\"statements\":[[1,[26,[\"text\"]],false]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-form/element/help-text.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-form/element/label", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "iLwjmlLY", "block": "{\"statements\":[[6,[\"if\"],[[29,\"default\"]],null,{\"statements\":[[0,\"  \"],[18,\"default\"],[0,\"\\n\"]],\"locals\":[]},null],[1,[26,[\"label\"]],false],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-form/element/label.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-form/element/layout/horizontal", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "LoV87tII", "block": "{\"statements\":[[6,[\"if\"],[[28,[\"hasLabel\"]]],null,{\"statements\":[[0,\"  \"],[1,[33,[\"component\"],[[28,[\"labelComponent\"]]],[[\"labelClass\"],[[28,[\"horizontalLabelGridClass\"]]]]],false],[0,\"\\n  \"],[11,\"div\",[]],[16,\"class\",[34,[[26,[\"horizontalInputGridClass\"]]]]],[13],[0,\"\\n    \"],[18,\"default\"],[0,\"\\n    \"],[1,[33,[\"component\"],[[28,[\"errorsComponent\"]]],null],false],[0,\"\\n    \"],[1,[33,[\"component\"],[[28,[\"helpTextComponent\"]]],null],false],[0,\"\\n  \"],[14],[0,\"\\n\"]],\"locals\":[]},{\"statements\":[[0,\"  \"],[11,\"div\",[]],[16,\"class\",[34,[[26,[\"horizontalInputGridClass\"]],\" \",[26,[\"horizontalInputOffsetGridClass\"]]]]],[13],[0,\"\\n    \"],[18,\"default\"],[0,\"\\n    \"],[1,[33,[\"component\"],[[28,[\"errorsComponent\"]]],null],false],[0,\"\\n    \"],[1,[33,[\"component\"],[[28,[\"helpTextComponent\"]]],null],false],[0,\"\\n  \"],[14],[0,\"\\n\"]],\"locals\":[]}]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-form/element/layout/horizontal.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-form/element/layout/horizontal/checkbox", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "V4rVM7tC", "block": "{\"statements\":[[11,\"div\",[]],[16,\"class\",[34,[[26,[\"horizontalInputGridClass\"]],\" \",[26,[\"horizontalInputOffsetGridClass\"]]]]],[13],[0,\"\\n\"],[6,[\"component\"],[[28,[\"labelComponent\"]]],null,{\"statements\":[[0,\"    \"],[18,\"default\"],[0,\"\\n\"]],\"locals\":[]},null],[0,\"  \"],[1,[33,[\"component\"],[[28,[\"errorsComponent\"]]],null],false],[0,\"\\n  \"],[1,[33,[\"component\"],[[28,[\"helpTextComponent\"]]],null],false],[0,\"\\n\"],[14],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-form/element/layout/horizontal/checkbox.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-form/element/layout/vertical", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "KEwlbGVn", "block": "{\"statements\":[[6,[\"if\"],[[28,[\"hasLabel\"]]],null,{\"statements\":[[0,\"  \"],[1,[33,[\"component\"],[[28,[\"labelComponent\"]]],null],false],[0,\"\\n\"]],\"locals\":[]},null],[18,\"default\"],[0,\"\\n\"],[1,[33,[\"component\"],[[28,[\"errorsComponent\"]]],null],false],[0,\"\\n\"],[1,[33,[\"component\"],[[28,[\"helpTextComponent\"]]],null],false]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-form/element/layout/vertical.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-form/element/layout/vertical/checkbox", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "sYj6Aq+r", "block": "{\"statements\":[[6,[\"component\"],[[28,[\"labelComponent\"]]],null,{\"statements\":[[0,\"  \"],[18,\"default\"],[0,\"\\n\"]],\"locals\":[]},null],[1,[33,[\"component\"],[[28,[\"errorsComponent\"]]],null],false],[0,\"\\n\"],[1,[33,[\"component\"],[[28,[\"helpTextComponent\"]]],null],false],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-form/element/layout/vertical/checkbox.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-form/group", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "x2GjMX7h", "block": "{\"statements\":[[18,\"default\"],[0,\"\\n\"],[6,[\"if\"],[[28,[\"hasFeedback\"]]],null,{\"statements\":[[0,\"  \"],[11,\"span\",[]],[16,\"class\",[34,[\"form-control-feedback \",[26,[\"iconName\"]]]]],[15,\"aria-hidden\",\"true\"],[13],[14],[0,\"\\n\"]],\"locals\":[]},null]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-form/group.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-modal-simple", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "b2IvRYf6", "block": "{\"statements\":[[6,[\"ember-wormhole\"],null,[[\"to\",\"renderInPlace\"],[\"ember-bootstrap-wormhole\",[28,[\"_renderInPlace\"]]]],{\"statements\":[[0,\"\\n\"],[6,[\"bs-modal/dialog\"],null,[[\"onClose\",\"fade\",\"showModal\",\"id\",\"keyboard\",\"size\",\"backdropClose\",\"class\",\"inDom\",\"paddingLeft\",\"paddingRight\"],[[33,[\"action\"],[[28,[null]],\"close\"],null],[28,[\"fade\"]],[28,[\"showModal\"]],[28,[\"modalId\"]],[28,[\"keyboard\"]],[28,[\"size\"]],[28,[\"backdropClose\"]],[28,[\"class\"]],[28,[\"inDom\"]],[28,[\"paddingLeft\"]],[28,[\"paddingRight\"]]]],{\"statements\":[[0,\"    \"],[1,[33,[\"bs-modal/header\"],null,[[\"title\",\"closeButton\",\"onClose\"],[[28,[\"title\"]],[28,[\"closeButton\"]],[33,[\"action\"],[[28,[null]],\"close\"],null]]]],false],[0,\"\\n\"],[6,[\"bs-modal/body\"],null,null,{\"statements\":[[0,\"      \"],[18,\"default\",[[33,[\"hash\"],null,[[\"close\",\"submit\"],[[33,[\"action\"],[[28,[null]],\"close\"],null],[33,[\"action\"],[[28,[null]],\"submit\"],null]]]]]],[0,\"\\n\"]],\"locals\":[]},null],[0,\"    \"],[1,[33,[\"bs-modal/footer\"],null,[[\"closeTitle\",\"submitTitle\",\"onClose\",\"onSubmit\"],[[28,[\"closeTitle\"]],[28,[\"submitTitle\"]],[33,[\"action\"],[[28,[null]],\"close\"],null],[33,[\"action\"],[[28,[null]],\"submit\"],null]]]],false],[0,\"\\n\"]],\"locals\":[]},null],[0,\"\\n  \"],[11,\"div\",[]],[13],[0,\"\\n\"],[6,[\"if\"],[[28,[\"showBackdrop\"]]],null,{\"statements\":[[0,\"      \"],[11,\"div\",[]],[16,\"class\",[34,[\"modal-backdrop \",[33,[\"if\"],[[28,[\"fade\"]],\"fade\"],null],\" \",[33,[\"if\"],[[28,[\"showModal\"]],[28,[\"showClass\"]]],null]]]],[16,\"id\",[34,[[26,[\"backdropId\"]]]]],[13],[14],[0,\"\\n\"]],\"locals\":[]},null],[0,\"  \"],[14],[0,\"\\n\\n\"]],\"locals\":[]},null]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-modal-simple.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-modal", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "6Ypjg1Wo", "block": "{\"statements\":[[6,[\"ember-wormhole\"],null,[[\"to\",\"renderInPlace\"],[\"ember-bootstrap-wormhole\",[28,[\"_renderInPlace\"]]]],{\"statements\":[[0,\"\\n\"],[6,[\"bs-modal/dialog\"],null,[[\"onClose\",\"fade\",\"showModal\",\"id\",\"keyboard\",\"size\",\"backdropClose\",\"class\",\"inDom\",\"paddingLeft\",\"paddingRight\"],[[33,[\"action\"],[[28,[null]],\"close\"],null],[28,[\"fade\"]],[28,[\"showModal\"]],[28,[\"modalId\"]],[28,[\"keyboard\"]],[28,[\"size\"]],[28,[\"backdropClose\"]],[28,[\"class\"]],[28,[\"inDom\"]],[28,[\"paddingLeft\"]],[28,[\"paddingRight\"]]]],{\"statements\":[[0,\"    \"],[18,\"default\",[[33,[\"hash\"],null,[[\"header\",\"body\",\"footer\",\"close\",\"submit\"],[[33,[\"component\"],[\"bs-modal/header\"],[[\"title\",\"onClose\"],[[28,[\"title\"]],[33,[\"action\"],[[28,[null]],\"close\"],null]]]],[33,[\"component\"],[\"bs-modal/body\"],null],[33,[\"component\"],[\"bs-modal/footer\"],[[\"onClose\",\"onSubmit\"],[[33,[\"action\"],[[28,[null]],\"close\"],null],[33,[\"action\"],[[28,[null]],\"submit\"],null]]]],[33,[\"action\"],[[28,[null]],\"close\"],null],[33,[\"action\"],[[28,[null]],\"submit\"],null]]]]]],[0,\"\\n\"]],\"locals\":[]},null],[0,\"\\n  \"],[11,\"div\",[]],[13],[0,\"\\n\"],[6,[\"if\"],[[28,[\"showBackdrop\"]]],null,{\"statements\":[[0,\"      \"],[11,\"div\",[]],[16,\"class\",[34,[\"modal-backdrop \",[33,[\"if\"],[[28,[\"fade\"]],\"fade\"],null],\" \",[33,[\"if\"],[[28,[\"showModal\"]],[28,[\"showClass\"]]],null]]]],[16,\"id\",[34,[[26,[\"backdropId\"]]]]],[13],[14],[0,\"\\n\"]],\"locals\":[]},null],[0,\"  \"],[14],[0,\"\\n\\n\"]],\"locals\":[]},null]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-modal.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-modal/body", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "0e7anqUg", "block": "{\"statements\":[[18,\"default\"]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-modal/body.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-modal/dialog", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "MFF7GNJO", "block": "{\"statements\":[[11,\"div\",[]],[16,\"class\",[34,[\"modal-dialog \",[26,[\"sizeClass\"]]]]],[13],[0,\"\\n  \"],[11,\"div\",[]],[15,\"class\",\"modal-content\"],[13],[0,\"\\n    \"],[18,\"default\"],[0,\"\\n  \"],[14],[0,\"\\n\"],[14]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-modal/dialog.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-modal/footer", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "+O39I5uL", "block": "{\"statements\":[[6,[\"if\"],[[29,\"default\"]],null,{\"statements\":[[0,\"  \"],[18,\"default\"],[0,\"\\n\"]],\"locals\":[]},{\"statements\":[[6,[\"if\"],[[28,[\"hasSubmitButton\"]]],null,{\"statements\":[[0,\"    \"],[6,[\"bs-button\"],null,[[\"onClick\"],[[33,[\"action\"],[[28,[null]],[28,[\"onClose\"]]],null]]],{\"statements\":[[1,[26,[\"closeTitle\"]],false]],\"locals\":[]},null],[0,\"\\n    \"],[6,[\"bs-button\"],null,[[\"type\",\"onClick\",\"disabled\"],[\"primary\",[33,[\"action\"],[[28,[null]],[28,[\"onSubmit\"]]],null],[28,[\"submitDisabled\"]]]],{\"statements\":[[1,[26,[\"submitTitle\"]],false]],\"locals\":[]},null],[0,\"\\n\"]],\"locals\":[]},{\"statements\":[[0,\"    \"],[6,[\"bs-button\"],null,[[\"type\",\"onClick\"],[\"primary\",[33,[\"action\"],[[28,[null]],[28,[\"onClose\"]]],null]]],{\"statements\":[[1,[26,[\"closeTitle\"]],false]],\"locals\":[]},null],[0,\"\\n\"]],\"locals\":[]}]],\"locals\":[]}]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-modal/footer.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-modal/header", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "/UGQ8POk", "block": "{\"statements\":[[6,[\"if\"],[[29,\"default\"]],null,{\"statements\":[[0,\"  \"],[18,\"default\"],[0,\"\\n\"]],\"locals\":[]},{\"statements\":[[0,\"  \"],[6,[\"bs-modal/header/title\"],null,null,{\"statements\":[[1,[26,[\"title\"]],false]],\"locals\":[]},null],[0,\"\\n\"]],\"locals\":[]}],[6,[\"if\"],[[28,[\"closeButton\"]]],null,{\"statements\":[[0,\"  \"],[1,[33,[\"bs-modal/header/close\"],null,[[\"onClick\"],[[33,[\"action\"],[[28,[null]],[28,[\"onClose\"]]],null]]]],false],[0,\"\\n\"]],\"locals\":[]},null]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-modal/header.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-modal/header/close", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "NXfd7DsE", "block": "{\"statements\":[[11,\"span\",[]],[15,\"aria-hidden\",\"true\"],[13],[0,\"×\"],[14]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-modal/header/close.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-modal/header/title", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "tYljS3hO", "block": "{\"statements\":[[18,\"default\"],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-modal/header/title.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-nav", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "0ePwGJjl", "block": "{\"statements\":[[18,\"default\",[[33,[\"hash\"],null,[[\"item\",\"link-to\",\"dropdown\"],[[33,[\"component\"],[[28,[\"itemComponent\"]]],null],[33,[\"component\"],[[28,[\"linkToComponent\"]]],null],[33,[\"component\"],[[28,[\"dropdownComponent\"]]],[[\"inNav\"],[true]]]]]]]],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-nav.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-nav/item", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "IcDyt1ij", "block": "{\"statements\":[[18,\"default\"],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-nav/item.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-navbar", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "urh7s2WN", "block": "{\"statements\":[[6,[\"if\"],[[28,[\"fluid\"]]],null,{\"statements\":[[0,\"  \"],[18,\"default\",[[33,[\"hash\"],null,[[\"toggle\",\"content\",\"nav\",\"collapse\",\"expand\"],[[33,[\"component\"],[\"bs-navbar/toggle\"],[[\"onClick\",\"collapsed\"],[[33,[\"action\"],[[28,[null]],\"toggleNavbar\"],null],[28,[\"_collapsed\"]]]]],[33,[\"component\"],[\"bs-navbar/content\"],[[\"collapsed\",\"onHidden\",\"onShown\"],[[28,[\"_collapsed\"]],[28,[\"onCollapsed\"]],[28,[\"onExpanded\"]]]]],[33,[\"component\"],[\"bs-navbar/nav\"],[[\"linkToComponent\"],[[33,[\"component\"],[\"bs-navbar/link-to\"],[[\"onCollapse\"],[[33,[\"action\"],[[28,[null]],\"collapse\"],null]]]]]]],[33,[\"action\"],[[28,[null]],\"collapse\"],null],[33,[\"action\"],[[28,[null]],\"expand\"],null]]]]]],[0,\"\\n\"]],\"locals\":[]},{\"statements\":[[0,\"  \"],[11,\"div\",[]],[15,\"class\",\"container\"],[13],[0,\"\\n    \"],[18,\"default\",[[33,[\"hash\"],null,[[\"toggle\",\"content\",\"nav\",\"collapse\",\"expand\"],[[33,[\"component\"],[\"bs-navbar/toggle\"],[[\"onClick\",\"collapsed\"],[[33,[\"action\"],[[28,[null]],\"toggleNavbar\"],null],[28,[\"_collapsed\"]]]]],[33,[\"component\"],[\"bs-navbar/content\"],[[\"collapsed\",\"onHidden\",\"onShown\"],[[28,[\"_collapsed\"]],[28,[\"onCollapsed\"]],[28,[\"onExpanded\"]]]]],[33,[\"component\"],[\"bs-navbar/nav\"],[[\"linkToComponent\"],[[33,[\"component\"],[\"bs-navbar/link-to\"],[[\"onCollapse\"],[[33,[\"action\"],[[28,[null]],\"collapse\"],null]]]]]]],[33,[\"action\"],[[28,[null]],\"collapse\"],null],[33,[\"action\"],[[28,[null]],\"expand\"],null]]]]]],[0,\"\\n  \"],[14],[0,\"\\n\"]],\"locals\":[]}]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-navbar.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-navbar/content", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "oiybeQUt", "block": "{\"statements\":[[18,\"default\"],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-navbar/content.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-navbar/toggle", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "wAOYB8Vf", "block": "{\"statements\":[[6,[\"if\"],[[29,\"default\"]],null,{\"statements\":[[0,\"  \"],[18,\"default\"],[0,\"\\n\"]],\"locals\":[]},{\"statements\":[[0,\"  \"],[11,\"span\",[]],[15,\"class\",\"navbar-toggler-icon\"],[13],[14],[0,\"\\n\"]],\"locals\":[]}]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-navbar/toggle.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-popover", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "p9XjCycb", "block": "{\"statements\":[[6,[\"if\"],[[28,[\"inDom\"]]],null,{\"statements\":[[0,\"\\n\"],[6,[\"ember-wormhole\"],null,[[\"to\",\"renderInPlace\"],[\"ember-bootstrap-wormhole\",[28,[\"_renderInPlace\"]]]],{\"statements\":[[0,\"\\n\"],[6,[\"bs-popover/element\"],null,[[\"id\",\"placement\",\"fade\",\"showHelp\",\"title\",\"class\"],[[28,[\"overlayId\"]],[28,[\"_placement\"]],[28,[\"fade\"]],[28,[\"showHelp\"]],[28,[\"title\"]],[28,[\"class\"]]]],{\"statements\":[[6,[\"if\"],[[29,\"default\"]],null,{\"statements\":[[0,\"        \"],[18,\"default\"],[0,\"\\n\"]],\"locals\":[]},{\"statements\":[[0,\"        \"],[1,[26,[\"title\"]],false],[0,\"\\n\"]],\"locals\":[]}]],\"locals\":[]},null],[0,\"\\n\"]],\"locals\":[]},null],[0,\"\\n\"]],\"locals\":[]},null]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-popover.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-popover/element", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "CK7cJnLk", "block": "{\"statements\":[[11,\"div\",[]],[15,\"class\",\"arrow\"],[13],[14],[0,\"\\n\"],[6,[\"if\"],[[28,[\"hasTitle\"]]],null,{\"statements\":[[0,\"  \"],[11,\"h3\",[]],[15,\"class\",\"popover-title\"],[13],[1,[26,[\"title\"]],false],[14],[0,\"\\n\"]],\"locals\":[]},null],[11,\"div\",[]],[15,\"class\",\"popover-content\"],[13],[18,\"default\"],[14]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-popover/element.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-progress", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "FmZn+kLX", "block": "{\"statements\":[[18,\"default\",[[33,[\"hash\"],null,[[\"bar\"],[[33,[\"component\"],[\"bs-progress/bar\"],null]]]]]],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-progress.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-progress/bar", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "esrLGFaU", "block": "{\"statements\":[[6,[\"if\"],[[28,[\"showLabel\"]]],null,{\"statements\":[[6,[\"if\"],[[29,\"default\"]],null,{\"statements\":[[0,\"    \"],[18,\"default\",[[28,[\"percentRounded\"]]]],[0,\"\\n\"]],\"locals\":[]},{\"statements\":[[0,\"    \"],[1,[26,[\"percentRounded\"]],false],[0,\"%\\n\"]],\"locals\":[]}]],\"locals\":[]},{\"statements\":[[6,[\"if\"],[[29,\"default\"]],null,{\"statements\":[[0,\"    \"],[11,\"span\",[]],[15,\"class\",\"sr-only\"],[13],[18,\"default\",[[28,[\"percentRounded\"]]]],[14],[0,\"\\n\"]],\"locals\":[]},{\"statements\":[[0,\"    \"],[11,\"span\",[]],[15,\"class\",\"sr-only\"],[13],[1,[26,[\"percentRounded\"]],false],[0,\"%\"],[14],[0,\"\\n\"]],\"locals\":[]}],[0,\"\\n\"]],\"locals\":[]}]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-progress/bar.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-tab", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "5LECzeUi", "block": "{\"statements\":[[6,[\"if\"],[[28,[\"customTabs\"]]],null,{\"statements\":[[0,\"  \"],[18,\"default\",[[33,[\"hash\"],null,[[\"pane\",\"activeId\",\"select\"],[[33,[\"component\"],[\"bs-tab/pane\"],[[\"parent\",\"activeId\",\"fade\",\"fadeTransition\"],[[28,[null]],[28,[\"isActiveId\"]],[28,[\"fade\"]],[28,[\"fadeTransition\"]]]]],[28,[\"isActiveId\"]],[33,[\"action\"],[[28,[null]],\"select\"],null]]]]]],[0,\"\\n\"]],\"locals\":[]},{\"statements\":[[6,[\"bs-nav\"],null,[[\"type\"],[[28,[\"type\"]]]],{\"statements\":[[6,[\"each\"],[[28,[\"navItems\"]]],null,{\"statements\":[[6,[\"if\"],[[28,[\"item\",\"isGroup\"]]],null,{\"statements\":[[6,[\"component\"],[[28,[\"nav\",\"dropdown\"]]],[[\"tagName\",\"class\"],[\"li\",[33,[\"if\"],[[33,[\"bs-contains\"],[[28,[\"item\",\"childIds\"]],[28,[\"isActiveId\"]]],null],\"active\"],null]]],{\"statements\":[[0,\"          \"],[6,[\"component\"],[[28,[\"dd\",\"toggle\"]]],null,{\"statements\":[[1,[28,[\"item\",\"groupTitle\"]],false],[0,\" \"],[11,\"span\",[]],[15,\"class\",\"caret\"],[13],[14]],\"locals\":[]},null],[0,\"\\n\"],[6,[\"component\"],[[28,[\"dd\",\"menu\"]]],null,{\"statements\":[[6,[\"each\"],[[28,[\"item\",\"children\"]]],null,{\"statements\":[[6,[\"component\"],[[28,[\"menu\",\"item\"]]],[[\"class\"],[[33,[\"if\"],[[33,[\"bs-eq\"],[[28,[\"isActiveId\"]],[28,[\"subItem\",\"elementId\"]]],null],\"active\"],null]]],{\"statements\":[[0,\"                \"],[11,\"a\",[]],[16,\"href\",[34,[\"#\",[28,[\"subItem\",\"elementId\"]]]]],[15,\"role\",\"tab\"],[16,\"class\",[33,[\"if\"],[[33,[\"bs-eq\"],[[28,[\"isActiveId\"]],[28,[\"subItem\",\"elementId\"]]],null],\"nav-link active\",\"nav-link\"],null],null],[5,[\"action\"],[[28,[null]],\"select\",[28,[\"subItem\",\"elementId\"]]]],[13],[0,\"\\n                  \"],[1,[28,[\"subItem\",\"title\"]],false],[0,\"\\n                \"],[14],[0,\"\\n\"]],\"locals\":[]},null]],\"locals\":[\"subItem\"]},null]],\"locals\":[\"menu\"]},null]],\"locals\":[\"dd\"]},null]],\"locals\":[]},{\"statements\":[[6,[\"component\"],[[28,[\"nav\",\"item\"]]],[[\"active\"],[[33,[\"bs-eq\"],[[28,[\"item\",\"elementId\"]],[28,[\"isActiveId\"]]],null]]],{\"statements\":[[0,\"          \"],[11,\"a\",[]],[16,\"href\",[34,[\"#\",[28,[\"item\",\"elementId\"]]]]],[15,\"role\",\"tab\"],[16,\"class\",[33,[\"if\"],[[33,[\"bs-eq\"],[[28,[\"isActiveId\"]],[28,[\"item\",\"elementId\"]]],null],\"nav-link active\",\"nav-link\"],null],null],[5,[\"action\"],[[28,[null]],\"select\",[28,[\"item\",\"elementId\"]]]],[13],[0,\"\\n            \"],[1,[28,[\"item\",\"title\"]],false],[0,\"\\n          \"],[14],[0,\"\\n\"]],\"locals\":[]},null]],\"locals\":[]}]],\"locals\":[\"item\"]},null]],\"locals\":[\"nav\"]},null],[0,\"\\n  \"],[11,\"div\",[]],[15,\"class\",\"tab-content\"],[13],[0,\"\\n    \"],[18,\"default\",[[33,[\"hash\"],null,[[\"pane\",\"activeId\",\"select\"],[[33,[\"component\"],[\"bs-tab/pane\"],[[\"parent\",\"activeId\",\"fade\",\"fadeTransition\"],[[28,[null]],[28,[\"isActiveId\"]],[28,[\"fade\"]],[28,[\"fadeTransition\"]]]]],[28,[\"isActiveId\"]],[33,[\"action\"],[[28,[null]],\"select\"],null]]]]]],[0,\"\\n  \"],[14],[0,\"\\n\"]],\"locals\":[]}]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-tab.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-tab/pane", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "BFDb2ch/", "block": "{\"statements\":[[18,\"default\"],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-tab/pane.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-tooltip", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "EM3k0cYr", "block": "{\"statements\":[[6,[\"if\"],[[28,[\"inDom\"]]],null,{\"statements\":[[0,\"\\n\"],[6,[\"ember-wormhole\"],null,[[\"to\",\"renderInPlace\"],[\"ember-bootstrap-wormhole\",[28,[\"_renderInPlace\"]]]],{\"statements\":[[0,\"\\n\"],[6,[\"bs-tooltip/element\"],null,[[\"id\",\"placement\",\"fade\",\"showHelp\",\"class\"],[[28,[\"overlayId\"]],[28,[\"_placement\"]],[28,[\"fade\"]],[28,[\"showHelp\"]],[28,[\"class\"]]]],{\"statements\":[[6,[\"if\"],[[29,\"default\"]],null,{\"statements\":[[0,\"        \"],[18,\"default\"],[0,\"\\n\"]],\"locals\":[]},{\"statements\":[[0,\"        \"],[1,[26,[\"title\"]],false],[0,\"\\n\"]],\"locals\":[]}]],\"locals\":[]},null],[0,\"\\n\"]],\"locals\":[]},null],[0,\"\\n\"]],\"locals\":[]},null]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-tooltip.hbs" } });
+});
+;define("ember-bootstrap/templates/components/bs-tooltip/element", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "HtMjO+VV", "block": "{\"statements\":[[11,\"div\",[]],[15,\"class\",\"tooltip-arrow\"],[13],[14],[0,\"\\n\"],[11,\"div\",[]],[15,\"class\",\"tooltip-inner\"],[13],[0,\"\\n  \"],[18,\"default\"],[0,\"\\n\"],[14]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-bootstrap/templates/components/bs-tooltip/element.hbs" } });
+});
+;define('ember-bootstrap/utils/get-calculated-offset', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = getCalculatedOffset;
+  var assert = _ember.default.assert;
+  function getCalculatedOffset(placement, pos, actualWidth, actualHeight) {
+    switch (placement) {
+      case 'bottom':
+        return { top: pos.top + pos.height, left: pos.left + pos.width / 2 - actualWidth / 2 };
+      case 'top':
+        return { top: pos.top - actualHeight, left: pos.left + pos.width / 2 - actualWidth / 2 };
+      case 'left':
+        return { top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left - actualWidth };
+      case 'right':
+        return { top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left + pos.width };
+      default:
+        assert('position must be one of bottom|top|left|right', false);
+    }
+  }
+});
+;define('ember-bootstrap/utils/get-parent', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = getParent;
+  var get = _ember.default.get;
+  function getParent(view) {
+    if (get(view, 'tagName') === '') {
+      // Beware: use of private API! :(
+      if (_ember.default.ViewUtils && _ember.default.ViewUtils.getViewBounds) {
+        return _ember.default.ViewUtils.getViewBounds(view).parentElement;
+      } else {
+        return view._renderNode.contextualElement;
+      }
+    } else {
+      return get(view, 'element').parentNode;
+    }
+  }
+});
+;define('ember-bootstrap/utils/get-position', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = getPosition;
+  var assign = _ember.default.assign;
+  function getPosition(el) {
+    var isBody = el.tagName === 'BODY';
+
+    // not needed as we won't support IE8
+    //
+    // if (elRect.width == null) {
+    //   // width and height are missing in IE8, so compute them manually; see https://github.com/twbs/bootstrap/issues/14093
+    //   elRect = $.extend({}, elRect, { width: elRect.right - elRect.left, height: elRect.bottom - elRect.top })
+    // }
+
+    var isSvg = window.SVGElement && el instanceof window.SVGElement;
+    // Avoid using $.offset() on SVGs since it gives incorrect results in jQuery 3.
+    // See https://github.com/twbs/bootstrap/issues/20280
+    var rect = el.getBoundingClientRect();
+    var scrollPosition = getScrollPosition();
+    var elOffset = isBody ? { top: 0, left: 0 } : isSvg ? {} : {
+      top: rect.top + scrollPosition.top,
+      left: rect.left + scrollPosition.left
+    };
+    var scroll = { scroll: isBody ? scrollPosition.top : el.scrollTop };
+    var outerDims = isBody ? { width: window.outerWidth, height: window.outerHeight } : {};
+
+    // Ember.assign/Object.assign does not copy properties of DOMRect object, so we have to clone into POJO...
+    var clonedRect = {
+      top: rect.top,
+      bottom: rect.bottom,
+      left: rect.left,
+      right: rect.right,
+      width: rect.width,
+      height: rect.height
+    };
+
+    return assign({}, clonedRect, scroll, outerDims, elOffset);
+  }
+
+  function getScrollPosition() {
+    return {
+      //    IE, Firefox                            Chrome
+      top: document.documentElement.scrollTop || document.body.scrollTop || 0,
+      left: document.documentElement.scrollLeft || document.body.scrollLeft || 0
+    };
+  }
+});
+;define('ember-bootstrap/utils/listen-to-cp', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  exports.default = function (dependentKey) {
+    var defaultValue = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+    return computed(dependentKey, {
+      get: function get() {
+        return getWithDefault(this, dependentKey, defaultValue);
+      },
+      set: function set(key, value) {
+        // eslint-disable-line no-unused-vars
+        return value;
+      }
+    });
+  };
+
+  var computed = _ember.default.computed,
+      getWithDefault = _ember.default.getWithDefault;
+});
+;define("ember-bootstrap/utils/set-offset", ["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = setOffset;
+  // simplified version of jQuery.offset.setOffset
+  function setOffset(elem, options) {
+    var curOffset = getOffset(elem);
+    var curCSSTop = elem.style.top;
+    var curCSSLeft = elem.style.left;
+
+    var curTop = parseFloat(curCSSTop) || 0;
+    var curLeft = parseFloat(curCSSLeft) || 0;
+
+    if (options.top != null) {
+      elem.style.top = Math.round(options.top - curOffset.top + curTop) + "px";
+    }
+    if (options.left != null) {
+      elem.style.left = Math.round(options.left - curOffset.left + curLeft) + "px";
+    }
+  }
+
+  function getOffset(elem) {
+    var rect = elem.getBoundingClientRect();
+    var win = elem.ownerDocument.defaultView;
+    return {
+      top: rect.top + win.pageYOffset,
+      left: rect.left + win.pageXOffset
+    };
+  }
+});
+;define('ember-bootstrap/utils/transition-end', ['exports', 'ember', 'ember-bootstrap/utils/transition-support'], function (exports, _ember, _transitionSupport) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = onTransitionEnd;
+  var _Ember$run = _ember.default.run,
+      join = _Ember$run.join,
+      cancel = _Ember$run.cancel,
+      later = _Ember$run.later;
+  function onTransitionEnd(node, handler, context) {
+    var duration = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
+
+    if (!node) {
+      return;
+    }
+    var fakeEvent = {
+      target: node,
+      currentTarget: node
+    };
+    var backup = void 0;
+
+    if (_transitionSupport.default) {
+      node.addEventListener(_transitionSupport.default, done, false);
+
+      backup = later(this, done, fakeEvent, duration);
+    } else {
+      later(this, done, fakeEvent, 0);
+    }
+
+    function done(event) {
+      if (backup) {
+        cancel(backup);
+      }
+      node.removeEventListener(_transitionSupport.default, done);
+      join(context, handler, event);
+    }
+  }
+});
+;define('ember-bootstrap/utils/transition-support', ['exports'], function (exports) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  function transitionSupport() {
+    var el = document.createElement('bootstrap');
+
+    var transEndEventNames = {
+      WebkitTransition: 'webkitTransitionEnd',
+      MozTransition: 'transitionend',
+      OTransition: 'oTransitionEnd otransitionend',
+      transition: 'transitionend'
+    };
+
+    for (var name in transEndEventNames) {
+      if (el.style[name] !== undefined) {
+        return transEndEventNames[name];
+      }
+    }
+
+    return false;
+  }
+
+  exports.default = typeof document !== 'undefined' && transitionSupport();
+});
 ;define('ember-cli-app-version/initializer-factory', ['exports', 'ember'], function (exports, _ember) {
   'use strict';
 
@@ -72106,6 +81930,221 @@ define("ember-resolver/features", [], function () {
 
   exports.__esModule = true;
   exports.default = Ember.HTMLBars.template({ "id": "t1+kJFex", "block": "{\"statements\":[[11,\"div\",[]],[15,\"id\",\"ember-welcome-page-id-selector\"],[16,\"data-ember-version\",[34,[[26,[\"emberVersion\"]]]]],[13],[0,\"\\n  \"],[11,\"div\",[]],[15,\"class\",\"columns\"],[13],[0,\"\\n    \"],[11,\"div\",[]],[15,\"class\",\"tomster\"],[13],[0,\"\\n      \"],[11,\"img\",[]],[15,\"src\",\"ember-welcome-page/images/construction.png\"],[15,\"alt\",\"Under construction\"],[13],[14],[0,\"\\n    \"],[14],[0,\"\\n    \"],[11,\"div\",[]],[15,\"class\",\"welcome\"],[13],[0,\"\\n      \"],[11,\"h2\",[]],[15,\"id\",\"title\"],[13],[0,\"Congratulations, you made it!\"],[14],[0,\"\\n\\n      \"],[11,\"p\",[]],[13],[0,\"You’ve officially spun up your very first Ember app :-)\"],[14],[0,\"\\n      \"],[11,\"p\",[]],[13],[0,\"You’ve got one more decision to make: what do you want to do next? We’d suggest one of the following to help you get going:\"],[14],[0,\"\\n      \"],[11,\"ol\",[]],[13],[0,\"\\n        \"],[11,\"li\",[]],[13],[11,\"a\",[]],[16,\"href\",[34,[\"https://guides.emberjs.com/v\",[26,[\"emberVersion\"]],\"/getting-started/quick-start/\"]]],[13],[0,\"Quick Start\"],[14],[0,\" - a quick introduction to how Ember works. Learn about defining your first route, writing a UI component and deploying your application.\"],[14],[0,\"\\n        \"],[11,\"li\",[]],[13],[11,\"a\",[]],[16,\"href\",[34,[\"https://guides.emberjs.com/v\",[26,[\"emberVersion\"]],\"/tutorial/ember-cli/\"]]],[13],[0,\"Ember Guides\"],[14],[0,\" - this is our more thorough, hands-on intro to Ember. Your crash course in Ember philosophy, background and some in-depth discussion of how things work (and why they work the way they do).\"],[14],[0,\"\\n      \"],[14],[0,\"\\n      \"],[11,\"p\",[]],[13],[0,\"If you run into problems, you can check \"],[11,\"a\",[]],[15,\"href\",\"http://stackoverflow.com/questions/tagged/ember.js\"],[13],[0,\"Stack Overflow\"],[14],[0,\" or \"],[11,\"a\",[]],[15,\"href\",\"http://discuss.emberjs.com/\"],[13],[0,\"our forums\"],[14],[0,\"  for ideas and answers—someone’s probably been through the same thing and already posted an answer.  If not, you can post your \"],[11,\"strong\",[]],[13],[0,\"own\"],[14],[0,\" question. People love to help new Ember developers get started, and our community is incredibly supportive \"],[14],[0,\"\\n    \"],[14],[0,\"\\n  \"],[14],[0,\"\\n    \"],[11,\"p\",[]],[15,\"class\",\"postscript\"],[13],[0,\"To remove this welcome message, remove the \"],[11,\"code\",[]],[13],[0,\"{{welcome-page}}\"],[14],[0,\" component from your \"],[11,\"code\",[]],[13],[0,\"application.hbs\"],[14],[0,\" file.\"],[11,\"br\",[]],[13],[14],[0,\"You'll see this page update soon after!\"],[14],[0,\"\\n\"],[14],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "ember-welcome-page/templates/components/welcome-page.hbs" } });
+});
+;define('ember-wormhole/components/ember-wormhole', ['exports', 'ember', 'ember-wormhole/templates/components/ember-wormhole', 'ember-wormhole/utils/dom'], function (exports, _ember, _emberWormhole, _dom) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var Component = _ember.default.Component,
+      computed = _ember.default.computed,
+      observer = _ember.default.observer,
+      run = _ember.default.run;
+  exports.default = Component.extend({
+    layout: _emberWormhole.default,
+
+    /*
+     * Attrs
+     */
+    to: computed.alias('destinationElementId'),
+    destinationElementId: null,
+    destinationElement: computed('destinationElementId', 'renderInPlace', function () {
+      var renderInPlace = this.get('renderInPlace');
+      if (renderInPlace) {
+        return this._element;
+      }
+      var id = this.get('destinationElementId');
+      if (!id) {
+        return null;
+      }
+      return (0, _dom.findElementById)(this._dom, id);
+    }),
+    renderInPlace: false,
+
+    /*
+     * Lifecycle
+     */
+    init: function init() {
+      this._super.apply(this, arguments);
+
+      this._dom = (0, _dom.getDOM)(this);
+
+      // Create text nodes used for the head, tail
+      this._wormholeHeadNode = this._dom.createTextNode('');
+      this._wormholeTailNode = this._dom.createTextNode('');
+
+      // A prop to help in the mocking of didInsertElement timing for Fastboot
+      this._didInsert = false;
+    },
+
+
+    /*
+     * didInsertElement does not fire in Fastboot. Here we use willRender and
+     * a _didInsert property to approximate the timing. Importantly we want
+     * to run appendToDestination after the child nodes have rendered.
+     */
+    willRender: function willRender() {
+      var _this = this;
+
+      this._super.apply(this, arguments);
+      if (!this._didInsert) {
+        this._didInsert = true;
+        run.schedule('afterRender', function () {
+          if (_this.isDestroyed) {
+            return;
+          }
+          _this._element = _this._wormholeHeadNode.parentNode;
+          if (!_this._element) {
+            throw new Error('The head node of a wormhole must be attached to the DOM');
+          }
+          _this._appendToDestination();
+        });
+      }
+    },
+
+
+    willDestroyElement: function willDestroyElement() {
+      var _this2 = this;
+
+      // not called in fastboot
+      this._super.apply(this, arguments);
+      this._didInsert = false;
+      var _wormholeHeadNode = this._wormholeHeadNode,
+          _wormholeTailNode = this._wormholeTailNode;
+
+      run.schedule('render', function () {
+        _this2._removeRange(_wormholeHeadNode, _wormholeTailNode);
+      });
+    },
+
+    _destinationDidChange: observer('destinationElement', function () {
+      var destinationElement = this.get('destinationElement');
+      if (destinationElement !== this._wormholeHeadNode.parentNode) {
+        run.schedule('render', this, '_appendToDestination');
+      }
+    }),
+
+    _appendToDestination: function _appendToDestination() {
+      var destinationElement = this.get('destinationElement');
+      if (!destinationElement) {
+        var destinationElementId = this.get('destinationElementId');
+        if (destinationElementId) {
+          throw new Error('ember-wormhole failed to render into \'#' + destinationElementId + '\' because the element is not in the DOM');
+        }
+        throw new Error('ember-wormhole failed to render content because the destinationElementId was set to an undefined or falsy value.');
+      }
+
+      var startingActiveElement = (0, _dom.getActiveElement)();
+      this._appendRange(destinationElement, this._wormholeHeadNode, this._wormholeTailNode);
+      var resultingActiveElement = (0, _dom.getActiveElement)();
+      if (startingActiveElement && resultingActiveElement !== startingActiveElement) {
+        startingActiveElement.focus();
+      }
+    },
+    _appendRange: function _appendRange(destinationElement, firstNode, lastNode) {
+      while (firstNode) {
+        destinationElement.insertBefore(firstNode, null);
+        firstNode = firstNode !== lastNode ? lastNode.parentNode.firstChild : null;
+      }
+    },
+    _removeRange: function _removeRange(firstNode, lastNode) {
+      var node = lastNode;
+      do {
+        var next = node.previousSibling;
+        if (node.parentNode) {
+          node.parentNode.removeChild(node);
+          if (node === firstNode) {
+            break;
+          }
+        }
+        node = next;
+      } while (node);
+    }
+  });
+});
+;define("ember-wormhole/templates/components/ember-wormhole", ["exports"], function (exports) {
+  "use strict";
+
+  exports.__esModule = true;
+  exports.default = Ember.HTMLBars.template({ "id": "kfOuAXbY", "block": "{\"statements\":[[1,[33,[\"unbound\"],[[28,[\"_wormholeHeadNode\"]]],null],false],[18,\"default\"],[1,[33,[\"unbound\"],[[28,[\"_wormholeTailNode\"]]],null],false]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"hasPartials\":false}", "meta": { "moduleName": "ember-wormhole/templates/components/ember-wormhole.hbs" } });
+});
+;define('ember-wormhole/utils/dom', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.getActiveElement = getActiveElement;
+  exports.findElementById = findElementById;
+  exports.getDOM = getDOM;
+
+  var getOwner = _ember.default.getOwner; /*
+                                           * Implement some helpers methods for interacting with the DOM,
+                                           * be it Fastboot's SimpleDOM or the browser's version.
+                                           */
+
+  function getActiveElement() {
+    if (typeof document === 'undefined') {
+      return null;
+    } else {
+      return document.activeElement;
+    }
+  }
+
+  function childNodesOfElement(element) {
+    var children = [];
+    var child = element.firstChild;
+    while (child) {
+      children.push(child);
+      child = child.nextSibling;
+    }
+    return children;
+  }
+
+  function findElementById(doc, id) {
+    if (doc.getElementById) {
+      return doc.getElementById(id);
+    }
+
+    var nodes = childNodesOfElement(doc);
+    var node = void 0;
+
+    while (nodes.length) {
+      node = nodes.shift();
+
+      if (node.getAttribute && node.getAttribute('id') === id) {
+        return node;
+      }
+
+      nodes = childNodesOfElement(node).concat(nodes);
+    }
+  }
+
+  // Private Ember API usage. Get the dom implementation used by the current
+  // renderer, be it native browser DOM or Fastboot SimpleDOM
+  function getDOM(context) {
+    var renderer = context.renderer;
+
+    if (!renderer._dom) {
+      // pre glimmer2
+      var container = getOwner ? getOwner(context) : context.container;
+      var documentService = container.lookup('service:-document');
+
+      if (documentService) {
+        return documentService;
+      }
+
+      renderer = container.lookup('renderer:-dom');
+    }
+
+    if (renderer._dom && renderer._dom.document) {
+      // pre Ember 2.6
+      return renderer._dom.document;
+    } else {
+      throw new Error('ember-wormhole could not get DOM');
+    }
+  }
 });
 ;define('emberfire/adapters/firebase', ['exports', 'ember', 'ember-data', 'emberfire/mixins/waitable', 'emberfire/utils/to-promise', 'lodash/object/assign', 'lodash/collection/forEach', 'lodash/collection/filter', 'lodash/collection/map', 'lodash/collection/includes', 'lodash/array/indexOf', 'lodash/collection/find'], function (exports, _ember, _emberData, _emberfireMixinsWaitable, _emberfireUtilsToPromise, _lodashObjectAssign, _lodashCollectionForEach, _lodashCollectionFilter, _lodashCollectionMap, _lodashCollectionIncludes, _lodashArrayIndexOf, _lodashCollectionFind) {
 
@@ -94983,13 +105022,6 @@ var InternalModel = function () {
       this.cancelDestroy();
     }
     this._checkForOrphanedInternalModels();
-    if (this.isDestroyed || this.isDestroying) {
-      return;
-    }
-
-    // just in-case we are not one of the orphaned, we should still
-    // still destroy ourselves
-    this.destroy();
   };
 
   InternalModel.prototype._checkForOrphanedInternalModels = function _checkForOrphanedInternalModels() {
@@ -99128,16 +109160,15 @@ Store = Service.extend({
     var trueId = coerceId(id);
     var internalModel = this._internalModelsFor(modelName).get(trueId);
 
-    if (internalModel) {
-      if (internalModel.hasScheduledDestroy()) {
-        internalModel.destroySync();
-        return this._buildInternalModel(modelName, trueId);
-      } else {
-        return internalModel;
-      }
+    if (!internalModel) {
+      internalModel = this._buildInternalModel(modelName, trueId);
     } else {
-      return this._buildInternalModel(modelName, trueId);
+      // if we already have an internalModel, we need to ensure any async teardown is cancelled
+      //   since we want it again.
+      internalModel.cancelDestroy();
     }
+
+    return internalModel;
   },
   _internalModelDidReceiveRelationshipData: function _internalModelDidReceiveRelationshipData(modelName, id, relationshipData) {
     this._relationshipsPayloads.push(modelName, id, relationshipData);
@@ -106837,7 +116868,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = "2.14.9";
+  exports.default = "2.14.8";
 });
 ;
 //# sourceMappingURL=vendor.map

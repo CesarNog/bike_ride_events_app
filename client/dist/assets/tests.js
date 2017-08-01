@@ -35,11 +35,6 @@ define('client/tests/app.lint-test', [], function () {
     assert.ok(true, 'models/invitation.js should pass ESLint\n\n');
   });
 
-  QUnit.test('models/post.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'models/post.js should pass ESLint\n\n');
-  });
-
   QUnit.test('resolver.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'resolver.js should pass ESLint\n\n');
@@ -53,11 +48,6 @@ define('client/tests/app.lint-test', [], function () {
   QUnit.test('routes/about.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'routes/about.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('routes/posts.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'routes/posts.js should pass ESLint\n\n');
   });
 });
 define('client/tests/helpers/create-offline-ref', ['exports', 'firebase'], function (exports, _firebase) {

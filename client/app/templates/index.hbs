@@ -1,27 +1,33 @@
-<h1>Home Page</h1>
 <div class="jumbotron text-center">
-  <h1>Coming Soon</h1>
+  <h3>User Registration</h3>
 
-  <br/><br/>
-
-  <p>Don't miss our launch date, request an invitation now.</p>
+  <div id="helpAccordion" class="form-horizontal form-group form-group-lg row">
+    {{#bs-accordion as |acc|}} 
+      {{#acc.item value=1 title="Help"}}
+        <p>Fugiat quo voluptas nulla pariatur? Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit. Accusantium
+          doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo. Nihil molestiae consequatur, vel illum qui dolorem
+          eum. Architecto beatae vitae dicta sunt explicabo. Et harum quidem rerum facilis est et expedita distinctio. Sed ut
+          perspiciatis unde omnis iste natus error sit voluptatem. Totam rem aperiam. Qui officia deserunt mollit anim id est
+          laborum. Esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa.
+          Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat.</p>
+      {{/acc.item}} 
+    {{/bs-accordion}}
+  </div>
 
   <div class="form-horizontal form-group form-group-lg row">
     <div class="col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-1 col-md-5 col-md-offset-2">
-      <input type="email" class="form-control" placeholder="Please type your e-mail address." autofocus="autofocus"/>
-    </div>
-    <div class="col-xs-10 col-xs-offset-1 col-sm-offset-0 col-sm-4 col-md-3">
-        <button class="btn btn-primary btn-lg btn-block" disabled={{isDisabled}} {{action 'saveInvitation'}}>Request invitation</button>
-    </div>
+      <input class="form-control" placeholder="Fullname" autofocus="autofocus" />
+      <input type="email" class="form-control" placeholder="Please type your e-mail address." autofocus="autofocus" />
+      <input type="city" class="form-control" placeholder="Please type your city." autofocus="autofocus" />
+    </div>    
+  </div>
+
+  <div >
+      <button class="btn btn-primary btn-lg btn-block" {{action 'cancel'}}>Cancel</button>
+      <button class="btn btn-primary btn-lg btn-block" {{action 'saveNewBiker'}}>Save</button>
   </div>
 
   {{#if responseMessage}}
-     <div class="alert alert-success">{{responseMessage}}</div>
-   {{/if}}
-
-  <button {{action "generateDummyList"}} class="btn btn-info">Generate 5 random record</button>
-  <button {{action "deleteAll"}} disabled={{isDeleteAllDisable}} class="btn btn-danger">Delete All</button>
-  <p>Size: {{model.length}}</p>
-
-  <br/><br/>
+  <div class="alert alert-success">{{responseMessage}}</div>
+  {{/if}}
 </div>

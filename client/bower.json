@@ -2,8 +2,7 @@
   "name": "client",
   "dependencies": {
     "ember-qunit-notifications": "0.1.0",
-    "jquery": "latest",
-    "bootstrap": "latest",
+    "ember-bootstrap": "latest",
     "normalize": "latest",
     "faker": "latest"
   }
