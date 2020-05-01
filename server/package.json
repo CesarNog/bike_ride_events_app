@@ -5,7 +5,9 @@
   "private": true,
   "scripts": {
     "test": "./node_modules/jshint/bin/jshint test_travis.js",
-    "start": "nodemon ./bin/www"
+    "start": "nodemon ./bin/www",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "author": "Cesar A. Nogueira <cesarnogueira1210@gmail.com>",
   "contributors": [
@@ -37,10 +39,12 @@
     "pluralize": "^1.2.1",
     "json-api-ify": "^1.0.0",
     "serve-static": "^1.12.3",
-    "jsonwebtoken": "^7.4.1"
+    "jsonwebtoken": "^7.4.1",
+    "snyk": "^1.316.1"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/CesarNog/bike_ride_events_app"
-  }
+  },
+  "snyk": true
 }
