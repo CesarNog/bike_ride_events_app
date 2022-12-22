@@ -37,7 +37,7 @@
     "pluralize": "^1.2.1",
     "json-api-ify": "^1.0.0",
     "serve-static": "^1.12.3",
-    "jsonwebtoken": "^7.4.1"
+    "jsonwebtoken": "^9.0.0"
   },
   "repository": {
     "type": "git",
