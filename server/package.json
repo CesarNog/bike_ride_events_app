@@ -31,7 +31,7 @@
     "jade": "^1.9.1",
     "morgan": "^1.6.1",
     "serve-favicon": "^2.2.0",
-    "sqlite3": "^3.0.4",
+    "sqlite3": "^5.0.3",
     "mongoose": "^4.4.12",
     "cors": "^2.7.1",
     "pluralize": "^1.2.1",
